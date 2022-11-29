@@ -1,0 +1,39 @@
+{
+  "Actions": [
+    {
+      "Name": "Billables Status",
+      "Tooltip": "Show current billables status.",
+      "UUID": "net.reiniiriarios.harvest-billables.status",
+      "Icon": "images/icon-default",
+      "States": [
+        {
+          "Image": "images/icon-default"
+        }
+      ]
+    }
+  ],
+  "SDKVersion": 2,
+  "Author": "Emma Litwa-Vulcu",
+  "CodePath": "index.html",
+  "PropertyInspectorPath": "pi.html",
+  "Description": "Billables Tracker for Harvest for Stream Deck",
+  "Category": "Harvest Billables",
+  "CategoryIcon": "images/icon-category",
+  "Name": "Harvest Billables",
+  "Icon": "images/icon-default",
+  "URL": "https://github.com/reiniiriarios/stream-deck-billables-harvest/",
+  "Version": "0.1",
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "10.11"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "5.0"
+  }
+}
