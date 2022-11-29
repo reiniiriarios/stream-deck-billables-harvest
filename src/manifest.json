@@ -14,7 +14,7 @@
   ],
   "SDKVersion": 2,
   "Author": "Emma Litwa-Vulcu",
-  "CodePath": "index.html",
+  "CodePath": "app.html",
   "PropertyInspectorPath": "pi.html",
   "Description": "Billables Tracker for Harvest for Stream Deck",
   "Category": "Harvest Billables",
