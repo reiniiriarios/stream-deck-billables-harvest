@@ -1,10 +1,14 @@
-const CopyPlugin = require('copy-webpack-plugin')
 const CONFIG = require('./config')
+const CopyPlugin = require('copy-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = {
   entry: {
     app: './src/app.ts',
     pi: './src/pi.ts',
+  },
+  resolve: {
+    extensions: ['.ts', '.js'],
   },
   module: {
     rules: [
@@ -21,13 +25,23 @@ module.exports = {
     path: __dirname + '/' + CONFIG.appName + '.sdPlugin',
     clean: true,
   },
+  optimization: {
+    minimizer: [new TerserPlugin({
+      terserOptions: {
+        compress: {
+          unused: false
+        },
+        mangle: false
+      }
+  })],
+  },
   plugins: [
     new CopyPlugin({
       patterns: [
         {
           from: 'src',
           globOptions: {
-            ignore: ['src/*.ts', 'src/*.js'],
+            ignore: ['**/*.ts', '**/*.js'],
           },
         },
       ],
