@@ -30,16 +30,24 @@ export const updateStatus = async (settings: Settings) => {
  *
  * @param {TimeEntry[]} timeEntries
  * @param {number} projectId
+ * @param {boolean} billable null = all entries, true = billable entries only, false = non-billable
  * @returns {number}
  */
 export const getTotalLoggedHours = (
   timeEntries: TimeEntry[],
-  projectId: number
+  projectId: number,
+  billable: boolean = null
 ): number => {
   let hours: number = 0
   timeEntries.forEach((timeEntry: TimeEntry) => {
     if (timeEntry.project.id === projectId) {
-      hours += timeEntry.hours
+      if (
+        billable === null ||
+        (billable && timeEntry.billable) ||
+        (!billable && !timeEntry.billable)
+      ) {
+        hours += timeEntry.hours
+      }
     }
   })
   return hours
@@ -53,17 +61,25 @@ export const getTotalLoggedHours = (
  *
  * @param {TimeEntry[]} timeEntries
  * @param {number} projectId
+ * @param {boolean} billable null = all entries, true = billable entries only, false = non-billable
  * @returns {HoursSchedule}
  */
 export const getLoggedHoursSchedule = (
   timeEntries: TimeEntry[],
-  projectId: number
+  projectId: number,
+  billable: boolean = null
 ): HoursSchedule => {
   let schedule: HoursSchedule = Array(7).fill(0)
   timeEntries.forEach((timeEntry: TimeEntry) => {
     if (timeEntry.project.id === projectId) {
-      let day: number = new Date(timeEntry.created_at).getDay()
-      schedule[day] += timeEntry.hours
+      if (
+        billable === null ||
+        (billable && timeEntry.billable) ||
+        (!billable && !timeEntry.billable)
+      ) {
+        let day: number = new Date(timeEntry.created_at).getDay()
+        schedule[day] += timeEntry.hours
+      }
     }
   })
   return schedule
