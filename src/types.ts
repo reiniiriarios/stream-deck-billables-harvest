@@ -12,7 +12,7 @@ export class Project {
   harvest_id: number
   color: string
   code: string
-  nodes: string
+  notes: string
   start_date: string
   end_date: string
   archived: boolean
@@ -41,9 +41,22 @@ export interface RemainingBudgetedHours {
 
 // Response from Harvest, with additional properties.
 export class TimeEntry {
+  id: number
   hours: number
   rounded_hours: number
+  hours_without_timer: number
+  is_locked: boolean
+  locked_reason: string
+  is_closed: boolean
+  is_billed: boolean
+  timer_started_at: string
+  started_time: string
+  ended_time: string
+  is_running: boolean
   billable: boolean
+  budgeted: boolean
+  billable_rate: number
+  cost_rate: number
   spent_date: string
   notes: string
   created_at: string
@@ -55,13 +68,36 @@ export class TimeEntry {
   client: {
     id: number
     name: string
+    currency: string
   }
   project: {
     id: number
     name: string
+    code: string
   }
   task: {
     id: number
     name: string
   }
+  user_assignment?: {
+    id: number
+    is_project_manager: boolean
+    is_active: boolean
+    use_default_rates: boolean
+    budget: boolean
+    created_at: string
+    updated_at: string
+    hourly_rate: number
+  }
+  task_assignment?: {
+    id: number
+    billable: boolean
+    is_active: boolean
+    created_at: string
+    updated_at: string
+    hourly_rate: number
+    budget: number
+  }
+  invoice?: object
+  external_reference?: object
 }
