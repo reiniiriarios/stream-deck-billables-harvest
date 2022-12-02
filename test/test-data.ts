@@ -1,4 +1,31 @@
-import { Project, TimeEntry } from '../src/types'
+import { User, Project, TimeEntry } from '../src/types'
+
+export const fakeUser: User = {
+  access_roles: ['member'],
+  avatar_url: 'https://via.placeholder.com/100',
+  calendar_integration_enabled: false,
+  calendar_integration_source: null,
+  can_create_projects: false,
+  created_at: '2022-06-02T19:35:58Z',
+  email: 'hello@example.com',
+  first_name: 'Fname',
+  has_access_to_all_future_projects: false,
+  id: 4321,
+  is_active: true,
+  is_contractor: false,
+  last_name: 'Lname',
+  permissions_claims: [
+    'expenses:read:own',
+    'expenses:write:own',
+    'timers:read:own',
+    'timers:write:own',
+  ],
+  roles: [],
+  telephone: '',
+  timezone: 'Pacific Time (US & Canada)',
+  updated_at: '2022-07-15T20:57:08Z',
+  weekly_capacity: 115200,
+}
 
 export const fakeProject: Project = {
   id: 1234321,
@@ -43,7 +70,7 @@ export const fakeTimeEntries: TimeEntry[] = [
     updated_at: '2022-11-28T16:11:48Z',
     user: {
       id: 4321,
-      name: 'Emma Litwa-Vulcu',
+      name: 'Fname Lname',
     },
     client: {
       id: 123456,
@@ -104,7 +131,7 @@ export const fakeTimeEntries: TimeEntry[] = [
     updated_at: '2022-11-29T16:11:48Z',
     user: {
       id: 4321,
-      name: 'Emma Litwa-Vulcu',
+      name: 'Fname Lname',
     },
     client: {
       id: 123456,
@@ -141,5 +168,5 @@ export const fakeTimeEntries: TimeEntry[] = [
     },
     invoice: null,
     external_reference: null,
-  }
+  },
 ]

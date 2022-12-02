@@ -1,8 +1,12 @@
-import { Settings, TimeEntry } from '../types'
+import { Settings, User, TimeEntry } from '../types'
 
 const harvestUrl = 'https://api.harvestapp.com/v2'
 
-const getHarvest = async (settings: Settings, path: string, args?: object) => {
+export const getHarvest = async (
+  settings: Settings,
+  path: string,
+  args?: object
+) => {
   let url = harvestUrl + path
   if (args) {
     let params = Object.keys(args)
@@ -25,9 +29,7 @@ const getHarvest = async (settings: Settings, path: string, args?: object) => {
   return response
 }
 
-const getHarvestData = async (settings: Settings) => {
-  const user = await getHarvest(settings, '/users/me')
-
+export const getHarvestData = async (settings: Settings, userId: number) => {
   let currentDate = new Date()
   // first day of the week = current day of the month - current day of the week
   const firstDay = currentDate.getDate() - currentDate.getDay()
@@ -37,7 +39,7 @@ const getHarvestData = async (settings: Settings) => {
 
   // Get tracked hours.
   const trackedHoursResponse = await getHarvest(settings, '/time_entries', {
-    user_id: user.id,
+    user_id: userId,
     from: new Date(currentDate.setDate(firstDay)).toISOString(),
     to: new Date(currentDate.setDate(lastDay)).toISOString(),
   })
@@ -56,4 +58,7 @@ const getHarvestData = async (settings: Settings) => {
   return timeEntries
 }
 
-export default getHarvestData
+export const getHarvestUserId = async (settings: Settings) => {
+  const user: User = await getHarvest(settings, '/users/me')
+  return user.id
+}

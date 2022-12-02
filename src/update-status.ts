@@ -1,5 +1,5 @@
 import getForecastData from './api/forecast'
-import getHarvestData from './api/harvest'
+import { getHarvestUserId, getHarvestData } from './api/harvest'
 import { HoursSchedule, Project, Settings, TimeEntry } from './types'
 
 /**
@@ -10,7 +10,8 @@ import { HoursSchedule, Project, Settings, TimeEntry } from './types'
 export const updateStatus = async (settings: Settings) => {
   const data = {}
   try {
-    const timeEntries: TimeEntry[] = await getHarvestData(settings)
+    const userId: number = await getHarvestUserId(settings)
+    const timeEntries: TimeEntry[] = await getHarvestData(settings, userId)
     const projects: Project[] = await getForecastData(settings)
 
     projects.forEach((project: Project, id: number) => {

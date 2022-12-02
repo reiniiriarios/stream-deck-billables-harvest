@@ -5,6 +5,29 @@ export interface Settings {
   forecastAccountId: string
 }
 
+// Response from Harvest, with additional properties.
+export class User {
+  access_roles: string[]
+  avatar_url?: string
+  calendar_integration_enabled: boolean
+  calendar_integration_source?: string
+  can_create_projects: boolean
+  created_at: string
+  email: string
+  first_name: string
+  has_access_to_all_future_projects: boolean
+  id: number
+  is_active: boolean
+  is_contractor: boolean
+  last_name: string
+  permissions_claims?: string[]
+  roles?: string[]
+  telephone?: string
+  timezone: string
+  updated_at?: string
+  weekly_capacity?: number
+}
+
 // Response from Forecast, with additional properties.
 export class Project {
   id: number
