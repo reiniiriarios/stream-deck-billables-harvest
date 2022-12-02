@@ -1,4 +1,4 @@
-import getForecastData from './api/forecast'
+import { getForecastData } from './api/forecast'
 import { getHarvestUserId, getHarvestData } from './api/harvest'
 import { HoursSchedule, Project, Settings, TimeEntry } from './types'
 

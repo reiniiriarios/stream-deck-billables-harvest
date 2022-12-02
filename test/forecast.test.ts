@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 import { Project } from '../src/types'
 import testSettings from './settings'
-import getForecastData from '../src/api/forecast'
+import { getForecastData } from '../src/api/forecast'
 
 describe('get forecast data', () => {
   let projects: Project[] = []

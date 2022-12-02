@@ -2,7 +2,21 @@ import { Project, RemainingBudgetedHours, Settings } from '../types'
 
 const forecastUrl = 'https://api.forecastapp.com'
 
-const getForecast = async (settings: Settings, path: string, args?: object) => {
+/**
+ * Fetch data from the forecast api.
+ *
+ * Fetches forecastUrl + path + ?arg1=val1&arg2=val2&etc
+ *
+ * @param {Settings} settings
+ * @param {string} path
+ * @param {object} args
+ * @returns {Promise<object[]>} json response
+ */
+export const getForecast = async (
+  settings: Settings,
+  path: string,
+  args?: object
+) => {
   let url = forecastUrl + path
   if (args) {
     let params = Object.keys(args)
@@ -25,7 +39,15 @@ const getForecast = async (settings: Settings, path: string, args?: object) => {
   return response
 }
 
-const getForecastData = async (settings: Settings) => {
+/**
+ * Fetches data from forecast.
+ *
+ * @param {Settings} settings
+ * @returns {Promise<Project[]>}
+ */
+export const getForecastData = async (
+  settings: Settings
+): Promise<Project[]> => {
   let projects: Project[] = []
 
   // Get projects.
@@ -61,5 +83,3 @@ const getForecastData = async (settings: Settings) => {
 
   return projects
 }
-
-export default getForecastData
