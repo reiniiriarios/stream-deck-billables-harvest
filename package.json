@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/reiniiriarios/stream-deck-billables-harvest/",
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand --bail",
     "build": "webpack --mode=production",
     "dev": "webpack --watch --mode=development",
     "release": "node release.js",

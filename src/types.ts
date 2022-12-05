@@ -124,3 +124,34 @@ export class TimeEntry {
   invoice?: object
   external_reference?: object
 }
+
+// used to filter assignments
+export interface AssignmentFilter {
+  project_id?: number
+  person_id?: number
+  start_date?: string // Format: YYYY-MM-DD
+  end_date?: string // Format: YYYY-MM-DD
+  repeated_assignment_set_id?: number
+  state?: string // active or archived
+}
+
+// Response from Forecast, with additional properties.
+export class Assignment {
+  id: number
+  start_date: string
+  end_date: string
+  allocation: number
+  notes?: string
+  updated_at?: string
+  updated_by_id?: number
+  project_id: number
+  person_id: number
+  placeholder_id?: number
+  repeated_assignment_set_id?: number
+  active_on_days_off?: boolean
+}
+
+export interface StartEndDates {
+  start: string
+  end: string
+}

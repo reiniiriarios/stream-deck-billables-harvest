@@ -1,4 +1,4 @@
-import { Settings, User, TimeEntry } from '../types'
+import { Settings, User, TimeEntry, StartEndDates } from '../types'
 
 const harvestUrl = 'https://api.harvestapp.com/v2'
 
@@ -9,7 +9,7 @@ const harvestUrl = 'https://api.harvestapp.com/v2'
  *
  * @param {Settings} settings
  * @param {string} path
- * @param {object} args 
+ * @param {object} args
  * @returns {Promise<object[]>} json response
  */
 export const getHarvest = async (
@@ -40,25 +40,36 @@ export const getHarvest = async (
 }
 
 /**
- * Fetches data from harvest.
+ * Get current user id.
  *
- * @param {Settings} settings 
- * @param {number} userId 
+ * @param {Settings} settings
+ * @returns {Promise<number>}
+ */
+export const getHarvestUserId = async (settings: Settings): Promise<number> => {
+  const user: User = await getHarvest(settings, '/users/me')
+  return user.id
+}
+
+/**
+ * Get time entries.
+ *
+ * @param {Settings} settings
+ * @param {number} userId
+ * @param {StartEndDates} startEnd
  * @returns {Promise<TimeEntry[]>}
  */
-export const getHarvestData = async (settings: Settings, userId: number): Promise<TimeEntry[]> => {
-  let currentDate = new Date()
-  // first day of the week = current day of the month - current day of the week
-  const firstDay = currentDate.getDate() - currentDate.getDay()
-  const lastDay = firstDay + 6
-
+export const getTimeEntries = async (
+  settings: Settings,
+  userId: number,
+  startEnd: StartEndDates
+): Promise<TimeEntry[]> => {
   let timeEntries: TimeEntry[] = []
 
   // Get tracked hours.
   const trackedHoursResponse = await getHarvest(settings, '/time_entries', {
     user_id: userId,
-    from: new Date(currentDate.setDate(firstDay)).toISOString(),
-    to: new Date(currentDate.setDate(lastDay)).toISOString(),
+    from: startEnd.start,
+    to: startEnd.end,
   })
   if (typeof trackedHoursResponse.error !== 'undefined') {
     throw new Error(trackedHoursResponse.error_description)
@@ -73,15 +84,4 @@ export const getHarvestData = async (settings: Settings, userId: number): Promis
   }
 
   return timeEntries
-}
-
-/**
- * Fetches data from harvest.
- *
- * @param {Settings} settings 
- * @returns {Promise<number>}
- */
-export const getHarvestUserId = async (settings: Settings): Promise<number> => {
-  const user: User = await getHarvest(settings, '/users/me')
-  return user.id
 }

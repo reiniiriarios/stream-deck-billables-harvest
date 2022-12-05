@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@jest/globals'
-import { Project, TimeEntry } from '../src/types'
+import { Project, StartEndDates, TimeEntry } from '../src/types'
 import testSettings from './settings'
 import { fakeProject, fakeTimeEntries } from './test-data'
-import { getTotalLoggedHours, getLoggedHoursSchedule } from '../src/update-status'
+import { getTotalLoggedHours, getLoggedHoursSchedule, getStartEndDates } from '../src/update-status'
 
 describe('update status', () => {
   test('get total logged hours', () => {
@@ -30,5 +30,14 @@ describe('update status', () => {
     expect(scheduleNonBillable[1]).toBe(0)
     expect(scheduleNonBillable[2]).toBe(1)
     expect(scheduleNonBillable[3]).toBe(0)
+  })
+
+  test('start and end dates', () => {
+    const startEnd: StartEndDates = getStartEndDates()
+    const now = Date.now()
+    const startTime = new Date(startEnd.start).getTime()
+    const endTime = new Date(startEnd.end).getTime()
+    expect(startTime).toBeLessThan(now)
+    expect(endTime).toBeGreaterThan(now)
   })
 })

@@ -1,4 +1,10 @@
-import { Project, RemainingBudgetedHours, Settings } from '../types'
+import {
+  Assignment,
+  Project,
+  RemainingBudgetedHours,
+  Settings,
+  StartEndDates,
+} from '../types'
 
 const forecastUrl = 'https://api.forecastapp.com'
 
@@ -40,14 +46,26 @@ export const getForecast = async (
 }
 
 /**
- * Fetches data from forecast.
+ * Get current user id.
+ *
+ * @param {Settings} settings
+ * @returns {Promise<number>}
+ */
+export const getForecastUserId = async (
+  settings: Settings
+): Promise<number> => {
+  const userResponse: { current_user: { id: number; account_ids: number[] } } =
+    await getForecast(settings, '/whoami')
+  return userResponse.current_user.id
+}
+
+/**
+ * Get projects.
  *
  * @param {Settings} settings
  * @returns {Promise<Project[]>}
  */
-export const getForecastData = async (
-  settings: Settings
-): Promise<Project[]> => {
+export const getProjects = async (settings: Settings): Promise<Project[]> => {
   let projects: Project[] = []
 
   // Get projects.
@@ -82,4 +100,40 @@ export const getForecastData = async (
   }
 
   return projects
+}
+
+/**
+ * Get assignments.
+ *
+ * @param {Settings} settings
+ * @param {number} userId
+ * @param {StartEndDates} startEnd
+ * @returns {Promise<Assignment[]>}
+ */
+export const getAssignments = async (
+  settings: Settings,
+  userId: number,
+  startEnd: StartEndDates
+): Promise<Assignment[]> => {
+  let assignments: Assignment[] = []
+
+  const assignmentsResponse = await getForecast(settings, '/assignments', {
+    person_id: userId,
+    start_date: startEnd.start,
+    end_date: startEnd.end,
+    state: 'active',
+  })
+  if (typeof assignmentsResponse.error !== 'undefined') {
+    throw new Error(assignmentsResponse.error_description)
+  }
+  if (
+    typeof assignmentsResponse.assignments !== 'undefined' &&
+    assignmentsResponse.assignments.length
+  ) {
+    assignmentsResponse.assignments.forEach((assignment: Assignment) => {
+      assignments.push(assignment)
+    })
+  }
+
+  return assignments
 }

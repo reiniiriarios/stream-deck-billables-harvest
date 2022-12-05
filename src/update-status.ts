@@ -1,6 +1,12 @@
-import { getForecastData } from './api/forecast'
-import { getHarvestUserId, getHarvestData } from './api/harvest'
-import { HoursSchedule, Project, Settings, TimeEntry } from './types'
+import { getProjects } from './api/forecast'
+import { getHarvestUserId, getTimeEntries } from './api/harvest'
+import {
+  HoursSchedule,
+  Project,
+  Settings,
+  StartEndDates,
+  TimeEntry,
+} from './types'
 
 /**
  * Callback for Stream Deck action.
@@ -10,13 +16,22 @@ import { HoursSchedule, Project, Settings, TimeEntry } from './types'
 export const updateStatus = async (settings: Settings) => {
   const data = {}
   try {
+    const startEnd: StartEndDates = getStartEndDates()
     const userId: number = await getHarvestUserId(settings)
-    const timeEntries: TimeEntry[] = await getHarvestData(settings, userId)
-    const projects: Project[] = await getForecastData(settings)
+    const timeEntries: TimeEntry[] = await getTimeEntries(
+      settings,
+      userId,
+      startEnd
+    )
+    const projects: Project[] = await getProjects(settings)
 
     projects.forEach((project: Project, id: number) => {
-      projects[id].hours_logged = getTotalLoggedHours(timeEntries, id)
-      projects[id].hours_schedule = getLoggedHoursSchedule(timeEntries, id)
+      projects[id].hours_logged = getTotalLoggedHours(timeEntries, id, true)
+      projects[id].hours_schedule = getLoggedHoursSchedule(
+        timeEntries,
+        id,
+        true
+      )
     })
   } catch (e) {
     // @todo Handle errors.
@@ -84,4 +99,26 @@ export const getLoggedHoursSchedule = (
     }
   })
   return schedule
+}
+
+/**
+ * Get start and end dates of current week in ISO 8601.
+ *
+ * @returns {StartEndDates}
+ */
+export const getStartEndDates = (): StartEndDates => {
+  let currentDate = new Date()
+  // first day of the week = current day of the month - current day of the week
+  const firstDay = currentDate.getDate() - currentDate.getDay()
+  const lastDay = firstDay + 6
+
+  let start = new Date(currentDate)
+  let end = new Date(currentDate)
+  start.setDate(start.getDate() + firstDay)
+  end.setDate(end.getDate() + lastDay)
+
+  return {
+    start: start.toISOString(),
+    end: end.toISOString(),
+  }
 }

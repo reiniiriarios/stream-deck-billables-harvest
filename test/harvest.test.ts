@@ -1,7 +1,8 @@
 import { describe, expect, test } from '@jest/globals'
 import { TimeEntry } from '../src/types'
 import testSettings from './settings'
-import { getHarvestUserId, getHarvestData } from '../src/api/harvest'
+import { getHarvestUserId, getTimeEntries } from '../src/api/harvest'
+import { getStartEndDates } from '../src/update-status'
 
 describe('get harvest data', () => {
   let timeEntries: TimeEntry[] = []
@@ -11,14 +12,12 @@ describe('get harvest data', () => {
     userId = await getHarvestUserId(testSettings)
     expect(userId).toBeGreaterThan(0)
   })
-  if (!userId) return
 
   test('data fetches', async () => {
-    timeEntries = await getHarvestData(testSettings, userId)
+    timeEntries = await getTimeEntries(testSettings, userId, getStartEndDates())
     // console.log(timeEntries)
     expect(timeEntries.length).toBeGreaterThanOrEqual(0)
   })
-  if (!timeEntries.length) return
 
   test('data type matches', () => {
     const firstTimeEntry: TimeEntry = timeEntries.pop()

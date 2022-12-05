@@ -1,4 +1,4 @@
-import { User, Project, TimeEntry } from '../src/types'
+import { User, Project, TimeEntry, Assignment } from '../src/types'
 
 export const fakeUser: User = {
   access_roles: ['member'],
@@ -45,6 +45,51 @@ export const fakeProject: Project = {
   billable: true,
   hours: 264.5,
 }
+
+export const fakeAssignments: Assignment[] = [
+  {
+    id: 61128063,
+    start_date: '2022-12-05',
+    end_date: '2022-12-09',
+    allocation: 25920,
+    notes: null,
+    updated_at: '2022-12-01T18:23:47.927Z',
+    updated_by_id: 1234,
+    project_id: 1234321,
+    person_id: 4321,
+    placeholder_id: null,
+    repeated_assignment_set_id: 12345,
+    active_on_days_off: false
+  },
+  {
+    id: 61128064,
+    start_date: '2022-12-12',
+    end_date: '2022-12-15',
+    allocation: 25920,
+    notes: null,
+    updated_at: '2022-12-01T18:23:58.553Z',
+    updated_by_id: 1234,
+    project_id: 1234321,
+    person_id: 4321,
+    placeholder_id: null,
+    repeated_assignment_set_id: null,
+    active_on_days_off: false
+  },
+  {
+    id: 61128064,
+    start_date: '2022-12-12',
+    end_date: '2022-12-15',
+    allocation: 25920,
+    notes: null,
+    updated_at: '2022-12-01T18:23:58.553Z',
+    updated_by_id: 1234,
+    project_id: 111,
+    person_id: 4321,
+    placeholder_id: null,
+    repeated_assignment_set_id: null,
+    active_on_days_off: false
+  }
+]
 
 export const fakeTimeEntries: TimeEntry[] = [
   {
