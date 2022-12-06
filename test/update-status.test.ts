@@ -1,16 +1,37 @@
 import { describe, expect, test } from '@jest/globals'
-import { Project, StartEndDates, TimeEntry } from '../src/types'
-import testSettings from './settings'
-import { fakeProject, fakeTimeEntries } from './test-data'
-import { getTotalLoggedHours, getLoggedHoursSchedule, getStartEndDates } from '../src/update-status'
+import { Project, StartEndDates } from '../src/types'
+import {
+  fakeAssignments,
+  fakeProject,
+  fakeStartEnd,
+  fakeTimeEntries,
+} from './test-data'
+import {
+  getTotalLoggedHours,
+  getLoggedHoursSchedule,
+  getStartEndDates,
+  getAssignedHoursSchedule,
+} from '../src/update-status'
 
 describe('update status', () => {
   test('get total logged hours', () => {
     const totalHours = getTotalLoggedHours(fakeTimeEntries, fakeProject.id)
     expect(totalHours).toBe(3)
-    const totalHoursBillable = getTotalLoggedHours(fakeTimeEntries, fakeProject.id, true)
+
+    // Only billable hours.
+    const totalHoursBillable = getTotalLoggedHours(
+      fakeTimeEntries,
+      fakeProject.id,
+      true
+    )
     expect(totalHoursBillable).toBe(2)
-    const totalHoursNonBillable = getTotalLoggedHours(fakeTimeEntries, fakeProject.id, false)
+
+    // Not including billable hours.
+    const totalHoursNonBillable = getTotalLoggedHours(
+      fakeTimeEntries,
+      fakeProject.id,
+      false
+    )
     expect(totalHoursNonBillable).toBe(1)
   })
 
@@ -20,12 +41,24 @@ describe('update status', () => {
     expect(schedule[1]).toBe(2)
     expect(schedule[2]).toBe(1)
     expect(schedule[3]).toBe(0)
-    const scheduleBillable = getLoggedHoursSchedule(fakeTimeEntries, fakeProject.id, true)
+
+    // Only billable hours.
+    const scheduleBillable = getLoggedHoursSchedule(
+      fakeTimeEntries,
+      fakeProject.id,
+      true
+    )
     expect(scheduleBillable[0]).toBe(0)
     expect(scheduleBillable[1]).toBe(2)
     expect(scheduleBillable[2]).toBe(0)
     expect(scheduleBillable[3]).toBe(0)
-    const scheduleNonBillable = getLoggedHoursSchedule(fakeTimeEntries, fakeProject.id, false)
+
+    // Not including billable hours.
+    const scheduleNonBillable = getLoggedHoursSchedule(
+      fakeTimeEntries,
+      fakeProject.id,
+      false
+    )
     expect(scheduleNonBillable[0]).toBe(0)
     expect(scheduleNonBillable[1]).toBe(0)
     expect(scheduleNonBillable[2]).toBe(1)
@@ -35,9 +68,74 @@ describe('update status', () => {
   test('start and end dates', () => {
     const startEnd: StartEndDates = getStartEndDates()
     const now = Date.now()
-    const startTime = new Date(startEnd.start).getTime()
-    const endTime = new Date(startEnd.end).getTime()
-    expect(startTime).toBeLessThan(now)
-    expect(endTime).toBeGreaterThan(now)
+    expect(startEnd.start.date.getTime()).toBeLessThan(now)
+    expect(startEnd.end.date.getTime()).toBeGreaterThan(now)
+  })
+
+  test('get assigned hours schedule', () => {
+    let fakeProjects: Project[] = []
+    fakeProjects[fakeProject.id] = fakeProject
+
+    // Get all assigned hours from data.
+    const schedule = getAssignedHoursSchedule(
+      fakeAssignments,
+      fakeStartEnd,
+      fakeProjects,
+      fakeProject.id
+    )
+    expect(schedule[0]).toBe(0) // Sunday
+    expect(schedule[1]).toBe(0) // Monday, fakeStartEnd starts on Tuesday
+    expect(schedule[2]).toBe(7.2)
+    expect(schedule[3]).toBe(7.2)
+    expect(schedule[4]).toBe(7.2)
+    expect(schedule[5]).toBe(7.2)
+    expect(schedule[6]).toBe(0) // Saturday
+
+    // The project id here doesn't match, so the schedule should be empty.
+    const scheduleNoProjectMatch = getAssignedHoursSchedule(
+      fakeAssignments,
+      fakeStartEnd,
+      fakeProjects,
+      123
+    )
+    expect(scheduleNoProjectMatch[0]).toBe(0)
+    expect(scheduleNoProjectMatch[1]).toBe(0)
+    expect(scheduleNoProjectMatch[2]).toBe(0)
+    expect(scheduleNoProjectMatch[3]).toBe(0)
+    expect(scheduleNoProjectMatch[4]).toBe(0)
+    expect(scheduleNoProjectMatch[5]).toBe(0)
+    expect(scheduleNoProjectMatch[6]).toBe(0)
+
+    // Not including billable hours.
+    const scheduleNoBillables = getAssignedHoursSchedule(
+      fakeAssignments,
+      fakeStartEnd,
+      fakeProjects,
+      fakeProject.id,
+      false
+    )
+    expect(scheduleNoBillables[0]).toBe(0)
+    expect(scheduleNoBillables[1]).toBe(0)
+    expect(scheduleNoBillables[2]).toBe(0)
+    expect(scheduleNoBillables[3]).toBe(0)
+    expect(scheduleNoBillables[4]).toBe(0)
+    expect(scheduleNoBillables[5]).toBe(0)
+    expect(scheduleNoBillables[6]).toBe(0)
+
+    // Only billable hours.
+    const scheduleBillables = getAssignedHoursSchedule(
+      fakeAssignments,
+      fakeStartEnd,
+      fakeProjects,
+      fakeProject.id,
+      true
+    )
+    expect(scheduleBillables[0]).toBe(0)
+    expect(scheduleBillables[1]).toBe(0)
+    expect(scheduleBillables[2]).toBe(7.2)
+    expect(scheduleBillables[3]).toBe(7.2)
+    expect(scheduleBillables[4]).toBe(7.2)
+    expect(scheduleBillables[5]).toBe(7.2)
+    expect(scheduleBillables[6]).toBe(0)
   })
 })

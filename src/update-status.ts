@@ -1,6 +1,7 @@
 import { getProjects } from './api/forecast'
 import { getHarvestUserId, getTimeEntries } from './api/harvest'
 import {
+  Assignment,
   HoursSchedule,
   Project,
   Settings,
@@ -39,6 +40,34 @@ export const updateStatus = async (settings: Settings) => {
   }
 
   // do things
+}
+
+/**
+ * Get start and end dates of current week in ISO 8601.
+ *
+ * @returns {StartEndDates}
+ */
+export const getStartEndDates = (): StartEndDates => {
+  let currentDate = new Date()
+  // first day of the week = current day of the month - current day of the week
+  const firstDay = currentDate.getDate() - currentDate.getDay()
+  const lastDay = firstDay + 6
+
+  let start = new Date(currentDate)
+  let end = new Date(currentDate)
+  start.setDate(firstDay)
+  end.setDate(lastDay)
+
+  return {
+    start: {
+      date: start,
+      iso: start.toISOString(),
+    },
+    end: {
+      date: end,
+      iso: end.toISOString(),
+    },
+  }
 }
 
 /**
@@ -82,43 +111,93 @@ export const getTotalLoggedHours = (
  */
 export const getLoggedHoursSchedule = (
   timeEntries: TimeEntry[],
-  projectId: number,
+  projectId: number = 0,
   billable: boolean = null
 ): HoursSchedule => {
   let schedule: HoursSchedule = Array(7).fill(0)
   timeEntries.forEach((timeEntry: TimeEntry) => {
-    if (timeEntry.project.id === projectId) {
-      if (
-        billable === null ||
-        (billable && timeEntry.billable) ||
-        (!billable && !timeEntry.billable)
-      ) {
-        let day: number = new Date(timeEntry.created_at).getDay()
-        schedule[day] += timeEntry.hours
-      }
+    if (projectId && timeEntry.project.id !== projectId) {
+      return
     }
+    if (billable !== null && billable !== timeEntry.billable) {
+      return
+    }
+
+    let day: number = new Date(timeEntry.created_at).getDay()
+    schedule[day] += timeEntry.hours
   })
   return schedule
 }
 
 /**
- * Get start and end dates of current week in ISO 8601.
+ * Get a week's schedule of assigned hours for a project from a list of assignments.
  *
- * @returns {StartEndDates}
+ * This function only sorts data by day of the week. All data must be from the same week
+ * for an accurate schedule.
+ *
+ * @param {Assignment[]} assignments
+ * @param {number} projectId
+ * @param {boolean} billable null = all entries, true = billable entries only, false = non-billable
+ * @returns {HoursSchedule}
  */
-export const getStartEndDates = (): StartEndDates => {
-  let currentDate = new Date()
-  // first day of the week = current day of the month - current day of the week
-  const firstDay = currentDate.getDate() - currentDate.getDay()
-  const lastDay = firstDay + 6
+export const getAssignedHoursSchedule = (
+  assignments: Assignment[],
+  startEnd: StartEndDates,
+  projects: Project[],
+  projectId: number = 0,
+  billable: boolean = null
+): HoursSchedule => {
+  let schedule: HoursSchedule = Array(7).fill(0)
+  assignments.forEach((assignment: Assignment) => {
+    if (projectId && assignment.project_id !== projectId) {
+      return
+    }
+    if (billable !== null && billable !== projects[assignment.project_id].billable) {
+      return
+    }
 
-  let start = new Date(currentDate)
-  let end = new Date(currentDate)
-  start.setDate(start.getDate() + firstDay)
-  end.setDate(end.getDate() + lastDay)
+    // If the assignment start date is before the current week's start date, then
+    // we count only beginning at startEnd.start and not assignment.start_date
+    let startDate = new Date(assignment.start_date)
+    if (startEnd.start.date > startDate) {
+      startDate = startEnd.start.date
+    }
+    // Don't count Sunday.
+    if (startDate.getDay() === 0) {
+      startDate.setDate(startDate.getDate() + 1)
+    }
+    // If the start date is in the future, don't count this assignment.
+    if (startDate >= startEnd.end.date) {
+      return
+    }
 
-  return {
-    start: start.toISOString(),
-    end: end.toISOString(),
-  }
+    // If the assignment end date is after the current week's end date, then
+    // we count ending at startEnd.end and not assignment.end_date
+    let endDate = new Date(assignment.end_date)
+    if (endDate > startEnd.end.date) {
+      endDate = startEnd.end.date
+    }
+    // Don't count Saturday.
+    if (endDate.getDay() === 6) {
+      endDate.setDate(endDate.getDate() - 1)
+    }
+    // If the end date is in the past, don't count this assignment.
+    if (endDate <= startEnd.start.date) {
+      return
+    }
+
+    // Get the total number of workdays for this assignment to look at.
+    const timeRange = endDate.getTime() - startDate.getTime()
+    const days = timeRange / (1000 * 3600 * 24) + 1
+    const hoursPerDay = assignment.allocation / 3600
+
+    // Loop each assigned day, adding hours per day to that day of the week in the schedule.
+    for (let i = 0; i < days; i++) {
+      let cDate = new Date(startDate)
+      cDate.setDate(cDate.getDate() + i)
+      schedule[cDate.getDay()] += hoursPerDay
+    }
+  })
+
+  return schedule
 }

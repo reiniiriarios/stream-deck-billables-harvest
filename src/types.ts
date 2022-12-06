@@ -151,7 +151,14 @@ export class Assignment {
   active_on_days_off?: boolean
 }
 
+// Date objects with strings compatible for forecast and harvest apis.
 export interface StartEndDates {
-  start: string
-  end: string
+  start: {
+    date: Date
+    iso: string
+  }
+  end: {
+    date: Date
+    iso: string
+  }
 }

@@ -119,8 +119,8 @@ export const getAssignments = async (
 
   const assignmentsResponse = await getForecast(settings, '/assignments', {
     person_id: userId,
-    start_date: startEnd.start,
-    end_date: startEnd.end,
+    start_date: startEnd.start.iso,
+    end_date: startEnd.end.iso,
     state: 'active',
   })
   if (typeof assignmentsResponse.error !== 'undefined') {

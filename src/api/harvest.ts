@@ -68,8 +68,8 @@ export const getTimeEntries = async (
   // Get tracked hours.
   const trackedHoursResponse = await getHarvest(settings, '/time_entries', {
     user_id: userId,
-    from: startEnd.start,
-    to: startEnd.end,
+    from: startEnd.start.iso,
+    to: startEnd.end.iso,
   })
   if (typeof trackedHoursResponse.error !== 'undefined') {
     throw new Error(trackedHoursResponse.error_description)

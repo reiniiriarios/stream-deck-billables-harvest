@@ -1,4 +1,21 @@
-import { User, Project, TimeEntry, Assignment } from '../src/types'
+import {
+  User,
+  Project,
+  TimeEntry,
+  Assignment,
+  StartEndDates,
+} from '../src/types'
+
+export const fakeStartEnd: StartEndDates = {
+  start: {
+    date: new Date('2022-12-06T15:59:13.503Z'),
+    iso: '2022-12-06T15:59:13.503Z',
+  },
+  end: {
+    date: new Date('2022-12-09T15:59:13.503Z'),
+    iso: '2022-12-09T15:59:13.503Z',
+  },
+}
 
 export const fakeUser: User = {
   access_roles: ['member'],
@@ -59,7 +76,7 @@ export const fakeAssignments: Assignment[] = [
     person_id: 4321,
     placeholder_id: null,
     repeated_assignment_set_id: 12345,
-    active_on_days_off: false
+    active_on_days_off: false,
   },
   {
     id: 61128064,
@@ -73,7 +90,7 @@ export const fakeAssignments: Assignment[] = [
     person_id: 4321,
     placeholder_id: null,
     repeated_assignment_set_id: null,
-    active_on_days_off: false
+    active_on_days_off: false,
   },
   {
     id: 61128064,
@@ -87,8 +104,8 @@ export const fakeAssignments: Assignment[] = [
     person_id: 4321,
     placeholder_id: null,
     repeated_assignment_set_id: null,
-    active_on_days_off: false
-  }
+    active_on_days_off: false,
+  },
 ]
 
 export const fakeTimeEntries: TimeEntry[] = [
