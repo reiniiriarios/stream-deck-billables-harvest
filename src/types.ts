@@ -141,6 +141,7 @@ export class Assignment {
   start_date: string
   end_date: string
   allocation: number
+  allocationHours?: number
   notes?: string
   updated_at?: string
   updated_by_id?: number

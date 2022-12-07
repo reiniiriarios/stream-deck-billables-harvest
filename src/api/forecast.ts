@@ -131,6 +131,7 @@ export const getAssignments = async (
     assignmentsResponse.assignments.length
   ) {
     assignmentsResponse.assignments.forEach((assignment: Assignment) => {
+      assignment.allocationHours = assignment.allocation ? assignment.allocation / 3600 : null
       assignments.push(assignment)
     })
   }
