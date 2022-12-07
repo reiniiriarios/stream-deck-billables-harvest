@@ -1,4 +1,4 @@
-import { getProjects } from './api/forecast'
+import { getAssignments, getProjects } from './api/forecast'
 import { getHarvestUserId, getTimeEntries } from './api/harvest'
 import { Assignment, HoursSchedule, Project, Settings, StartEndDates, TimeEntry } from './types'
 
@@ -10,15 +10,38 @@ import { Assignment, HoursSchedule, Project, Settings, StartEndDates, TimeEntry 
 export const updateStatus = async (settings: Settings) => {
   const data = {}
   try {
+    // Get the start and end dates for this time range (current work week).
     const startEnd: StartEndDates = getStartEndDates()
+    // Get the current user id. This id should be the same across harvest and forecast.
     const userId: number = await getHarvestUserId(settings)
+    // Get the current logged time entries from harvest.
     const timeEntries: TimeEntry[] = await getTimeEntries(settings, userId, startEnd)
+    // Get assignment data from forecast.
+    const assignments: Assignment[] = await getAssignments(settings, userId, startEnd)
+    // Get project information from forecast.
     const projects: Project[] = await getProjects(settings)
-
+    // Add time entry data to each project.
     projects.forEach((project: Project, id: number) => {
       projects[id].hours_logged = getTotalLoggedHours(timeEntries, id, true)
       projects[id].hours_schedule = getLoggedHoursSchedule(timeEntries, id, true)
     })
+    // Calculate the assigned hours schedule for this week.
+    const assignedScheduleBillable: HoursSchedule = getAssignedHoursSchedule(
+      assignments,
+      startEnd,
+      projects,
+      0,
+      true
+    )
+    // Get the assigned billable hours up to the current day based on the calculated schedule.
+    const assignedHoursBillable: number =
+      getAssignedHoursToTodayFromSchedule(assignedScheduleBillable)
+    // Get the total logged billable hours for this work week.
+    const loggedHoursBillable: number = getTotalLoggedHours(timeEntries, 0, true)
+    // Calculate how far ahead or behind the user is for billable hours.
+    const timeDifferenceBillable: number = assignedHoursBillable - loggedHoursBillable
+
+    console.log(timeDifferenceBillable)
   } catch (e) {
     // @todo Handle errors.
     console.error(e)
@@ -87,7 +110,7 @@ export const getTotalLoggedHours = (
  * @param {HoursSchedule} schedule
  * @returns {number} hours
  */
-export const getHoursToTodayFromSchedule = (schedule: HoursSchedule): number => {
+export const getAssignedHoursToTodayFromSchedule = (schedule: HoursSchedule): number => {
   let hours: number = 0
   const currentDayOfWeek = new Date().getDay()
   for (let i = 0; i <= currentDayOfWeek; i++) {
@@ -115,10 +138,10 @@ export const getLoggedHoursSchedule = (
   let schedule: HoursSchedule = Array(7).fill(0)
   timeEntries.forEach((timeEntry: TimeEntry) => {
     if (projectId && timeEntry.project.id !== projectId) {
-      return
+      return schedule
     }
     if (billable !== null && billable !== timeEntry.billable) {
-      return
+      return schedule
     }
 
     let day: number = new Date(timeEntry.created_at).getDay()
@@ -148,10 +171,10 @@ export const getAssignedHoursSchedule = (
   let schedule: HoursSchedule = Array(7).fill(0)
   assignments.forEach((assignment: Assignment) => {
     if (projectId && assignment.project_id !== projectId) {
-      return
+      return schedule
     }
     if (billable !== null && billable !== projects[assignment.project_id].billable) {
-      return
+      return schedule
     }
 
     const assignmentDays = getAssignmentDays(assignment, startEnd)
@@ -183,7 +206,10 @@ export const getAssignmentDays = (
   }
   // If the start date is in the future, don't count this assignment.
   if (startDate >= startEnd.end.date) {
-    return
+    return {
+      start: startDate,
+      days: 0,
+    }
   }
 
   // If the assignment end date is after the current week's end date, then
@@ -198,7 +224,10 @@ export const getAssignmentDays = (
   }
   // If the end date is in the past, don't count this assignment.
   if (endDate <= startEnd.start.date) {
-    return
+    return {
+      start: startDate,
+      days: 0,
+    }
   }
 
   // Get the total number of workdays for this assignment to look at.

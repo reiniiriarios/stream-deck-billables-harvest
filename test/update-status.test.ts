@@ -6,7 +6,9 @@ import {
   getLoggedHoursSchedule,
   getStartEndDates,
   getAssignedHoursSchedule,
+  updateStatus,
 } from '../src/update-status'
+import testSettings from './settings'
 
 describe('update status', () => {
   test('get total logged hours', () => {
@@ -116,5 +118,9 @@ describe('update status', () => {
     expect(scheduleBillables[4]).toBe(7.2)
     expect(scheduleBillables[5]).toBe(7.2)
     expect(scheduleBillables[6]).toBe(0)
+  })
+
+  test('update status', async () => {
+    await updateStatus(testSettings)
   })
 })
