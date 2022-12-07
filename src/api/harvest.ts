@@ -12,11 +12,7 @@ const harvestUrl = 'https://api.harvestapp.com/v2'
  * @param {object} args
  * @returns {Promise<object[]>} json response
  */
-export const getHarvest = async (
-  settings: Settings,
-  path: string,
-  args?: object
-) => {
+export const getHarvest = async (settings: Settings, path: string, args?: object) => {
   let url = harvestUrl + path
   if (args) {
     let params = Object.keys(args)

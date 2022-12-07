@@ -1,10 +1,4 @@
-import {
-  User,
-  Project,
-  TimeEntry,
-  Assignment,
-  StartEndDates,
-} from '../src/types'
+import { User, Project, TimeEntry, Assignment, StartEndDates } from '../src/types'
 
 export const fakeStartEnd: StartEndDates = {
   start: {

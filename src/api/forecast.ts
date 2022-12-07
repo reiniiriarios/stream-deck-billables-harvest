@@ -1,10 +1,4 @@
-import {
-  Assignment,
-  Project,
-  RemainingBudgetedHours,
-  Settings,
-  StartEndDates,
-} from '../types'
+import { Assignment, Project, RemainingBudgetedHours, Settings, StartEndDates } from '../types'
 
 const forecastUrl = 'https://api.forecastapp.com'
 
@@ -18,11 +12,7 @@ const forecastUrl = 'https://api.forecastapp.com'
  * @param {object} args
  * @returns {Promise<object[]>} json response
  */
-export const getForecast = async (
-  settings: Settings,
-  path: string,
-  args?: object
-) => {
+export const getForecast = async (settings: Settings, path: string, args?: object) => {
   let url = forecastUrl + path
   if (args) {
     let params = Object.keys(args)
@@ -51,11 +41,11 @@ export const getForecast = async (
  * @param {Settings} settings
  * @returns {Promise<number>}
  */
-export const getForecastUserId = async (
-  settings: Settings
-): Promise<number> => {
-  const userResponse: { current_user: { id: number; account_ids: number[] } } =
-    await getForecast(settings, '/whoami')
+export const getForecastUserId = async (settings: Settings): Promise<number> => {
+  const userResponse: { current_user: { id: number; account_ids: number[] } } = await getForecast(
+    settings,
+    '/whoami'
+  )
   return userResponse.current_user.id
 }
 
@@ -77,10 +67,7 @@ export const getProjects = async (settings: Settings): Promise<Project[]> => {
   })
 
   // Get remaining budgeted hours.
-  const hoursResponse = await getForecast(
-    settings,
-    '/aggregate/remaining_budgeted_hours'
-  )
+  const hoursResponse = await getForecast(settings, '/aggregate/remaining_budgeted_hours')
   if (typeof hoursResponse.error !== 'undefined') {
     throw new Error(hoursResponse.error_description)
   }
@@ -88,15 +75,13 @@ export const getProjects = async (settings: Settings): Promise<Project[]> => {
     typeof hoursResponse.remaining_budgeted_hours !== 'undefined' &&
     hoursResponse.remaining_budgeted_hours.length
   ) {
-    hoursResponse.remaining_budgeted_hours.forEach(
-      (hours: RemainingBudgetedHours) => {
-        if (typeof projects[hours.project_id] !== 'undefined') {
-          projects[hours.project_id].budget_by = hours.budget_by
-          projects[hours.project_id].billable = hours.budget_by !== 'none'
-          projects[hours.project_id].hours = hours.hours
-        }
+    hoursResponse.remaining_budgeted_hours.forEach((hours: RemainingBudgetedHours) => {
+      if (typeof projects[hours.project_id] !== 'undefined') {
+        projects[hours.project_id].budget_by = hours.budget_by
+        projects[hours.project_id].billable = hours.budget_by !== 'none'
+        projects[hours.project_id].hours = hours.hours
       }
-    )
+    })
   }
 
   return projects

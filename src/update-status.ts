@@ -1,13 +1,6 @@
 import { getProjects } from './api/forecast'
 import { getHarvestUserId, getTimeEntries } from './api/harvest'
-import {
-  Assignment,
-  HoursSchedule,
-  Project,
-  Settings,
-  StartEndDates,
-  TimeEntry,
-} from './types'
+import { Assignment, HoursSchedule, Project, Settings, StartEndDates, TimeEntry } from './types'
 
 /**
  * Callback for Stream Deck action.
@@ -19,20 +12,12 @@ export const updateStatus = async (settings: Settings) => {
   try {
     const startEnd: StartEndDates = getStartEndDates()
     const userId: number = await getHarvestUserId(settings)
-    const timeEntries: TimeEntry[] = await getTimeEntries(
-      settings,
-      userId,
-      startEnd
-    )
+    const timeEntries: TimeEntry[] = await getTimeEntries(settings, userId, startEnd)
     const projects: Project[] = await getProjects(settings)
 
     projects.forEach((project: Project, id: number) => {
       projects[id].hours_logged = getTotalLoggedHours(timeEntries, id, true)
-      projects[id].hours_schedule = getLoggedHoursSchedule(
-        timeEntries,
-        id,
-        true
-      )
+      projects[id].hours_schedule = getLoggedHoursSchedule(timeEntries, id, true)
     })
   } catch (e) {
     // @todo Handle errors.
@@ -165,10 +150,7 @@ export const getAssignedHoursSchedule = (
     if (projectId && assignment.project_id !== projectId) {
       return
     }
-    if (
-      billable !== null &&
-      billable !== projects[assignment.project_id].billable
-    ) {
+    if (billable !== null && billable !== projects[assignment.project_id].billable) {
       return
     }
 

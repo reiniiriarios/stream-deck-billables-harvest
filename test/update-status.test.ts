@@ -1,11 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
 import { Project, StartEndDates } from '../src/types'
-import {
-  fakeAssignments,
-  fakeProject,
-  fakeStartEnd,
-  fakeTimeEntries,
-} from './test-data'
+import { fakeAssignments, fakeProject, fakeStartEnd, fakeTimeEntries } from './test-data'
 import {
   getTotalLoggedHours,
   getLoggedHoursSchedule,
@@ -19,19 +14,11 @@ describe('update status', () => {
     expect(totalHours).toBe(3)
 
     // Only billable hours.
-    const totalHoursBillable = getTotalLoggedHours(
-      fakeTimeEntries,
-      fakeProject.id,
-      true
-    )
+    const totalHoursBillable = getTotalLoggedHours(fakeTimeEntries, fakeProject.id, true)
     expect(totalHoursBillable).toBe(2)
 
     // Not including billable hours.
-    const totalHoursNonBillable = getTotalLoggedHours(
-      fakeTimeEntries,
-      fakeProject.id,
-      false
-    )
+    const totalHoursNonBillable = getTotalLoggedHours(fakeTimeEntries, fakeProject.id, false)
     expect(totalHoursNonBillable).toBe(1)
   })
 
@@ -43,22 +30,14 @@ describe('update status', () => {
     expect(schedule[3]).toBe(0)
 
     // Only billable hours.
-    const scheduleBillable = getLoggedHoursSchedule(
-      fakeTimeEntries,
-      fakeProject.id,
-      true
-    )
+    const scheduleBillable = getLoggedHoursSchedule(fakeTimeEntries, fakeProject.id, true)
     expect(scheduleBillable[0]).toBe(0)
     expect(scheduleBillable[1]).toBe(2)
     expect(scheduleBillable[2]).toBe(0)
     expect(scheduleBillable[3]).toBe(0)
 
     // Not including billable hours.
-    const scheduleNonBillable = getLoggedHoursSchedule(
-      fakeTimeEntries,
-      fakeProject.id,
-      false
-    )
+    const scheduleNonBillable = getLoggedHoursSchedule(fakeTimeEntries, fakeProject.id, false)
     expect(scheduleNonBillable[0]).toBe(0)
     expect(scheduleNonBillable[1]).toBe(0)
     expect(scheduleNonBillable[2]).toBe(1)

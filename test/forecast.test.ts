@@ -1,11 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 import { Assignment, Project, StartEndDates } from '../src/types'
 import testSettings from './settings'
-import {
-  getAssignments,
-  getForecastUserId,
-  getProjects,
-} from '../src/api/forecast'
+import { getAssignments, getForecastUserId, getProjects } from '../src/api/forecast'
 import { getStartEndDates } from '../src/update-status'
 
 describe('get forecast data', () => {
@@ -30,11 +26,7 @@ describe('get forecast data', () => {
   })
 
   test('get assignments', async () => {
-    const assignments: Assignment[] = await getAssignments(
-      testSettings,
-      userId,
-      getStartEndDates()
-    )
+    const assignments: Assignment[] = await getAssignments(testSettings, userId, getStartEndDates())
     // console.log(assignments)
     expect(assignments.length).toBeGreaterThanOrEqual(0)
 
