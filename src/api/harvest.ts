@@ -47,7 +47,7 @@ export const getHarvestUserId = async (settings: Settings): Promise<number> => {
 }
 
 /**
- * Get time entries.
+ * Get time entries from harvest.
  *
  * @param {Settings} settings
  * @param {number} userId

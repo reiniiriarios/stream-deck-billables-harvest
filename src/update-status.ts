@@ -1,4 +1,4 @@
-import { getAssignments, getProjects } from './api/forecast'
+import { getAssignments, getForecastUserId, getProjects } from './api/forecast'
 import { getHarvestUserId, getTimeEntries } from './api/harvest'
 import { Assignment, HoursSchedule, Project, Settings, StartEndDates, TimeEntry } from './types'
 
@@ -12,12 +12,13 @@ export const updateStatus = async (settings: Settings) => {
   try {
     // Get the start and end dates for this time range (current work week).
     const startEnd: StartEndDates = getStartEndDates()
-    // Get the current user id. This id should be the same across harvest and forecast.
-    const userId: number = await getHarvestUserId(settings)
+    // Get the current user id.
+    const userIdHarvest: number = await getHarvestUserId(settings)
+    const userIdForecast: number = await getForecastUserId(settings)
     // Get the current logged time entries from harvest.
-    const timeEntries: TimeEntry[] = await getTimeEntries(settings, userId, startEnd)
+    const timeEntries: TimeEntry[] = await getTimeEntries(settings, userIdHarvest, startEnd)
     // Get assignment data from forecast.
-    const assignments: Assignment[] = await getAssignments(settings, userId, startEnd)
+    const assignments: Assignment[] = await getAssignments(settings, userIdForecast, startEnd)
     // Get project information from forecast.
     const projects: Project[] = await getProjects(settings)
     // Add time entry data to each project.
@@ -41,7 +42,7 @@ export const updateStatus = async (settings: Settings) => {
     // Calculate how far ahead or behind the user is for billable hours.
     const timeDifferenceBillable: number = assignedHoursBillable - loggedHoursBillable
 
-    console.log(timeDifferenceBillable)
+    console.log('timeDifferenceBillable', timeDifferenceBillable)
   } catch (e) {
     // @todo Handle errors.
     console.error(e)
@@ -138,10 +139,10 @@ export const getLoggedHoursSchedule = (
   let schedule: HoursSchedule = Array(7).fill(0)
   timeEntries.forEach((timeEntry: TimeEntry) => {
     if (projectId && timeEntry.project.id !== projectId) {
-      return schedule
+      return
     }
     if (billable !== null && billable !== timeEntry.billable) {
-      return schedule
+      return
     }
 
     let day: number = new Date(timeEntry.created_at).getDay()
@@ -171,10 +172,10 @@ export const getAssignedHoursSchedule = (
   let schedule: HoursSchedule = Array(7).fill(0)
   assignments.forEach((assignment: Assignment) => {
     if (projectId && assignment.project_id !== projectId) {
-      return schedule
+      return
     }
     if (billable !== null && billable !== projects[assignment.project_id].billable) {
-      return schedule
+      return
     }
 
     const assignmentDays = getAssignmentDays(assignment, startEnd)

@@ -88,7 +88,7 @@ export const getProjects = async (settings: Settings): Promise<Project[]> => {
 }
 
 /**
- * Get assignments.
+ * Get assignments from forecast.
  *
  * @param {Settings} settings
  * @param {number} userId
