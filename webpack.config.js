@@ -22,7 +22,7 @@ module.exports = {
   target: 'web',
   output: {
     filename: '[name].js',
-    path: __dirname + '/' + CONFIG.appName + '.sdPlugin',
+    path: __dirname + '/build/' + CONFIG.appName + '.sdPlugin',
     clean: true,
   },
   optimization: {

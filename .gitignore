@@ -1,5 +1,5 @@
 node_modules/
-net.reiniiriarios.harvest-billables.sdPlugin/
-net.reiniiriarios.harvest-billables.streamDeckPlugin/
+build/net.reiniiriarios.harvest-billables.sdPlugin/
+build/net.reiniiriarios.harvest-billables.streamDeckPlugin
 .DS_Store
 test/settings.ts
