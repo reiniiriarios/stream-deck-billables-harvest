@@ -23,19 +23,19 @@ const connectElgatoStreamDeckSocket = (
     )
   })
 
-  ws.addEventListener('close', (e: CloseEvent) => {
-    console.log('WEBSOCKET CLOSED', e)
+  ws.addEventListener('close', (event: CloseEvent) => {
+    console.log('WEBSOCKET CLOSED', event)
   })
 
-  ws.addEventListener('error', (e: Event) => {
-    console.warn('WEBSOCKET ERROR', e)
+  ws.addEventListener('error', (event: Event) => {
+    console.warn('WEBSOCKET ERROR', event)
   })
 
-  ws.addEventListener('message', async (e: MessageEvent<any>) => {
-    const data = JSON.parse(e.data)
-    const { event, payload, action } = data
+  ws.addEventListener('message', async (event: MessageEvent<any>) => {
+    const data = JSON.parse(event.data)
+    const { eventName, payload, action } = data
     console.table(payload?.settings)
-    switch (event) {
+    switch (eventName) {
       case 'keyDown':
         switch (action) {
           case ACTIONS.UPDATE_STATUS:
