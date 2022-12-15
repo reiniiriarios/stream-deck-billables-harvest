@@ -22,6 +22,12 @@ export const updateStatus = async (settings: Settings) => {
   // do things
 }
 
+/**
+ * 
+ * @param {Settings} settings
+ * @param {boolean} billable; null = all entries, true = billable entries only, false = non-billable
+ * @returns {Promise<number>} hours
+ */
 export const getRemainingHoursToday = async (
   settings: Settings,
   billable: boolean = null
@@ -95,7 +101,7 @@ export const getStartEndDates = (): StartEndDates => {
  *
  * @param {TimeEntry[]} timeEntries
  * @param {number} projectId
- * @param {boolean} billable null = all entries, true = billable entries only, false = non-billable
+ * @param {boolean} billable; null = all entries, true = billable entries only, false = non-billable
  * @returns {number}
  */
 export const getTotalLoggedHours = (
