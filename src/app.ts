@@ -1,5 +1,5 @@
 import { ACTIONS } from './const'
-import updateStatus from './update-status'
+import { updateStatus } from './update-status'
 
 export let ws: WebSocket | null = null
 
@@ -23,7 +23,15 @@ const connectElgatoStreamDeckSocket = (
     )
   })
 
-  ws.addEventListener('message', async (e) => {
+  ws.addEventListener('close', (e: CloseEvent) => {
+    console.log('WEBSOCKET CLOSED', e)
+  })
+
+  ws.addEventListener('error', (e: Event) => {
+    console.warn('WEBSOCKET ERROR', e)
+  })
+
+  ws.addEventListener('message', async (e: MessageEvent<any>) => {
     const data = JSON.parse(e.data)
     const { event, payload, action } = data
     console.table(payload?.settings)

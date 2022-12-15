@@ -3,7 +3,7 @@
     {
       "Name": "Billables Status",
       "Tooltip": "Show current billables status.",
-      "UUID": "net.reiniiriarios.harvest-billables.status",
+      "UUID": "net.reiniiriarios.harvest-billables.update-status",
       "Icon": "images/icon-default",
       "States": [
         {
