@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Harvest Billables</title>
+    <title>net.reiniiriarios.harvest-billables.pi</title>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="./sdpi.css">
+    <script src="./pi.js"></script>
   </head>
   <body>
     <div class="sdpi-wrapper">
+      <div class="sdpi-heading">Keys</div>
       <div class="sdpi-item">
         <div class="sdpi-item-label">Harvest API Token</div>
         <input class="sdpi-item-value" id="harvest-account-token" value="">
@@ -18,10 +21,10 @@
         <div class="sdpi-item-label">Forecast Account ID</div>
         <input class="sdpi-item-value" id="forecast-account-id" value="">
       </div>
-      <div className="sdpi-item">
-        <button className="sdpi-item-value" id="howto-button">How To</button>
+      <div class="sdpi-heading">Help</div>
+      <div class="sdpi-item">
+        <button class="sdpi-item-value" id="howto-button">How To</button>
       </div>
     </div>
-    <script src="./pi.js"></script>
   </body>
 </html>
