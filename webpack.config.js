@@ -31,7 +31,9 @@ module.exports = {
         compress: {
           unused: false
         },
-        mangle: false
+        mangle: false,
+        keep_classnames: true,
+        keep_fnames: true
       }
   })],
   },
