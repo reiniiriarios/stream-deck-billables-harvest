@@ -14,7 +14,6 @@ const connectElgatoStreamDeckSocket = (
   const actionInfo = JSON.parse(inActionInfo)
   uuid = inPluginUUID
   settings = actionInfo.payload.settings
-  console.log(settings)
   ws = new WebSocket(`ws://127.0.0.1:${inPort}`)
   ws.addEventListener('open', () => {
     console.log({
@@ -36,51 +35,70 @@ const connectElgatoStreamDeckSocket = (
     )
   })
 
-  piSetup()
-}
+  ws.addEventListener('close', (event: CloseEvent) => {
+    console.log('WEBSOCKET CLOSED', event)
+  })
+  
+  ws.addEventListener('error', (event: Event) => {
+    console.warn('WEBSOCKET ERROR', event)
+  })
 
-ws.addEventListener('close', (event: CloseEvent) => {
-  console.log('WEBSOCKET CLOSED', event)
-})
+  ws.addEventListener('message', (event: MessageEvent<any>) => {
+    const eventData = JSON.parse(event.data)  
+    switch (eventData.event) {
+      case 'didReceiveGlobalSettings':
+      case 'didReceiveSettings':
+        settings = eventData.payload.settings
+        break
+    }
+  })
 
-ws.addEventListener('error', (event: Event) => {
-  console.warn('WEBSOCKET ERROR', event)
-})
+  const fieldHarvestAccountToken = document.getElementById('harvest-account-token') as HTMLInputElement
+  const fieldHarvestAccountId = document.getElementById('harvest-account-id') as HTMLInputElement
+  const fieldForecastAccountId = document.getElementById('forecast-account-id') as HTMLInputElement
+  const buttonHowTo = document.getElementById('howto-button') as HTMLInputElement
 
-ws.addEventListener('message', (event: MessageEvent<any>) => {
-  const { eventName, payload } = JSON.parse(event.data)
-
-  switch (eventName) {
-    case 'didReceiveGlobalSettings':
-      settings = payload.settings
-      break
+  if (fieldHarvestAccountToken != null) {
+    fieldHarvestAccountToken.value = settings?.harvestAccountToken ?? ''
+    fieldHarvestAccountToken.addEventListener('input', (event: any) => {
+      updateSettings(event.target.value, 'harvestAccountToken')
+    })
   }
-})
+  if (fieldHarvestAccountId != null) {
+    fieldHarvestAccountId.value = settings?.harvestAccountId ?? ''
+    fieldHarvestAccountId.addEventListener('input', (event: any) => {
+      updateSettings(event.target.value, 'harvestAccountId')
+    })
+  }
+  if (fieldForecastAccountId != null) {
+    fieldForecastAccountId.value = settings?.forecastAccountId ?? ''
+    fieldForecastAccountId.addEventListener('input', (event: any) => {
+      updateSettings(event.target.value, 'harvestAccountId')
+    })
+  }
+  if (buttonHowTo != null) {
+    buttonHowTo.addEventListener('click', () => {
+      openUrl('https://github.com/reiniiriarios/stream-deck-billables-harvest/#readme')
+    })
+  }
 
-const piSetup = () => {
-  const harvestAccountToken = document.querySelector<HTMLInputElement>('#harvest-account-token')
-  const harvestAccountId = document.querySelector<HTMLInputElement>('#harvest-account-id')
-  const forecastAccountId = document.querySelector<HTMLInputElement>('#forecast-account-id')
-  const howtoButton = document.querySelector<HTMLButtonElement>('#howto-button')
-
-  const updateSettings = (value: string, key: string): void => {
+  const updateSettings = (value: string, key: string): void => {  
     if (ws == null) return
     settings = {
-      harvestAccountToken: harvestAccountToken?.value ?? '',
-      harvestAccountId: harvestAccountId?.value ?? '',
-      forecastAccountId: forecastAccountId?.value ?? '',
+      harvestAccountToken: fieldHarvestAccountToken?.value ?? '',
+      harvestAccountId: fieldHarvestAccountId?.value ?? '',
+      forecastAccountId: fieldForecastAccountId?.value ?? '',
     }
     settings[key] = value
-    console.log('updateSettings', settings)
     ws.send(
       JSON.stringify({
         event: 'setSettings',
         context: uuid,
-        settings,
+        payload: settings,
       })
     )
   }
-
+  
   const openUrl = (url: string): void => {
     if (ws == null) return
     ws.send(
@@ -93,28 +111,6 @@ const piSetup = () => {
       })
     )
   }
-
-  if (harvestAccountToken != null) {
-    harvestAccountToken.value = settings?.harvestAccountToken ?? ''
-    harvestAccountToken.addEventListener('change', (event: any) => {
-      updateSettings(event.target.value, 'harvestAccountToken')
-    })
-  }
-  if (harvestAccountId != null) {
-    harvestAccountId.value = settings?.harvestAccountId ?? ''
-    harvestAccountId.addEventListener('change', (event: any) => {
-      updateSettings(event.target.value, 'harvestAccountId')
-    })
-  }
-  if (forecastAccountId != null) {
-    forecastAccountId.value = settings?.forecastAccountId ?? ''
-    forecastAccountId.addEventListener('change', (event: any) => {
-      updateSettings(event.target.value, 'harvestAccountId')
-    })
-  }
-  if (howtoButton != null) {
-    howtoButton.addEventListener('click', () => {
-      openUrl('https://github.com/reiniiriarios/stream-deck-billables-harvest/#readme')
-    })
-  }
 }
+
+;(window as any)['connectElgatoStreamDeckSocket'] = connectElgatoStreamDeckSocket
