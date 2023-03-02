@@ -1,5 +1,4 @@
 node_modules/
-build/net.reiniiriarios.harvest-billables.sdPlugin/
-build/net.reiniiriarios.harvest-billables.streamDeckPlugin
+build/
 .DS_Store
 test/settings.ts

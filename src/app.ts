@@ -1,9 +1,9 @@
 import { ACTIONS } from './const'
 import { updateStatus } from './update-status'
 
-export let ws: WebSocket | null = null
+let ws: WebSocket | null = null
 
-export const connectElgatoStreamDeckSocket = (
+const connectElgatoStreamDeckSocket = (
   inPort: number,
   inPluginUUID: string,
   inRegisterEvent: any,
@@ -33,7 +33,7 @@ export const connectElgatoStreamDeckSocket = (
 
   ws.addEventListener('message', async (event: MessageEvent<any>) => {
     const eventData = JSON.parse(event.data)
-    console.table(eventData.payload?.settings)
+    console.log(eventData)
     switch (eventData.event) {
       case 'keyDown':
         switch (eventData.action) {

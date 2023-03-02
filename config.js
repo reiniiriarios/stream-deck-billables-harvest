@@ -1,3 +1,3 @@
 module.exports = {
-  appName: 'net.reiniiriarios.harvest-billables',
+  appName: 'me.reinii.harvest-billables',
 }

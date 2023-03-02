@@ -36,5 +36,6 @@ export const displayHoursRemaining = (hours: number): void => {
   const hoursFormatted: string = formatHours(hours)
   const icon = getStatusIcon(hours)
 
+  
   console.log(hoursFormatted, icon)
 }
