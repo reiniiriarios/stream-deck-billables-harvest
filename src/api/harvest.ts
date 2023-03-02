@@ -30,6 +30,10 @@ export const getHarvest = async (settings: Settings, path: string, args?: object
       'Harvest-Account-Id': settings.harvestAccountId,
     },
   }).then((res) => {
+    if (res.status != 200) {
+      // Will return a 404 [sic] on invalid authentication.
+      throw new Error('Error fetching data, check authentication tokens.')
+    }
     return res.json()
   })
   return response

@@ -32,40 +32,31 @@ export const getRemainingHoursToday = async (
   settings: Settings,
   billable: boolean = null
 ): Promise<number> => {
-  let remainingHours: number = 0
-
-  try {
-    // Get the start and end dates for this time range (current work week).
-    const startEnd: StartEndDates = getStartEndDates()
-    // Get the current user id.
-    const userIdHarvest: number = await getHarvestUserId(settings)
-    const userIdForecast: number = await getForecastUserId(settings)
-    // Get the current logged time entries from harvest.
-    const timeEntries: TimeEntry[] = await getTimeEntries(settings, userIdHarvest, startEnd)
-    // Get assignment data from forecast.
-    const assignments: Assignment[] = await getAssignments(settings, userIdForecast, startEnd)
-    // Get project information from forecast.
-    const projects: Project[] = await getProjects(settings)
-    // Calculate the assigned hours schedule for this week.
-    const assignedSchedule: HoursSchedule = getAssignedHoursSchedule(
-      assignments,
-      startEnd,
-      projects,
-      0,
-      billable
-    )
-    // Get the assigned billable hours up to the current day based on the calculated schedule.
-    const assignedHours: number = getAssignedHoursToTodayFromSchedule(assignedSchedule)
-    // Get the total logged billable hours for this work week.
-    const loggedHours: number = getTotalLoggedHours(timeEntries, 0, billable)
-    // Calculate how far ahead or behind the user is for billable hours.
-    remainingHours = loggedHours - assignedHours
-  } catch (e) {
-    // @todo Handle errors.
-    console.error(e)
-  }
-
-  return remainingHours
+  // Get the start and end dates for this time range (current work week).
+  const startEnd: StartEndDates = getStartEndDates()
+  // Get the current user id.
+  const userIdHarvest: number = await getHarvestUserId(settings)
+  const userIdForecast: number = await getForecastUserId(settings)
+  // Get the current logged time entries from harvest.
+  const timeEntries: TimeEntry[] = await getTimeEntries(settings, userIdHarvest, startEnd)
+  // Get assignment data from forecast.
+  const assignments: Assignment[] = await getAssignments(settings, userIdForecast, startEnd)
+  // Get project information from forecast.
+  const projects: Project[] = await getProjects(settings)
+  // Calculate the assigned hours schedule for this week.
+  const assignedSchedule: HoursSchedule = getAssignedHoursSchedule(
+    assignments,
+    startEnd,
+    projects,
+    0,
+    billable
+  )
+  // Get the assigned billable hours up to the current day based on the calculated schedule.
+  const assignedHours: number = getAssignedHoursToTodayFromSchedule(assignedSchedule)
+  // Get the total logged billable hours for this work week.
+  const loggedHours: number = getTotalLoggedHours(timeEntries, 0, billable)
+  // Calculate how far ahead or behind the user is for billable hours.
+  return loggedHours - assignedHours
 }
 
 /**
