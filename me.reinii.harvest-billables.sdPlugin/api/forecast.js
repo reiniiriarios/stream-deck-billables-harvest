@@ -1,4 +1,4 @@
-const forecastUrl = 'https://api.forecastapp.com';
+const forecastUrl = 'https://api.forecastapp.com/';
 
 /**
  * Fetch data from the forecast api.
@@ -32,7 +32,7 @@ const getForecast = async (settings, path, args) => {
  * Get current user id.
  */
 const getForecastUserId = async (settings) => {
-  const userResponse = await getForecast(settings, '/whoami');
+  const userResponse = await getForecast(settings, 'whoami');
   return userResponse.current_user.id;
 };
 
@@ -43,7 +43,7 @@ const getProjects = async (settings) => {
   let projects = [];
 
   // Get projects.
-  const projectsResponse = await getForecast(settings, '/projects');
+  const projectsResponse = await getForecast(settings, 'projects');
   projectsResponse.projects.forEach((project) => {
     if (!project.archived) {
       projects[project.id] = project;
@@ -51,7 +51,7 @@ const getProjects = async (settings) => {
   });
 
   // Get remaining budgeted hours.
-  const hoursResponse = await getForecast(settings, '/aggregate/remaining_budgeted_hours');
+  const hoursResponse = await getForecast(settings, 'aggregate/remaining_budgeted_hours');
   if (typeof hoursResponse.error !== 'undefined') {
     throw new Error(hoursResponse.error_description);
   }
@@ -77,7 +77,7 @@ const getProjects = async (settings) => {
 const getAssignments = async (settings, userId, startEnd) => {
   let assignments = [];
 
-  const assignmentsResponse = await getForecast(settings, '/assignments', {
+  const assignmentsResponse = await getForecast(settings, 'assignments', {
     person_id: userId,
     start_date: startEnd.start.iso,
     end_date: startEnd.end.iso,
