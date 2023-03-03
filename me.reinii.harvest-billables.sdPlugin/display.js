@@ -4,6 +4,7 @@
  * Get the hours formatted for display.
  */
 const formatHours = (hours) => {
+  if (Math.abs(hours) < 1) return (hours >= 0 ? '+' : '') + Math.round(hours * 60) + 'm';
   return (hours >= 0 ? '+' : '') + hours.toFixed(2) + 'h';
 };
 

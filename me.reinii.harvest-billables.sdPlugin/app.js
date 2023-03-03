@@ -3,12 +3,20 @@
 /// <reference path="update-status.js" />
 
 const actionUpdateStatus = new Action('me.reinii.harvest-billables.status');
+const FETCH_INTERVAL = 60;
 
 /**
  * The first event fired when Stream Deck starts
  */
 $SD.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }) => {
-	console.log('Stream Deck connected!');
+  console.log('Stream Deck connected!');
+});
+
+actionUpdateStatus.onWillAppear(({ action, context, device, event, payload }) => {
+  updateStatus(context, payload.settings);
+  setInterval(() => {
+    updateStatus(context, payload.settings);
+  }, FETCH_INTERVAL * 1000);
 });
 
 actionUpdateStatus.onKeyUp(({ action, context, device, event, payload }) => {
