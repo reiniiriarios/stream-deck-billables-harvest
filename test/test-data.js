@@ -1,6 +1,4 @@
-import { User, Project, TimeEntry, Assignment, StartEndDates } from '../src/types'
-
-export const fakeStartEnd: StartEndDates = {
+export const fakeStartEnd = {
   start: {
     date: new Date('2022-12-06T15:59:13.503Z'),
     iso: '2022-12-06T15:59:13.503Z',
@@ -11,7 +9,7 @@ export const fakeStartEnd: StartEndDates = {
   },
 }
 
-export const fakeUser: User = {
+export const fakeUser = {
   access_roles: ['member'],
   avatar_url: 'https://via.placeholder.com/100',
   calendar_integration_enabled: false,
@@ -38,7 +36,7 @@ export const fakeUser: User = {
   weekly_capacity: 115200,
 }
 
-export const fakeProject: Project = {
+export const fakeProject = {
   id: 1234321,
   name: 'Fake Project',
   color: 'aqua',
@@ -57,7 +55,7 @@ export const fakeProject: Project = {
   hours: 264.5,
 }
 
-export const fakeAssignments: Assignment[] = [
+export const fakeAssignments = [
   {
     id: 61128063,
     start_date: '2022-12-05',
@@ -105,7 +103,7 @@ export const fakeAssignments: Assignment[] = [
   },
 ]
 
-export const fakeTimeEntries: TimeEntry[] = [
+export const fakeTimeEntries = [
   {
     id: 123456789,
     spent_date: '2022-11-28',

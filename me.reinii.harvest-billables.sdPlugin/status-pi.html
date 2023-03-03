@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>me.reinii.harvest-billables.pi</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="stylesheet" href="libs/css/sdpi.css" />
+  </head>
+  <body>
+    <div class="sdpi-wrapper">
+      <form id="property-inspector">
+        <div class="sdpi-heading">Keys</div>
+        <div class="sdpi-item">
+          <div class="sdpi-item-label">Harvest API Token</div>
+          <input class="sdpi-item-value" name="harvestAccountToken" type="text" value="" />
+        </div>
+        <div class="sdpi-item">
+          <div class="sdpi-item-label">Harvest Account ID</div>
+          <input class="sdpi-item-value" name="harvestAccountId" type="text" value="" />
+        </div>
+        <div class="sdpi-item">
+          <div class="sdpi-item-label">Forecast Account ID</div>
+          <input class="sdpi-item-value" name="forecastAccountId" type="text" value="" />
+        </div>
+        <div class="sdpi-heading">Help</div>
+        <div class="sdpi-item">
+          <button class="sdpi-item-value" id="howto-button">How To</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Stream Deck Libs -->
+    <script src="libs/js/constants.js"></script>
+    <script src="libs/js/prototypes.js"></script>
+    <script src="libs/js/timers.js"></script>
+    <script src="libs/js/utils.js"></script>
+    <script src="libs/js/events.js"></script>
+    <script src="libs/js/api.js"></script>
+    <script src="libs/js/property-inspector.js"></script>
+    <script src="libs/js/dynamic-styles.js"></script>
+
+    <!-- Property Inspector -->
+    <script src="status-pi.js"></script>
+  </body>
+</html>

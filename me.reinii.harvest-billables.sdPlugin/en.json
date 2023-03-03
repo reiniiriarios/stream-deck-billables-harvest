@@ -1,0 +1,10 @@
+{
+  "Description": "Billables Tracker for Harvest for Stream Deck", 
+  "Name": "Harvest Billables", 
+  "Category": "Harvest Billables", 
+  "me.reinii.harvest-billables.status": {
+    "Name": "Billables Status", 
+    "Tooltip": "Show current billables status."
+  },
+  "Localization": {}
+}
