@@ -14,14 +14,5 @@
   "bugs": {
     "url": "https://github.com/reiniiriarios/stream-deck-billables-harvest/issues"
   },
-  "homepage": "https://github.com/reiniiriarios/stream-deck-billables-harvest/",
-  "scripts": {
-    "test": "jest --runInBand --bail"
-  },
-  "devDependencies": {
-    "jest": "^29.3.1"
-  },
-  "engines": {
-    "node": "~18.6.0"
-  }
+  "homepage": "https://github.com/reiniiriarios/stream-deck-billables-harvest/"
 }
