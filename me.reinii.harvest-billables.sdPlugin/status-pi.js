@@ -22,7 +22,7 @@ $PI.onConnected((jsn) => {
 $PI.onDidReceiveGlobalSettings(({ payload }) => {
   console.log('onDidReceiveGlobalSettings', payload);
 });
-$PI.onDidReceiveSettings('me.reinii.harvest-billables.update-status', ({ payload }) => {
+$PI.onDidReceiveSettings('me.reinii.harvest-billables.status', ({ payload }) => {
   console.log('onDidReceiveSettings', payload);
 });
 

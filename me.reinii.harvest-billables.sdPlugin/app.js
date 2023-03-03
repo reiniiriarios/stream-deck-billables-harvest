@@ -1,6 +1,6 @@
 /// <reference path="libs/js/action.js" />
 /// <reference path="libs/js/stream-deck.js" />
-/// <reference path="update-status.js" />
+/// <reference path="status-update.js" />
 
 const actionUpdateStatus = new Action('me.reinii.harvest-billables.status');
 
