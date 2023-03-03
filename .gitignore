@@ -1,4 +1,3 @@
 node_modules/
-build/
 .DS_Store
-test/settings.js
+Thumbs.db
