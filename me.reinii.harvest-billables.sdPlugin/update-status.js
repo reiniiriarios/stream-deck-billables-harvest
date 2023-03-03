@@ -5,11 +5,11 @@
 /**
  * Callback for Stream Deck action.
  */
-const updateStatus = async (settings) => {
+const updateStatus = async (context, settings) => {
   console.log(settings);
   try {
     const hoursRemaining = await getRemainingHoursToday(settings, true);
-    displayHoursRemaining(hoursRemaining);
+    displayHoursRemaining(context, hoursRemaining);
   } catch (e) {
     // @todo Handle errors.
     console.error(e);

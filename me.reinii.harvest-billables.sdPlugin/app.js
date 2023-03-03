@@ -12,5 +12,5 @@ $SD.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }) =
 });
 
 actionUpdateStatus.onKeyUp(({ action, context, device, event, payload }) => {
-  updateStatus(payload.settings);
+  updateStatus(context, payload.settings);
 });
