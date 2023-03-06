@@ -2,7 +2,7 @@
 /// <reference path="libs/js/stream-deck.js" />
 
 import { updateStatus } from './status-update';
-import config from '../config';
+import config from '../config.js';
 
 const actionUpdateStatus = new Action(config.appName + '.status');
 

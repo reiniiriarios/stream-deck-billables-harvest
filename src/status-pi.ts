@@ -1,7 +1,7 @@
 /// <reference path="libs/js/property-inspector.js" />
 /// <reference path="libs/js/utils.js" />
 
-import config from '../config';
+import config from '../config.js';
 
 $PI.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }): void => {
   const { payload, context } = actionInfo;
