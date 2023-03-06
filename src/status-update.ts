@@ -1,11 +1,11 @@
-/// <reference path="api/forecast.js" />
-/// <reference path="api/harvest.js" />
-/// <reference path="display.js" />
+import { getForecastUserId, getProjects, getAssignments } from './api/forecast';
+import { getHarvestUserId, getTimeEntries } from './api/harvest';
+import { displayHoursRemaining } from './display';
 
 /**
  * Callback for Stream Deck action.
  */
-const updateStatus = async (context, settings) => {
+export const updateStatus = async (context, settings) => {
   console.log(settings);
   try {
     const hoursRemaining = await getRemainingHoursToday(settings, true);
@@ -14,8 +14,6 @@ const updateStatus = async (context, settings) => {
     // @todo Handle errors.
     console.error(e);
   }
-
-  // do things
 };
 
 /**

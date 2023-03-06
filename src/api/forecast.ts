@@ -5,7 +5,7 @@ const forecastUrl = 'https://api.forecastapp.com/';
  *
  * Fetches forecastUrl + path + ?arg1=val1&arg2=val2&etc
  */
-const getForecast = async (settings, path, args) => {
+export const getForecast = async (settings, path, args = null) => {
   let url = forecastUrl + path;
   if (args) {
     let params = Object.keys(args)
@@ -31,7 +31,7 @@ const getForecast = async (settings, path, args) => {
 /**
  * Get current user id.
  */
-const getForecastUserId = async (settings) => {
+export const getForecastUserId = async (settings) => {
   const userResponse = await getForecast(settings, 'whoami');
   return userResponse.current_user.id;
 };
@@ -39,7 +39,7 @@ const getForecastUserId = async (settings) => {
 /**
  * Get projects.
  */
-const getProjects = async (settings) => {
+export const getProjects = async (settings) => {
   let projects = [];
 
   // Get projects.
@@ -74,7 +74,7 @@ const getProjects = async (settings) => {
 /**
  * Get assignments from forecast.
  */
-const getAssignments = async (settings, userId, startEnd) => {
+export const getAssignments = async (settings, userId, startEnd) => {
   let assignments = [];
 
   const assignmentsResponse = await getForecast(settings, 'assignments', {

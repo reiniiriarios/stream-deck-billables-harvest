@@ -30,7 +30,7 @@ $PI.onDidReceiveSettings('me.reinii.harvest-billables.status', ({ payload }) => 
  * Provide window level functions to use in the external window
  * (this can be removed if the external window is not used)
  */
-window.sendToInspector = (data) => {
+(window as any).sendToInspector = (data) => {
   console.log(data);
 };
 

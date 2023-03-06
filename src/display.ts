@@ -55,7 +55,7 @@ const FONT_SIZE = 32;
 /**
  * Display the hours remaining.
  */
-const displayHoursRemaining = (context, hours) => {
+export const displayHoursRemaining = (context, hours) => {
   console.log(formatHours(hours), getStatusIcon(hours).color);
   // Canvas
   let canvas = document.createElement('canvas');

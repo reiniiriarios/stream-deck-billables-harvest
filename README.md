@@ -7,7 +7,13 @@ to let you know how much more billable time you have left for the day.
 
 This plugin is not yet in the Stream Deck app.
 
-To install this plugin manually, copy the `me.reinii.harvest-billables.sdPlugin` directory to
+To build, run:
+
+```sh
+npm run build
+```
+
+To install this plugin manually, copy the `build/me.reinii.harvest-billables.sdPlugin` directory to
 `~/Library/Application Support/com.elgato.StreamDeck/Plugins` on macOS or
 `%appdata%\Elgato\StreamDeck\Plugins\` on Windows.
 

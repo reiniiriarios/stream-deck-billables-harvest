@@ -5,7 +5,7 @@ const harvestUrl = 'https://api.harvestapp.com/v2/';
  *
  * Fetches harvestUrl + path + ?arg1=val1&arg2=val2&etc
  */
-const getHarvest = async (settings, path, args) => {
+export const getHarvest = async (settings, path, args = null) => {
   let url = harvestUrl + path;
   if (args) {
     let params = Object.keys(args)
@@ -35,7 +35,7 @@ const getHarvest = async (settings, path, args) => {
 /**
  * Get current user id.
  */
-const getHarvestUserId = async (settings) => {
+export const getHarvestUserId = async (settings) => {
   const user = await getHarvest(settings, 'users/me');
   return user.id;
 };
@@ -48,7 +48,7 @@ const getHarvestUserId = async (settings) => {
  * @param {StartEndDates} startEnd
  * @returns {Promise<TimeEntry[]>}
  */
-const getTimeEntries = async (settings, userId, startEnd) => {
+export const getTimeEntries = async (settings, userId, startEnd) => {
   let timeEntries = [];
 
   // Get tracked hours.
