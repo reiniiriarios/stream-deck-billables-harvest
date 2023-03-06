@@ -1,14 +1,11 @@
 /// <reference path="libs/js/property-inspector.js" />
 /// <reference path="libs/js/utils.js" />
 
-$PI.onConnected((jsn) => {
+$PI.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }): void => {
+  const { payload, context } = actionInfo;
   const form = document.getElementById('property-inspector');
 
-  const { actionInfo, appInfo, connection, messageType, port, uuid } = jsn;
-  const { payload, context } = actionInfo;
-  const { settings } = payload;
-
-  Utils.setFormValue(settings, form);
+  Utils.setFormValue(payload.settings, form);
 
   form.addEventListener(
     'input',
@@ -19,10 +16,10 @@ $PI.onConnected((jsn) => {
   );
 });
 
-$PI.onDidReceiveGlobalSettings(({ payload }) => {
+$PI.onDidReceiveGlobalSettings(({ payload }): void => {
   console.log('onDidReceiveGlobalSettings', payload);
 });
-$PI.onDidReceiveSettings('me.reinii.harvest-billables.status', ({ payload }) => {
+$PI.onDidReceiveSettings('me.reinii.harvest-billables.status', ({ payload }): void => {
   console.log('onDidReceiveSettings', payload);
 });
 
@@ -30,7 +27,7 @@ $PI.onDidReceiveSettings('me.reinii.harvest-billables.status', ({ payload }) => 
  * Provide window level functions to use in the external window
  * (this can be removed if the external window is not used)
  */
-(window as any).sendToInspector = (data) => {
+(window as any).sendToInspector = (data: any): void => {
   console.log(data);
 };
 

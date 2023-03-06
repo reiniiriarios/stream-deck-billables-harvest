@@ -2,8 +2,11 @@
 
 /**
  * Get the hours formatted for display.
+ *
+ * @param {number} hours
+ * @returns {string} formatted hours
  */
-const formatHours = (hours) => {
+const formatHours = (hours: number): string => {
   if (Math.abs(hours) < 1) return (hours >= 0 ? '+' : '') + Math.round(hours * 60) + 'm';
   return (hours >= 0 ? '+' : '') + hours.toFixed(2) + 'h';
 };
@@ -34,8 +37,11 @@ const ICONS = {
 
 /**
  * Get the icon to display based on hours.
+ *
+ * @param {number} hours
+ * @returns {{ path: string; color: string }} icon data
  */
-const getStatusIcon = (hours) => {
+const getStatusIcon = (hours: number): { path: string; color: string } => {
   if (hours >= 0.5) {
     return ICONS.stopReally;
   }
@@ -54,8 +60,11 @@ const FONT_SIZE = 32;
 
 /**
  * Display the hours remaining.
+ *
+ * @param {string} context
+ * @param {number} hours
  */
-export const displayHoursRemaining = (context, hours) => {
+export const displayHoursRemaining = (context: string, hours: number): void => {
   console.log(formatHours(hours), getStatusIcon(hours).color);
   // Canvas
   let canvas = document.createElement('canvas');
