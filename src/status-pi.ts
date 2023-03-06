@@ -1,6 +1,8 @@
 /// <reference path="libs/js/property-inspector.js" />
 /// <reference path="libs/js/utils.js" />
 
+import config from '../config';
+
 $PI.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }): void => {
   const { payload, context } = actionInfo;
   const form = document.getElementById('property-inspector');
@@ -19,7 +21,7 @@ $PI.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }): 
 $PI.onDidReceiveGlobalSettings(({ payload }): void => {
   console.log('onDidReceiveGlobalSettings', payload);
 });
-$PI.onDidReceiveSettings('me.reinii.harvest-billables.status', ({ payload }): void => {
+$PI.onDidReceiveSettings(config.appName + '.status', ({ payload }): void => {
   console.log('onDidReceiveSettings', payload);
 });
 

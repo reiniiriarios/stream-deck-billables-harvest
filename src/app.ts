@@ -2,8 +2,9 @@
 /// <reference path="libs/js/stream-deck.js" />
 
 import { updateStatus } from './status-update';
+import config from '../config';
 
-const actionUpdateStatus = new Action('me.reinii.harvest-billables.status');
+const actionUpdateStatus = new Action(config.appName + '.status');
 
 /**
  * The first event fired when Stream Deck starts

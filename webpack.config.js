@@ -1,10 +1,11 @@
-const CopyPlugin = require('copy-webpack-plugin')
-const TerserPlugin = require('terser-webpack-plugin')
+const config = require('./config');
+const CopyPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   entry: {
     app: './src/app.ts',
-    "status-pi": './src/status-pi.ts',
+    'status-pi': './src/status-pi.ts',
   },
   resolve: {
     extensions: ['.ts'],
@@ -21,20 +22,22 @@ module.exports = {
   target: 'web',
   output: {
     filename: '[name].js',
-    path: __dirname + '/build/me.reinii.harvest-billables.sdPlugin',
+    path: __dirname + '/build/' + config.appName + '.sdPlugin',
     clean: true,
   },
   optimization: {
-    minimizer: [new TerserPlugin({
-      terserOptions: {
-        compress: {
-          unused: false
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            unused: false,
+          },
+          mangle: false,
+          keep_classnames: true,
+          keep_fnames: true,
         },
-        mangle: false,
-        keep_classnames: true,
-        keep_fnames: true
-      }
-  })],
+      }),
+    ],
   },
   plugins: [
     new CopyPlugin({
@@ -48,4 +51,4 @@ module.exports = {
       ],
     }),
   ],
-}
+};
