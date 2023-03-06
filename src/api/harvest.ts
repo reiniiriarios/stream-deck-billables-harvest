@@ -1,11 +1,22 @@
+import { Settings, StartEndDates, TimeEntry } from '../types';
+
 const harvestUrl = 'https://api.harvestapp.com/v2/';
 
 /**
  * Fetch data from the harvest api.
  *
  * Fetches harvestUrl + path + ?arg1=val1&arg2=val2&etc
+ *
+ * @param {Settings} settings
+ * @param {string} path
+ * @param {object} args
+ * @returns {Promise<any>} json response
  */
-export const getHarvest = async (settings, path, args = null) => {
+export const getHarvest = async (
+  settings: Settings,
+  path: string,
+  args: object = null
+): Promise<any> => {
   let url = harvestUrl + path;
   if (args) {
     let params = Object.keys(args)
@@ -34,8 +45,11 @@ export const getHarvest = async (settings, path, args = null) => {
 
 /**
  * Get current user id.
+ *
+ * @param {Settings} settings
+ * @returns {Promise<number>}
  */
-export const getHarvestUserId = async (settings) => {
+export const getHarvestUserId = async (settings: Settings): Promise<number> => {
   const user = await getHarvest(settings, 'users/me');
   return user.id;
 };
@@ -48,7 +62,11 @@ export const getHarvestUserId = async (settings) => {
  * @param {StartEndDates} startEnd
  * @returns {Promise<TimeEntry[]>}
  */
-export const getTimeEntries = async (settings, userId, startEnd) => {
+export const getTimeEntries = async (
+  settings: Settings,
+  userId: number,
+  startEnd: StartEndDates
+): Promise<TimeEntry[]> => {
   let timeEntries = [];
 
   // Get tracked hours.
@@ -64,7 +82,7 @@ export const getTimeEntries = async (settings, userId, startEnd) => {
     typeof trackedHoursResponse.time_entries !== 'undefined' &&
     trackedHoursResponse.time_entries.length
   ) {
-    trackedHoursResponse.time_entries.forEach((entry) => {
+    trackedHoursResponse.time_entries.forEach((entry: TimeEntry) => {
       timeEntries.push(entry);
     });
   }

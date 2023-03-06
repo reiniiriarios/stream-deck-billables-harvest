@@ -1,11 +1,22 @@
+import { Assignment, Project, RemainingBudgetedHours, Settings, StartEndDates } from '../types';
+
 const forecastUrl = 'https://api.forecastapp.com/';
 
 /**
  * Fetch data from the forecast api.
  *
  * Fetches forecastUrl + path + ?arg1=val1&arg2=val2&etc
+ *
+ * @param {Settings} settings
+ * @param {string} path
+ * @param {object} args
+ * @returns {Promise<any>} json response
  */
-export const getForecast = async (settings, path, args = null) => {
+export const getForecast = async (
+  settings: Settings,
+  path: string,
+  args: object = null
+): Promise<any> => {
   let url = forecastUrl + path;
   if (args) {
     let params = Object.keys(args)
@@ -30,21 +41,27 @@ export const getForecast = async (settings, path, args = null) => {
 
 /**
  * Get current user id.
+ *
+ * @param {Settings} settings
+ * @returns {Promise<number>}
  */
-export const getForecastUserId = async (settings) => {
+export const getForecastUserId = async (settings: Settings): Promise<number> => {
   const userResponse = await getForecast(settings, 'whoami');
   return userResponse.current_user.id;
 };
 
 /**
  * Get projects.
+ *
+ * @param {Settings} settings
+ * @returns {Promise<Project[]>}
  */
-export const getProjects = async (settings) => {
+export const getProjects = async (settings: Settings): Promise<Project[]> => {
   let projects = [];
 
   // Get projects.
   const projectsResponse = await getForecast(settings, 'projects');
-  projectsResponse.projects.forEach((project) => {
+  projectsResponse.projects.forEach((project: Project) => {
     if (!project.archived) {
       projects[project.id] = project;
     }
@@ -59,7 +76,7 @@ export const getProjects = async (settings) => {
     typeof hoursResponse.remaining_budgeted_hours !== 'undefined' &&
     hoursResponse.remaining_budgeted_hours.length
   ) {
-    hoursResponse.remaining_budgeted_hours.forEach((hours) => {
+    hoursResponse.remaining_budgeted_hours.forEach((hours: RemainingBudgetedHours) => {
       if (typeof projects[hours.project_id] !== 'undefined') {
         projects[hours.project_id].budget_by = hours.budget_by;
         projects[hours.project_id].billable = hours.budget_by !== 'none';
@@ -73,8 +90,17 @@ export const getProjects = async (settings) => {
 
 /**
  * Get assignments from forecast.
+ *
+ * @param {Settings} settings
+ * @param {number} userId
+ * @param {StartEndDates} startEnd
+ * @returns {Promise<Assignment[]>}
  */
-export const getAssignments = async (settings, userId, startEnd) => {
+export const getAssignments = async (
+  settings: Settings,
+  userId: number,
+  startEnd: StartEndDates
+): Promise<Assignment[]> => {
   let assignments = [];
 
   const assignmentsResponse = await getForecast(settings, 'assignments', {
