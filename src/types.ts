@@ -152,6 +152,46 @@ export class Assignment {
   active_on_days_off?: boolean;
 }
 
+export class TaskAssignment {
+  id: number;
+  billable: boolean;
+  is_active: boolean;
+  created_at: string; // 2023-03-07T17:36:54Z
+  updated_at: string; // 2023-03-07T17:36:54Z
+  hourly_rate: number;
+  budget: number;
+  project?: {
+    id: number;
+    name: string;
+    code: string;
+  };
+  task: {
+    id: number;
+    name: string;
+  };
+}
+
+export class ProjectAssignment {
+  id: number;
+  is_active: boolean;
+  is_project_manager: boolean;
+  use_default_rates: boolean;
+  hourly_rate: number;
+  budget: number;
+  created_at: string; // 2023-03-07T17:36:54Z
+  updated_at: string; // 2023-03-07T17:36:54Z
+  project: {
+    id: number;
+    name: string;
+    code: string;
+  };
+  client: {
+    id: number;
+    name: string;
+  };
+  task_assignments: TaskAssignment[];
+}
+
 // Date objects with strings compatible for forecast and harvest apis.
 export interface StartEndDates {
   start: {

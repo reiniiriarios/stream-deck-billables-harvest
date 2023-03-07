@@ -1,4 +1,4 @@
-import { Settings, StartEndDates, TimeEntry } from '../types';
+import { ProjectAssignment, Settings, StartEndDates, TimeEntry } from '../types';
 
 const harvestUrl = 'https://api.harvestapp.com/v2/';
 
@@ -36,7 +36,7 @@ export const getHarvest = async (
   }).then((res) => {
     if (res.status != 200) {
       // Will return a 404 [sic] on invalid authentication.
-      throw new Error('Error fetching data, check authentication tokens.');
+      throw new Error('Error fetching data, check authentication tokens. Response: ' + res.status);
     }
     return res.json();
   });
@@ -67,7 +67,7 @@ export const getTimeEntries = async (
   userId: number,
   startEnd: StartEndDates
 ): Promise<TimeEntry[]> => {
-  let timeEntries = [];
+  let timeEntries: TimeEntry[] = [];
 
   // Get tracked hours.
   const trackedHoursResponse = await getHarvest(settings, 'time_entries', {
@@ -89,3 +89,36 @@ export const getTimeEntries = async (
 
   return timeEntries;
 };
+
+/**
+ * Get user project assignments from harvest.
+ *
+ * You must be an Administrator or Manager with permission to create and edit tasks in order to
+ * interact with the /v2/tasks, /v2/user_assignments, or /v2/task_assignments endpoints. The
+ * /v2/users/{USER_ID}/project_assignments endpoint is available for all users for their own
+ * data by using `me` as the user id. Accessing data via user id at this endpoint requires
+ * Administrator or Manager permissions.
+ *
+ * @param {Settings} settings
+ * @returns {Promise<ProjectAssignment[]>}
+ */
+export const getUserProjectAssignments = async (settings: Settings): Promise<ProjectAssignment[]> => {
+  let projectAssignments: ProjectAssignment[] = [];
+
+  const projectAssignmentsResponse = await getHarvest(settings, 'users/me/project_assignments', {
+    is_active: true,
+  });
+  if (typeof projectAssignmentsResponse.error !== 'undefined') {
+    throw new Error(projectAssignmentsResponse.error_description);
+  }
+  if (
+    typeof projectAssignmentsResponse.project_assignments !== 'undefined' &&
+    projectAssignmentsResponse.project_assignments.length
+  ) {
+    projectAssignmentsResponse.project_assignments.forEach((assignment: ProjectAssignment) => {
+      projectAssignments.push(assignment);
+    });
+  }
+
+  return projectAssignments;
+}
