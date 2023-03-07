@@ -24,19 +24,6 @@
   ],
   "Actions": [
     {
-      "Name": "Billables Status",
-      "Controllers": ["Keypad"],
-      "Tooltip": "Show current billables status.",
-      "UUID": "me.reinii.harvest-billables.status",
-      "Icon": "images/icon-default",
-      "States": [
-        {
-          "Image": "images/icon-default"
-        }
-      ],
-      "PropertyInspectorPath": "status-pi.html"
-    },
-    {
       "Name": "Timer",
       "Controllers": ["Keypad"],
       "Tooltip": "Control a specific timer.",
@@ -48,6 +35,19 @@
         }
       ],
       "PropertyInspectorPath": "timer-pi.html"
+    },
+    {
+      "Name": "Billables Status",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Show current billables status.",
+      "UUID": "me.reinii.harvest-billables.status",
+      "Icon": "images/icon-default",
+      "States": [
+        {
+          "Image": "images/icon-default"
+        }
+      ],
+      "PropertyInspectorPath": "status-pi.html"
     }
   ]
 }
