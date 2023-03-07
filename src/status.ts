@@ -1,5 +1,6 @@
 import { getForecastUserId, getProjects, getAssignments } from './api/forecast';
 import { getHarvestUserId, getTimeEntries } from './api/harvest';
+import { getStartEndDates } from './common';
 import { displayHoursRemaining } from './display';
 import { Assignment, HoursSchedule, Project, Settings, StartEndDates, TimeEntry } from './types';
 
@@ -57,34 +58,6 @@ export const getRemainingHoursToday = async (
   const loggedHours: number = getTotalLoggedHours(timeEntries, 0, billable);
   // Calculate how far ahead or behind the user is for billable hours.
   return loggedHours - assignedHours;
-};
-
-/**
- * Get start and end dates of current week in ISO 8601.
- *
- * @returns {StartEndDates}
- */
-export const getStartEndDates = (): StartEndDates => {
-  let currentDate = new Date();
-  // first day of the week = current day of the month - current day of the week
-  const firstDay = currentDate.getDate() - currentDate.getDay();
-  const lastDay = firstDay + 6;
-
-  let start = new Date(currentDate);
-  let end = new Date(currentDate);
-  start.setDate(firstDay);
-  end.setDate(lastDay);
-
-  return {
-    start: {
-      date: start,
-      iso: start.toISOString(),
-    },
-    end: {
-      date: end,
-      iso: end.toISOString(),
-    },
-  };
 };
 
 /**

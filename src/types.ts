@@ -3,6 +3,7 @@ export interface Settings {
   harvestAccountToken: string;
   harvestAccountId: string;
   forecastAccountId: string;
+  task?: string;
 }
 
 // Response from Harvest, with additional properties.

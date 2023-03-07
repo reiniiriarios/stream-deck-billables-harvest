@@ -2,7 +2,7 @@ import { describe, expect, test } from '@jest/globals';
 import { Assignment, Project, StartEndDates } from '../src/types';
 import testSettings from './settings';
 import { getAssignments, getForecastUserId, getProjects } from '../src/api/forecast';
-import { getStartEndDates } from '../src/status';
+import { getStartEndDates } from '../src/common';
 
 describe('get forecast data', () => {
   let userId: number;

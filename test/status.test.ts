@@ -4,11 +4,11 @@ import { fakeAssignments, fakeProject, fakeStartEnd, fakeTimeEntries } from './t
 import {
   getTotalLoggedHours,
   getLoggedHoursSchedule,
-  getStartEndDates,
   getAssignedHoursSchedule,
   updateStatus,
 } from '../src/status';
 import testSettings from './settings';
+import { getStartEndDates } from '../src/common';
 
 describe('update status', () => {
   test('get total logged hours', () => {

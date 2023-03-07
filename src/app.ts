@@ -3,10 +3,10 @@
 
 import { updateStatus } from './status';
 import config from '../config.js';
-import { updateTimer } from './timer';
+import { changeTimer, updateTimer } from './timer';
 
-const actionUpdateStatus = new Action(config.appName + '.status');
-const actionUpdateTimer = new Action(config.appName + '.timer');
+const actionStatus = new Action(config.appName + '.status');
+const actionTimer = new Action(config.appName + '.timer');
 
 /**
  * The first event fired when Stream Deck starts
@@ -15,7 +15,7 @@ $SD.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }): 
   console.log('Stream Deck connected!');
 });
 
-actionUpdateStatus.onWillAppear(({ action, context, device, event, payload }): void => {
+actionStatus.onWillAppear(({ action, context, device, event, payload }): void => {
   const intervalMinutes = parseInt(payload.settings.fetchInterval);
   const interval = (intervalMinutes < 1 ? 1 : intervalMinutes) * 60000;
   updateStatus(context, payload.settings);
@@ -24,19 +24,19 @@ actionUpdateStatus.onWillAppear(({ action, context, device, event, payload }): v
   }, interval);
 });
 
-actionUpdateStatus.onKeyUp(({ action, context, device, event, payload }): void => {
+actionStatus.onKeyUp(({ action, context, device, event, payload }): void => {
   updateStatus(context, payload.settings);
 });
 
-actionUpdateTimer.onWillAppear(({ action, context, device, event, payload }): void => {
+actionTimer.onWillAppear(({ action, context, device, event, payload }): void => {
   const intervalMinutes = parseInt(payload.settings.fetchInterval);
   const interval = (intervalMinutes < 1 ? 1 : intervalMinutes) * 60000;
-  updateTimer(context);
+  updateTimer(context, payload.settings);
   setInterval(() => {
-    updateTimer(context);
+    updateTimer(context, payload.settings);
   }, interval);
 });
 
-actionUpdateTimer.onKeyUp(({ action, context, device, event, payload }): void => {
-  updateTimer(context);
+actionTimer.onKeyUp(({ action, context, device, event, payload }): void => {
+  changeTimer(context, payload.settings);
 });

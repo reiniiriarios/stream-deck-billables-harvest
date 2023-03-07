@@ -12,6 +12,17 @@ const formatHours = (hours: number): string => {
 };
 
 /**
+ * Get a timer's hours formatted for display.
+ *
+ * @param {number} hours
+ * @returns {string} formatted hours
+ */
+const formatTimer = (hours: number): string => {
+  if (hours < 1) return Math.round(hours * 60) + 'm';
+  return hours.toFixed(2) + 'h';
+};
+
+/**
  * The icon svg data.
  *
  * Easy editor: https://yqnn.github.io/svg-path-editor/
@@ -32,6 +43,14 @@ const ICONS = {
   success: {
     path: 'M 114 19 L 65 68 L 39 42 L 31 50 l 34 34 l 57 -57 z',
     color: '#0cc952',
+  },
+  timerRunning: {
+    path: 'M 60.4 39 C 58 37.4 54.8 38.2 54.8 42.2 v 49.6 c 0 4 3.2 4 5.6 2.4 l 35.2 -24 C 98 68.6 98 65.4 95.6 63.8 l -35.2 -24.8 z M 86.8 67 l -24.8 17.6 V 49.4 L 86.8 67 z',
+    color: '#fa5c00',
+  },
+  timerStopped: {
+    path: 'M 57.58 37.52 H 62.9 a 3.04 3.04 90 0 1 3.04 3.04 V 86.92 a 3.04 3.04 90 0 1 -3.04 3.04 H 57.58 a 3.04 3.04 90 0 1 -3.04 -3.04 V 40.56 A 3.04 3.04 90 0 1 57.58 37.52 Z m 23.56 52.44 h 5.32 a 3.04 3.04 90 0 0 3.04 -3.04 V 40.56 a 3.04 3.04 90 0 0 -3.04 -3.04 H 81.14 a 3.04 3.04 90 0 0 -3.04 3.04 V 86.92 A 3.04 3.04 90 0 0 81.14 89.96 Z',
+    color: '#575757',
   },
 };
 
@@ -65,7 +84,6 @@ const FONT_SIZE = 32;
  * @param {number} hours
  */
 export const displayHoursRemaining = (context: string, hours: number): void => {
-  console.log(formatHours(hours), getStatusIcon(hours).color);
   // Canvas
   let canvas = document.createElement('canvas');
   canvas.width = CANVAS_SIZE;
@@ -85,6 +103,38 @@ export const displayHoursRemaining = (context: string, hours: number): void => {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(formatHours(hours), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.8);
+
+  const finalImage = canvas.toDataURL('image/png');
+  $SD.setImage(context, finalImage);
+};
+
+/**
+ * Display a timer's status.
+ *
+ * @param {string} context
+ * @param {boolean} is_running
+ * @param {number} time
+ */
+export const displayTimerStatus = (context: string, is_running: boolean, time: number): void => {
+  // Canvas
+  let canvas = document.createElement('canvas');
+  canvas.width = CANVAS_SIZE;
+  canvas.height = CANVAS_SIZE;
+  let ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Icon
+  const icon = is_running ? ICONS.timerRunning : ICONS.timerStopped;
+  const path = new Path2D(icon.path);
+  ctx.fillStyle = icon.color;
+  ctx.fill(path);
+
+  // Text
+  ctx.fillStyle = TEXT_COLOR;
+  ctx.font = `${FONT_SIZE}px Helvetica, Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(formatTimer(time), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.8);
 
   const finalImage = canvas.toDataURL('image/png');
   $SD.setImage(context, finalImage);

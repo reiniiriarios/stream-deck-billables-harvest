@@ -58,9 +58,8 @@ const setTaskOptions = async (settings: Settings) => {
       let option = document.createElement('option');
       option.text = task_assignment.task.name;
       option.value = JSON.stringify({
-        project: project_assignment.project.id,
-        task_assignment: task_assignment.id,
-        task: task_assignment.task.id,
+        id: task_assignment.task.id,
+        projectId: project_assignment.project.id,
       });
       optgroup.appendChild(option);
     });

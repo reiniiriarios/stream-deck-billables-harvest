@@ -1,3 +1,4 @@
+import { getTodayUTCDate } from '../common';
 import { ProjectAssignment, Settings, StartEndDates, TimeEntry } from '../types';
 
 const harvestUrl = 'https://api.harvestapp.com/v2/';
@@ -34,12 +35,86 @@ export const getHarvest = async (
       'Harvest-Account-Id': settings.harvestAccountId,
     },
   }).then((res) => {
-    if (res.status != 200) {
-      // Will return a 404 [sic] on invalid authentication.
+    if (res.status < 200 || res.status >= 300) {
+      console.error(res);
       throw new Error('Error fetching data, check authentication tokens. Response: ' + res.status);
     }
     return res.json();
   });
+  if (typeof response.error !== 'undefined') {
+    console.error(response.error_description);
+    throw new Error(response.error_description);
+  }
+
+  return response;
+};
+
+/**
+ * Post data to harvest.
+ *
+ * Posts data to harvestUrl + path.
+ *
+ * @param {Settings} settings
+ * @param {string} path
+ * @param {object} data
+ * @returns {Promise<any>} json response
+ */
+export const postHarvest = async (settings: Settings, path: string, data: object): Promise<any> => {
+  let url = harvestUrl + path;
+  console.log(url, data);
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      Authorization: `Bearer ${settings.harvestAccountToken}`,
+      'Harvest-Account-Id': settings.harvestAccountId,
+    },
+    body: JSON.stringify(data),
+  }).then((res) => {
+    if (res.status < 200 || res.status >= 300) {
+      console.error(res);
+      throw new Error('Error posting data, check authentication tokens. Response: ' + res.status);
+    }
+    return res.json();
+  });
+  if (typeof response.error !== 'undefined') {
+    console.error(response.error_description);
+    throw new Error(response.error_description);
+  }
+
+  return response;
+};
+
+/**
+ * Patch an endpoint on the harvest api.
+ *
+ * Send a patch request to harvestUrl + path.
+ *
+ * @param {Settings} settings
+ * @param {string} path
+ * @returns {Promise<any>} json response
+ */
+export const patchHarvest = async (settings: Settings, path: string): Promise<any> => {
+  let url = harvestUrl + path;
+  const response = await fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      Authorization: `Bearer ${settings.harvestAccountToken}`,
+      'Harvest-Account-Id': settings.harvestAccountId,
+    },
+  }).then((res) => {
+    if (res.status < 200 || res.status >= 300) {
+      console.error(res);
+      throw new Error('Error posting data, check authentication tokens. Response: ' + res.status);
+    }
+    return res.json();
+  });
+  if (typeof response.error !== 'undefined') {
+    console.error(response.error_description);
+    throw new Error(response.error_description);
+  }
+
   return response;
 };
 
@@ -75,9 +150,6 @@ export const getTimeEntries = async (
     from: startEnd.start.iso,
     to: startEnd.end.iso,
   });
-  if (typeof trackedHoursResponse.error !== 'undefined') {
-    throw new Error(trackedHoursResponse.error_description);
-  }
   if (
     typeof trackedHoursResponse.time_entries !== 'undefined' &&
     trackedHoursResponse.time_entries.length
@@ -88,6 +160,93 @@ export const getTimeEntries = async (
   }
 
   return timeEntries;
+};
+
+/**
+ * Get specific time entry from harvest.
+ *
+ * @param {Settings} settings
+ * @param {number} userId
+ * @param {number} projectId
+ * @param {number} taskId
+ * @returns {Promise<TimeEntry>}
+ */
+export const getTimeEntryForTask = async (
+  settings: Settings,
+  userId: number,
+  projectId: number,
+  taskId: number
+): Promise<TimeEntry> => {
+  // Get tracked hours.
+  const today = getTodayUTCDate();
+  const timeEntriesResponse = await getHarvest(settings, 'time_entries', {
+    user_id: userId,
+    project_id: projectId,
+    task_id: taskId,
+    from: today,
+    to: today,
+  });
+  if (
+    typeof timeEntriesResponse.time_entries !== 'undefined' &&
+    timeEntriesResponse.time_entries.length
+  ) {
+    // Return the first one found.
+    // @todo Track this differently?
+    return timeEntriesResponse.time_entries.pop();
+  }
+
+  return null;
+};
+
+/**
+ * Create a time entry for a task.
+ *
+ * @param {Settings} settings
+ * @param {number} projectId
+ * @param {number} taskId
+ * @returns {Promise<TimeEntry>}
+ */
+export const createTimeEntry = async (
+  settings: Settings,
+  projectId: number,
+  taskId: number
+): Promise<TimeEntry> => {
+  const newTimeEntry = await postHarvest(settings, 'time_entries', {
+    project_id: projectId,
+    task_id: taskId,
+    spent_date: getTodayUTCDate(),
+  });
+  if (typeof newTimeEntry.id === 'undefined' || !newTimeEntry.id) {
+    throw new Error('Error creating time entry.');
+  }
+
+  return newTimeEntry;
+};
+
+/**
+ * Restart a stopped time entry.
+ *
+ * @param {Settings} settings
+ * @param {number} timeEntryId
+ */
+export const restartTimeEntry = async (settings: Settings, timeEntryId: number) => {
+  const res = await patchHarvest(settings, 'time_entries/' + timeEntryId + '/restart');
+  if (typeof res.id === 'undefined' || !res.id) {
+    throw new Error('Possible error restarting time entry.');
+  }
+};
+
+/**
+ * Stop a stopped time entry.
+ *
+ * @param {Settings} settings
+ * @param {number} timeEntryId
+ */
+export const stopTimeEntry = async (settings: Settings, timeEntryId: number) => {
+  const res = await patchHarvest(settings, 'time_entries/' + timeEntryId + '/stop');
+  if (typeof res.id === 'undefined' || !res.id) {
+    throw new Error('Possible error stopping time entry.');
+  }
 };
 
 /**
@@ -102,7 +261,9 @@ export const getTimeEntries = async (
  * @param {Settings} settings
  * @returns {Promise<ProjectAssignment[]>}
  */
-export const getUserProjectAssignments = async (settings: Settings): Promise<ProjectAssignment[]> => {
+export const getUserProjectAssignments = async (
+  settings: Settings
+): Promise<ProjectAssignment[]> => {
   let projectAssignments: ProjectAssignment[] = [];
 
   const projectAssignmentsResponse = await getHarvest(settings, 'users/me/project_assignments', {
@@ -121,4 +282,4 @@ export const getUserProjectAssignments = async (settings: Settings): Promise<Pro
   }
 
   return projectAssignments;
-}
+};

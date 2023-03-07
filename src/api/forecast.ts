@@ -34,6 +34,10 @@ export const getForecast = async (
       'Forecast-Account-Id': settings.forecastAccountId,
     },
   }).then((res) => {
+    if (res.status < 200 || res.status >= 300) {
+      // Will return a 404 [sic] on invalid authentication.
+      throw new Error('Error fetching data, check authentication tokens. Response: ' + res.status);
+    }
     return res.json();
   });
   return response;
