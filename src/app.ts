@@ -1,10 +1,12 @@
 /// <reference path="libs/js/action.js" />
 /// <reference path="libs/js/stream-deck.js" />
 
-import { updateStatus } from './status-update';
+import { updateStatus } from './status';
 import config from '../config.js';
+import { updateTimer } from './timer';
 
 const actionUpdateStatus = new Action(config.appName + '.status');
+const actionUpdateTimer = new Action(config.appName + '.timer');
 
 /**
  * The first event fired when Stream Deck starts
@@ -24,4 +26,17 @@ actionUpdateStatus.onWillAppear(({ action, context, device, event, payload }): v
 
 actionUpdateStatus.onKeyUp(({ action, context, device, event, payload }): void => {
   updateStatus(context, payload.settings);
+});
+
+actionUpdateTimer.onWillAppear(({ action, context, device, event, payload }): void => {
+  const intervalMinutes = parseInt(payload.settings.fetchInterval);
+  const interval = (intervalMinutes < 1 ? 1 : intervalMinutes) * 60000;
+  updateTimer(context);
+  setInterval(() => {
+    updateTimer(context);
+  }, interval);
+});
+
+actionUpdateTimer.onKeyUp(({ action, context, device, event, payload }): void => {
+  updateTimer(context);
 });

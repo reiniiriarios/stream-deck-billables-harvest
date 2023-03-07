@@ -7,7 +7,7 @@ import {
   getStartEndDates,
   getAssignedHoursSchedule,
   updateStatus,
-} from '../src/status-update';
+} from '../src/status';
 import testSettings from './settings';
 
 describe('update status', () => {

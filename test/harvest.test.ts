@@ -2,7 +2,7 @@ import { describe, expect, test } from '@jest/globals';
 import { TimeEntry } from '../src/types';
 import testSettings from './settings';
 import { getHarvestUserId, getTimeEntries } from '../src/api/harvest';
-import { getStartEndDates } from '../src/status-update';
+import { getStartEndDates } from '../src/status';
 
 describe('get harvest data', () => {
   let timeEntries: TimeEntry[] = [];

@@ -6,6 +6,7 @@ module.exports = {
   entry: {
     app: './src/app.ts',
     'status-pi': './src/status-pi.ts',
+    'timer-pi': './src/timer-pi.ts',
   },
   resolve: {
     extensions: ['.ts'],

@@ -35,6 +35,19 @@
         }
       ],
       "PropertyInspectorPath": "status-pi.html"
+    },
+    {
+      "Name": "Timer",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Control a specific timer.",
+      "UUID": "me.reinii.harvest-billables.timer",
+      "Icon": "images/icon-default",
+      "States": [
+        {
+          "Image": "images/icon-default"
+        }
+      ],
+      "PropertyInspectorPath": "timer-pi.html"
     }
   ]
 }

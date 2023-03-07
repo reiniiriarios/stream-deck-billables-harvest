@@ -21,7 +21,8 @@ To install this plugin manually, copy the `build/me.reinii.harvest-billables.sdP
 
 You'll need to generate an API token in [Harvest][harvest-api] as well
 as finding your Harvest Account ID and Forecast Account ID. Both your Harvest and Forecast IDs
-can be found under the API token details after [creating it][harvest-api].
+can be found under the API token details after [creating it][harvest-api]. These two additional
+ids are necessary as they refer to your organization and not your user account.
 
 [stream-deck]: https://www.elgato.com/en/welcome-to-stream-deck
 [harvest]: https://www.getharvest.com/
