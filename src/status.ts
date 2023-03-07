@@ -4,8 +4,11 @@ import { displayHoursRemaining } from './display';
 import { Assignment, HoursSchedule, Project, Settings, StartEndDates, TimeEntry } from './types';
 
 /**
+ * Update billable hours status.
+ *
  * Callback for Stream Deck action.
  *
+ * @param {string} context
  * @param {Settings} settings
  */
 export const updateStatus = async (context: string, settings: Settings) => {
@@ -19,6 +22,7 @@ export const updateStatus = async (context: string, settings: Settings) => {
 };
 
 /**
+ * Get remaining hours today.
  *
  * @param {Settings} settings
  * @param {boolean} billable; null = all entries, true = billable entries only, false = non-billable
