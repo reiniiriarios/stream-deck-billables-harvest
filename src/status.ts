@@ -33,18 +33,48 @@ export const getRemainingHoursToday = async (
   settings: Settings,
   billable: boolean = null
 ): Promise<number> => {
-  // Get the start and end dates for this time range (current work week).
   const startEnd: StartEndDates = getStartEndDates();
-  // Get the current user id.
+  const loggedHours = getLoggedHours(settings, startEnd, billable);
+  const assignedHours = getAssignedHours(settings, startEnd, billable);
+  return (await loggedHours) - (await assignedHours);
+};
+
+/**
+ * Get logged hours for range of dates.
+ *
+ * @param {Settings} settings
+ * @param {StartEndDates} startEnd
+ * @param {boolean} billable; null = all entries, true = billable entries only, false = non-billable
+ * @returns {Promise<number>} hours
+ */
+export const getLoggedHours = async (
+  settings: Settings,
+  startEnd: StartEndDates,
+  billable: boolean = null
+): Promise<number> => {
   const userIdHarvest: number = await getHarvestUserId(settings);
-  const userIdForecast: number = await getForecastUserId(settings);
-  // Get the current logged time entries from harvest.
   const timeEntries: TimeEntry[] = await getTimeEntries(settings, userIdHarvest, startEnd);
-  // Get assignment data from forecast.
+  const loggedHours: number = getTotalLoggedHours(timeEntries, 0, billable);
+
+  return loggedHours;
+};
+
+/**
+ * Get assigned hours for range of dates.
+ *
+ * @param {Settings} settings
+ * @param {StartEndDates} startEnd
+ * @param {boolean} billable; null = all entries, true = billable entries only, false = non-billable
+ * @returns {Promise<number>} hours
+ */
+export const getAssignedHours = async (
+  settings: Settings,
+  startEnd: StartEndDates,
+  billable: boolean = null
+): Promise<number> => {
+  const userIdForecast: number = await getForecastUserId(settings);
   const assignments: Assignment[] = await getAssignments(settings, userIdForecast, startEnd);
-  // Get project information from forecast.
   const projects: Project[] = await getProjects(settings);
-  // Calculate the assigned hours schedule for this week.
   const assignedSchedule: HoursSchedule = getAssignedHoursSchedule(
     assignments,
     startEnd,
@@ -52,12 +82,9 @@ export const getRemainingHoursToday = async (
     0,
     billable
   );
-  // Get the assigned billable hours up to the current day based on the calculated schedule.
   const assignedHours: number = getAssignedHoursToTodayFromSchedule(assignedSchedule);
-  // Get the total logged billable hours for this work week.
-  const loggedHours: number = getTotalLoggedHours(timeEntries, 0, billable);
-  // Calculate how far ahead or behind the user is for billable hours.
-  return loggedHours - assignedHours;
+
+  return assignedHours;
 };
 
 /**
