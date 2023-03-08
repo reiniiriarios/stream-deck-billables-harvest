@@ -1,5 +1,7 @@
 # Harvest Billables for Stream Deck
 
+![](docs/icons.png)
+
 This [Stream Deck][stream-deck] plugin fetches data from [Harvest][harvest] and [Forecast][forecast]
 to let you know how much more billable time you have left for the day.
 
