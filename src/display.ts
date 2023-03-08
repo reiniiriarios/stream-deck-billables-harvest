@@ -49,7 +49,7 @@ const ICONS = {
     color: '#fa5c00',
   },
   timerStopped: {
-    path: 'M 57.58 37.52 H 62.9 a 3.04 3.04 90 0 1 3.04 3.04 V 86.92 a 3.04 3.04 90 0 1 -3.04 3.04 H 57.58 a 3.04 3.04 90 0 1 -3.04 -3.04 V 40.56 A 3.04 3.04 90 0 1 57.58 37.52 Z m 23.56 52.44 h 5.32 a 3.04 3.04 90 0 0 3.04 -3.04 V 40.56 a 3.04 3.04 90 0 0 -3.04 -3.04 H 81.14 a 3.04 3.04 90 0 0 -3.04 3.04 V 86.92 A 3.04 3.04 90 0 0 81.14 89.96 Z',
+    path: 'M 57.58 40.52 H 62.9 a 3.04 3.04 90 0 1 3.04 3.04 V 89.92 a 3.04 3.04 90 0 1 -3.04 3.04 H 57.58 a 3.04 3.04 90 0 1 -3.04 -3.04 V 43.56 A 3.04 3.04 90 0 1 57.58 40.52 Z m 23.56 52.44 h 5.32 a 3.04 3.04 90 0 0 3.04 -3.04 V 43.56 a 3.04 3.04 90 0 0 -3.04 -3.04 H 81.14 a 3.04 3.04 90 0 0 -3.04 3.04 V 89.92 A 3.04 3.04 90 0 0 81.14 92.96 Z',
     color: '#575757',
   },
 };
@@ -102,7 +102,7 @@ export const displayHoursRemaining = (context: string, hours: number): void => {
   ctx.font = `${FONT_SIZE}px Helvetica, Arial, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(formatHours(hours), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.8);
+  ctx.fillText(formatHours(hours), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
 
   const finalImage = canvas.toDataURL('image/png');
   $SD.setImage(context, finalImage);
@@ -134,7 +134,7 @@ export const displayTimerStatus = (context: string, is_running: boolean, time: n
   ctx.font = `${FONT_SIZE}px Helvetica, Arial, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(formatTimer(time), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.8);
+  ctx.fillText(formatTimer(time), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
 
   const finalImage = canvas.toDataURL('image/png');
   $SD.setImage(context, finalImage);
