@@ -93,7 +93,6 @@ export const displayHoursRemaining = (
   hoursRemaining: number,
   assignedHours: number
 ): void => {
-  console.log(hoursRemaining, '/', assignedHours);
   // Canvas
   let canvas = document.createElement('canvas');
   canvas.width = CANVAS_SIZE;
@@ -102,10 +101,59 @@ export const displayHoursRemaining = (
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Icon
-  const icon = getStatusIcon(hoursRemaining);
-  const path = new Path2D(icon.path);
-  ctx.fillStyle = icon.color;
-  ctx.fill(path);
+  if (!assignedHours) {
+    // @todo draw something else?
+  }
+  else {
+    let percentageRemaining = assignedHours - hoursRemaining / assignedHours;
+    // check success with an error margin
+    if (percentageRemaining <= 0.01 && percentageRemaining >= -0.01) {
+      // @todo draw checkbox
+    }
+    else {
+      // draw pie chart
+      let workedHours: number;
+      let filledColor: string, emptyColor: string;
+      if (hoursRemaining < 0) {
+        // overage, we worked too long today
+        filledColor = '#f00';
+        emptyColor = '#fa5c00';
+        // hours worked should display as the amount over we are
+        workedHours = hoursRemaining * -1;
+      }
+      else {
+        // under, there are hours remaining to be worked
+        filledColor = '#fa5c00';
+        emptyColor = '#333';
+        workedHours = assignedHours - hoursRemaining;
+      }
+      const centerX = CANVAS_SIZE * 0.5;
+      const centerY = CANVAS_SIZE * 0.35;
+      const radius = CANVAS_SIZE * 0.3;
+      const startAngle = Math.PI * -0.5; // radians
+      const offset = radius * 0.175;
+      // draw slice of hours fulfilled
+      const workedHoursAngle = (workedHours / assignedHours) * 2 * Math.PI;
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.arc(centerX, centerY, radius, startAngle, startAngle + workedHoursAngle, false);
+      ctx.lineTo(centerX, centerY);
+      ctx.fillStyle = filledColor;
+      ctx.fill();
+      // draw the rest empty
+      const remainingAngle = ((assignedHours - workedHours) / assignedHours) * 2 * Math.PI;
+      const endAngle = startAngle + workedHoursAngle + remainingAngle;
+      const angleCenter = (startAngle + workedHoursAngle + endAngle) * 0.5;
+      const offsetX = Math.cos(angleCenter) * offset;
+      const offsetY = Math.sin(angleCenter) * offset;
+      ctx.beginPath();
+      ctx.moveTo(centerX + offsetX, centerY + offsetY);
+      ctx.arc(centerX + offsetX, centerY + offsetY, radius * 0.75, startAngle + workedHoursAngle, endAngle, false);
+      ctx.lineTo(centerX + offsetX, centerY + offsetY);
+      ctx.fillStyle = emptyColor;
+      ctx.fill();
+    }
+  }
 
   // Text
   ctx.fillStyle = TEXT_COLOR;
