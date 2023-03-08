@@ -7,6 +7,10 @@
  * @returns {string} formatted hours
  */
 const formatHours = (hours: number): string => {
+  // Display hours as a value of how far a user has to go.
+  // -2h = 2 hours remaining to work
+  // 2h = 2 hours over
+  hours = hours * -1;
   if (Math.abs(hours) < 1) return (hours >= 0 ? '+' : '') + Math.round(hours * 60) + 'm';
   return (hours >= 0 ? '+' : '') + hours.toFixed(2) + 'h';
 };
@@ -55,19 +59,19 @@ const ICONS = {
 };
 
 /**
- * Get the icon to display based on hours.
+ * Get the icon to display based on hours remaining.
  *
  * @param {number} hours
  * @returns {{ path: string; color: string }} icon data
  */
 const getStatusIcon = (hours: number): { path: string; color: string } => {
-  if (hours >= 0.5) {
+  if (hours < 0.5) {
     return ICONS.stopReally;
   }
-  if (hours >= 0.25) {
+  if (hours < 0.25) {
     return ICONS.stop;
   }
-  if (hours <= 0.25) {
+  if (hours > 0.25) {
     return ICONS.continue;
   }
   return ICONS.success;
@@ -81,9 +85,15 @@ const FONT_SIZE = 32;
  * Display the hours remaining.
  *
  * @param {string} context
- * @param {number} hours
+ * @param {number} hoursRemaining
+ * @param {number} assignedHours
  */
-export const displayHoursRemaining = (context: string, hours: number): void => {
+export const displayHoursRemaining = (
+  context: string,
+  hoursRemaining: number,
+  assignedHours: number
+): void => {
+  console.log(hoursRemaining, '/', assignedHours);
   // Canvas
   let canvas = document.createElement('canvas');
   canvas.width = CANVAS_SIZE;
@@ -92,7 +102,7 @@ export const displayHoursRemaining = (context: string, hours: number): void => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Icon
-  const icon = getStatusIcon(hours);
+  const icon = getStatusIcon(hoursRemaining);
   const path = new Path2D(icon.path);
   ctx.fillStyle = icon.color;
   ctx.fill(path);
@@ -102,7 +112,7 @@ export const displayHoursRemaining = (context: string, hours: number): void => {
   ctx.font = `${FONT_SIZE}px Helvetica, Arial, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(formatHours(hours), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
+  ctx.fillText(formatHours(hoursRemaining), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
 
   const finalImage = canvas.toDataURL('image/png');
   $SD.setImage(context, finalImage);

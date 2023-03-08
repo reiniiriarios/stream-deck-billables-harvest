@@ -14,29 +14,15 @@ import { Assignment, HoursSchedule, Project, Settings, StartEndDates, TimeEntry 
  */
 export const updateStatus = async (context: string, settings: Settings) => {
   try {
-    const hoursRemaining: number = await getRemainingHoursToday(settings, true);
-    displayHoursRemaining(context, hoursRemaining);
+    const startEnd: StartEndDates = getStartEndDates();
+    const loggedHours = getLoggedHours(settings, startEnd, true);
+    const assignedHours = getAssignedHours(settings, startEnd, true);
+    const hoursRemaining = (await assignedHours) - (await loggedHours);
+    displayHoursRemaining(context, hoursRemaining, await assignedHours);
   } catch (e) {
     // @todo Handle errors.
     console.error(e);
   }
-};
-
-/**
- * Get remaining hours today.
- *
- * @param {Settings} settings
- * @param {boolean} billable; null = all entries, true = billable entries only, false = non-billable
- * @returns {Promise<number>} hours
- */
-export const getRemainingHoursToday = async (
-  settings: Settings,
-  billable: boolean = null
-): Promise<number> => {
-  const startEnd: StartEndDates = getStartEndDates();
-  const loggedHours = getLoggedHours(settings, startEnd, billable);
-  const assignedHours = getAssignedHours(settings, startEnd, billable);
-  return (await loggedHours) - (await assignedHours);
 };
 
 /**
