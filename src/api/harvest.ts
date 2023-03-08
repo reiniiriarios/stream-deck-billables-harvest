@@ -145,16 +145,13 @@ export const getTimeEntries = async (
   let timeEntries: TimeEntry[] = [];
 
   // Get tracked hours.
-  const trackedHoursResponse = await getHarvest(settings, 'time_entries', {
+  const res = await getHarvest(settings, 'time_entries', {
     user_id: userId,
     from: startEnd.start.iso,
     to: startEnd.end.iso,
   });
-  if (
-    typeof trackedHoursResponse.time_entries !== 'undefined' &&
-    trackedHoursResponse.time_entries.length
-  ) {
-    trackedHoursResponse.time_entries.forEach((entry: TimeEntry) => {
+  if (typeof res.time_entries !== 'undefined' && res.time_entries.length) {
+    res.time_entries.forEach((entry: TimeEntry) => {
       timeEntries.push(entry);
     });
   }
@@ -179,20 +176,17 @@ export const getTimeEntryForTask = async (
 ): Promise<TimeEntry> => {
   // Get tracked hours.
   const today = getTodayUTCDate();
-  const timeEntriesResponse = await getHarvest(settings, 'time_entries', {
+  const res = await getHarvest(settings, 'time_entries', {
     user_id: userId,
     project_id: projectId,
     task_id: taskId,
     from: today,
     to: today,
   });
-  if (
-    typeof timeEntriesResponse.time_entries !== 'undefined' &&
-    timeEntriesResponse.time_entries.length
-  ) {
+  if (typeof res.time_entries !== 'undefined' && res.time_entries.length) {
     // Return the first one found.
     // @todo Track this differently?
-    return timeEntriesResponse.time_entries.pop();
+    return res.time_entries.pop();
   }
 
   return null;
@@ -266,17 +260,14 @@ export const getUserProjectAssignments = async (
 ): Promise<ProjectAssignment[]> => {
   let projectAssignments: ProjectAssignment[] = [];
 
-  const projectAssignmentsResponse = await getHarvest(settings, 'users/me/project_assignments', {
+  const res = await getHarvest(settings, 'users/me/project_assignments', {
     is_active: true,
   });
-  if (typeof projectAssignmentsResponse.error !== 'undefined') {
-    throw new Error(projectAssignmentsResponse.error_description);
+  if (typeof res.error !== 'undefined') {
+    throw new Error(res.error_description);
   }
-  if (
-    typeof projectAssignmentsResponse.project_assignments !== 'undefined' &&
-    projectAssignmentsResponse.project_assignments.length
-  ) {
-    projectAssignmentsResponse.project_assignments.forEach((assignment: ProjectAssignment) => {
+  if (typeof res.project_assignments !== 'undefined' && res.project_assignments.length) {
+    res.project_assignments.forEach((assignment: ProjectAssignment) => {
       projectAssignments.push(assignment);
     });
   }

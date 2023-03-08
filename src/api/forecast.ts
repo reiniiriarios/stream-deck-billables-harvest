@@ -50,12 +50,12 @@ export const getForecast = async (
  * @returns {Promise<number>}
  */
 export const getForecastUserId = async (settings: Settings): Promise<number> => {
-  const userResponse = await getForecast(settings, 'whoami');
-  return userResponse.current_user.id;
+  const res = await getForecast(settings, 'whoami');
+  return res.current_user.id;
 };
 
 /**
- * Get projects.
+ * Get projects with remaining budgeted hours.
  *
  * @param {Settings} settings
  * @returns {Promise<Project[]>}
@@ -64,23 +64,23 @@ export const getProjects = async (settings: Settings): Promise<Project[]> => {
   let projects = [];
 
   // Get projects.
-  const projectsResponse = await getForecast(settings, 'projects');
-  projectsResponse.projects.forEach((project: Project) => {
+  const resP = await getForecast(settings, 'projects');
+  resP.projects.forEach((project: Project) => {
     if (!project.archived) {
       projects[project.id] = project;
     }
   });
 
   // Get remaining budgeted hours.
-  const hoursResponse = await getForecast(settings, 'aggregate/remaining_budgeted_hours');
-  if (typeof hoursResponse.error !== 'undefined') {
-    throw new Error(hoursResponse.error_description);
+  const resH = await getForecast(settings, 'aggregate/remaining_budgeted_hours');
+  if (typeof resH.error !== 'undefined') {
+    throw new Error(resH.error_description);
   }
   if (
-    typeof hoursResponse.remaining_budgeted_hours !== 'undefined' &&
-    hoursResponse.remaining_budgeted_hours.length
+    typeof resH.remaining_budgeted_hours !== 'undefined' &&
+    resH.remaining_budgeted_hours.length
   ) {
-    hoursResponse.remaining_budgeted_hours.forEach((hours: RemainingBudgetedHours) => {
+    resH.remaining_budgeted_hours.forEach((hours: RemainingBudgetedHours) => {
       if (typeof projects[hours.project_id] !== 'undefined') {
         projects[hours.project_id].budget_by = hours.budget_by;
         projects[hours.project_id].billable = hours.budget_by !== 'none';
@@ -107,20 +107,17 @@ export const getAssignments = async (
 ): Promise<Assignment[]> => {
   let assignments = [];
 
-  const assignmentsResponse = await getForecast(settings, 'assignments', {
+  const res = await getForecast(settings, 'assignments', {
     person_id: userId,
     start_date: startEnd.start.iso,
     end_date: startEnd.end.iso,
     state: 'active',
   });
-  if (typeof assignmentsResponse.error !== 'undefined') {
-    throw new Error(assignmentsResponse.error_description);
+  if (typeof res.error !== 'undefined') {
+    throw new Error(res.error_description);
   }
-  if (
-    typeof assignmentsResponse.assignments !== 'undefined' &&
-    assignmentsResponse.assignments.length
-  ) {
-    assignmentsResponse.assignments.forEach((assignment) => {
+  if (typeof res.assignments !== 'undefined' && res.assignments.length) {
+    res.assignments.forEach((assignment: Assignment) => {
       assignment.allocationHours = assignment.allocation ? assignment.allocation / 3600 : 0;
       assignments.push(assignment);
     });
