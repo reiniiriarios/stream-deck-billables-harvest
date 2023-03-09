@@ -22,13 +22,12 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Zip artifact for deployment
-        run: zip release-${{ github.ref_name }}.zip ./build/me.reinii.harvest-billables.sdPlugin -r
+      - name: Zip plugin
+        run: (cd build && zip -r ../release-${{ github.ref_name }}.zip .)
 
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
           files: release-${{ github.ref_name }}.zip
-          release_name: Release ${{ github.ref_name }}
           fail_on_unmatched_files: true
           draft: true
