@@ -18,8 +18,8 @@
   "scripts": {
     "test": "jest --runInBand --bail",
     "build": "webpack --mode=production",
-    "install": "./install.sh",
-    "build-install": "npm run build && npm run install",
+    "copy": "./install-plugin.sh",
+    "build-copy": "npm run build && npm run install",
     "dev": "webpack --watch --mode=development"
   },
   "devDependencies": {
