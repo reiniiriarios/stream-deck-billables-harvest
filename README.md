@@ -47,6 +47,7 @@ Error|Details
 `F0###`|Error fetching data from Forecast.
 `F0002`|Error response from Forecast.
 `F0003`|No projects found in Forecast. In order for billable hours to display, there must be projects in Forecast that you are assigned to.
+`ERROR`|Unhandled error. Details available in DevTools.
 
 In all of the above messages, `###` refers to an HTTP response code.
 The API has a bug where if authentication fails, it will sometimes respond
