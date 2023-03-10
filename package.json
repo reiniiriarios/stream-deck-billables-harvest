@@ -19,7 +19,7 @@
     "test": "jest --runInBand --bail",
     "build": "webpack --mode=production",
     "copy": "./install-plugin.sh",
-    "build-copy": "npm run build && npm run install",
+    "build-copy": "npm run build && npm run copy",
     "dev": "webpack --watch --mode=development"
   },
   "devDependencies": {

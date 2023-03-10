@@ -35,11 +35,14 @@ export const getForecast = async (
     },
   }).then((res) => {
     if (res.status < 200 || res.status >= 300) {
-      // Will return a 404 [sic] on invalid authentication.
-      throw new Error('Error fetching data, check authentication tokens. Response: ' + res.status);
+      throw new Error('F0' + String(res.status).padStart(3, '0') + ': Error fetching data.');
     }
     return res.json();
   });
+  if (typeof response.error !== 'undefined') {
+    throw new Error('F0002: ' + response.error_description);
+  }
+
   return response;
 };
 
@@ -65,6 +68,9 @@ export const getProjects = async (settings: Settings): Promise<Project[]> => {
 
   // Get projects.
   const resP = await getForecast(settings, 'projects');
+  if (typeof resP.projects === 'undefined' || !resP.projects.length) {
+    throw new Error('F0003: No projects found in Forecast.');
+  }
   resP.projects.forEach((project: Project) => {
     if (!project.archived) {
       projects[project.id] = project;
@@ -73,9 +79,6 @@ export const getProjects = async (settings: Settings): Promise<Project[]> => {
 
   // Get remaining budgeted hours.
   const resH = await getForecast(settings, 'aggregate/remaining_budgeted_hours');
-  if (typeof resH.error !== 'undefined') {
-    throw new Error(resH.error_description);
-  }
   if (
     typeof resH.remaining_budgeted_hours !== 'undefined' &&
     resH.remaining_budgeted_hours.length
@@ -105,7 +108,7 @@ export const getAssignments = async (
   userId: number,
   startEnd: StartEndDates
 ): Promise<Assignment[]> => {
-  let assignments = [];
+  let assignments: Assignment[] = [];
 
   const res = await getForecast(settings, 'assignments', {
     person_id: userId,
@@ -113,9 +116,6 @@ export const getAssignments = async (
     end_date: startEnd.end.iso,
     state: 'active',
   });
-  if (typeof res.error !== 'undefined') {
-    throw new Error(res.error_description);
-  }
   if (typeof res.assignments !== 'undefined' && res.assignments.length) {
     res.assignments.forEach((assignment: Assignment) => {
       assignment.allocationHours = assignment.allocation ? assignment.allocation / 3600 : 0;

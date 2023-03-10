@@ -58,6 +58,10 @@ const ICONS = {
     path: 'M 72 82.5 A 1.875 1.875 90 0 0 72 15 A 1.875 1.875 90 0 0 72 82.5 M 72 75 A 1.875 1.875 90 0 1 72 22.5 A 1.875 1.875 90 0 1 72 75 Z M 100.125 15 L 38.25 76.875 L 43.875 82.5 L 105.75 20.625 Z',
     color: EMPTY_COLOR,
   },
+  error: {
+    path: 'M 100 15 L 38 77 L 44 83 L 106 21 Z M 44 15 L 38 21 L 100 83 L 106 77 L 44 15 Z',
+    color: '#c00',
+  },
 };
 
 /**
@@ -217,6 +221,40 @@ export const displayTimerStatus = (context: string, is_running: boolean, time: n
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(formatTimer(time), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
+
+  const finalImage = canvas.toDataURL('image/png');
+  $SD.setImage(context, finalImage);
+};
+
+/**
+ * Display a (very) short error message and icon and log the error to the console.
+ *
+ * @param {string} context
+ * @param {string} error
+ */
+export const displayError = (context: string, error: Error): void => {
+  console.error(error);
+
+  // Canvas
+  let canvas = document.createElement('canvas');
+  canvas.width = CANVAS_SIZE;
+  canvas.height = CANVAS_SIZE;
+  let ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Icon
+  const icon = ICONS.error;
+  const path = new Path2D(icon.path);
+  ctx.fillStyle = icon.color;
+  ctx.fill(path);
+
+  // Text
+  const iconText = /^[0-9A-Z]{5}:/.test(error.message) ? error.message.substring(0, 5) : 'ERROR';
+  ctx.fillStyle = TEXT_COLOR;
+  ctx.font = `${FONT_SIZE}px Helvetica, Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(iconText, CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
 
   const finalImage = canvas.toDataURL('image/png');
   $SD.setImage(context, finalImage);

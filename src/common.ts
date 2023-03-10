@@ -1,4 +1,17 @@
-import { StartEndDates } from "./types";
+import { Settings, StartEndDates } from './types';
+
+/**
+ * Helper function to check settings are filled.
+ *
+ *
+ */
+export const missingKeys = (settings: Settings) => {
+  return (
+    !settings.forecastAccountId.length ||
+    !settings.harvestAccountId.length ||
+    !settings.harvestAccountToken
+  );
+};
 
 /**
  * Get start and end dates of current week in ISO 8601.
@@ -35,7 +48,11 @@ export const getStartEndDates = (): StartEndDates => {
  */
 export const getTodayUTCDate = (): string => {
   const date = new Date();
-  return date.getUTCFullYear() + '-' +
-    (date.getUTCMonth() + 1).toString().padStart(2, '0') + '-' +
-    date.getUTCDate().toString().padStart(2, '0');
-}
+  return (
+    date.getUTCFullYear() +
+    '-' +
+    (date.getUTCMonth() + 1).toString().padStart(2, '0') +
+    '-' +
+    date.getUTCDate().toString().padStart(2, '0')
+  );
+};

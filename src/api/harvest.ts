@@ -36,14 +36,12 @@ export const getHarvest = async (
     },
   }).then((res) => {
     if (res.status < 200 || res.status >= 300) {
-      console.error(res);
-      throw new Error('Error fetching data, check authentication tokens. Response: ' + res.status);
+      throw new Error('H0' + String(res.status).padStart(3, '0') + ': Error fetching data.');
     }
     return res.json();
   });
   if (typeof response.error !== 'undefined') {
-    console.error(response.error_description);
-    throw new Error(response.error_description);
+    throw new Error('H0001: ' + response.error_description);
   }
 
   return response;
@@ -61,7 +59,6 @@ export const getHarvest = async (
  */
 export const postHarvest = async (settings: Settings, path: string, data: object): Promise<any> => {
   let url = harvestUrl + path;
-  console.log(url, data);
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -72,14 +69,12 @@ export const postHarvest = async (settings: Settings, path: string, data: object
     body: JSON.stringify(data),
   }).then((res) => {
     if (res.status < 200 || res.status >= 300) {
-      console.error(res);
-      throw new Error('Error posting data, check authentication tokens. Response: ' + res.status);
+      throw new Error('H1' + String(res.status).padStart(3, '0') + ': Error posting data.');
     }
     return res.json();
   });
   if (typeof response.error !== 'undefined') {
-    console.error(response.error_description);
-    throw new Error(response.error_description);
+    throw new Error('H1001: ' + response.error_description);
   }
 
   return response;
@@ -105,14 +100,12 @@ export const patchHarvest = async (settings: Settings, path: string): Promise<an
     },
   }).then((res) => {
     if (res.status < 200 || res.status >= 300) {
-      console.error(res);
-      throw new Error('Error posting data, check authentication tokens. Response: ' + res.status);
+      throw new Error('H2' + String(res.status).padStart(3, '0') + ': Error posting data.');
     }
     return res.json();
   });
   if (typeof response.error !== 'undefined') {
-    console.error(response.error_description);
-    throw new Error(response.error_description);
+    throw new Error('H2001: ' + response.error_description);
   }
 
   return response;
@@ -211,7 +204,7 @@ export const createTimeEntry = async (
     spent_date: getTodayUTCDate(),
   });
   if (typeof newTimeEntry.id === 'undefined' || !newTimeEntry.id) {
-    throw new Error('Error creating time entry.');
+    throw new Error('H5001: Error creating time entry.');
   }
 
   return newTimeEntry;
@@ -226,7 +219,7 @@ export const createTimeEntry = async (
 export const restartTimeEntry = async (settings: Settings, timeEntryId: number) => {
   const res = await patchHarvest(settings, 'time_entries/' + timeEntryId + '/restart');
   if (typeof res.id === 'undefined' || !res.id) {
-    throw new Error('Possible error restarting time entry.');
+    throw new Error('H5002: Possible error restarting time entry.');
   }
 };
 
@@ -239,7 +232,7 @@ export const restartTimeEntry = async (settings: Settings, timeEntryId: number) 
 export const stopTimeEntry = async (settings: Settings, timeEntryId: number) => {
   const res = await patchHarvest(settings, 'time_entries/' + timeEntryId + '/stop');
   if (typeof res.id === 'undefined' || !res.id) {
-    throw new Error('Possible error stopping time entry.');
+    throw new Error('H5003: Possible error stopping time entry.');
   }
 };
 
@@ -263,9 +256,6 @@ export const getUserProjectAssignments = async (
   const res = await getHarvest(settings, 'users/me/project_assignments', {
     is_active: true,
   });
-  if (typeof res.error !== 'undefined') {
-    throw new Error(res.error_description);
-  }
   if (typeof res.project_assignments !== 'undefined' && res.project_assignments.length) {
     res.project_assignments.forEach((assignment: ProjectAssignment) => {
       projectAssignments.push(assignment);

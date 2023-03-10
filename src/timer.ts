@@ -5,8 +5,9 @@ import {
   restartTimeEntry,
   stopTimeEntry,
 } from './api/harvest';
-import { displayTimerStatus } from './display';
-import { Settings, StartEndDates } from './types';
+import { missingKeys } from './common';
+import { displayError, displayTimerStatus } from './display';
+import { Settings } from './types';
 
 /**
  * Update timer.
@@ -17,15 +18,25 @@ import { Settings, StartEndDates } from './types';
  * @param {Settings} settings
  */
 export const updateTimer = async (context: string, settings: Settings) => {
-  const userId: number = await getHarvestUserId(settings);
-  const task: { id: number; projectId: number } = JSON.parse(settings.task);
-  if (typeof task !== 'undefined' && typeof task.id !== 'undefined' && task.id) {
-    const timeEntry = await getTimeEntryForTask(settings, userId, task.projectId, task.id);
-    if (timeEntry) {
-      displayTimerStatus(context, timeEntry.is_running, timeEntry.hours);
-    } else {
-      displayTimerStatus(context, false, 0);
+  try {
+    if (missingKeys(settings)) {
+      throw new Error('EAUTH: Missing keys, unable to display timer.');
     }
+    if (!settings.task) {
+      throw new Error('ETASK: No task selected.');
+    }
+    const userId: number = await getHarvestUserId(settings);
+    const task: { id: number; projectId: number } = JSON.parse(settings.task);
+    if (typeof task !== 'undefined' && typeof task.id !== 'undefined' && task.id) {
+      const timeEntry = await getTimeEntryForTask(settings, userId, task.projectId, task.id);
+      if (timeEntry) {
+        displayTimerStatus(context, timeEntry.is_running, timeEntry.hours);
+      } else {
+        displayTimerStatus(context, false, 0);
+      }
+    }
+  } catch (e) {
+    displayError(context, e);
   }
 };
 
@@ -38,22 +49,31 @@ export const updateTimer = async (context: string, settings: Settings) => {
  * @param {Settings} settings
  */
 export const changeTimer = async (context: string, settings: Settings) => {
-  const userId: number = await getHarvestUserId(settings);
-  const task: { id: number; projectId: number } = JSON.parse(settings.task);
-  if (typeof task !== 'undefined' && typeof task.id !== 'undefined' && task.id) {
-    let timeEntry = await getTimeEntryForTask(settings, userId, task.projectId, task.id);
-    if (timeEntry) {
-      console.log(timeEntry);
-      if (timeEntry.is_running) {
-        await stopTimeEntry(settings, timeEntry.id);
-        timeEntry.is_running = false;
-      } else {
-        await restartTimeEntry(settings, timeEntry.id);
-        timeEntry.is_running = true;
-      }
-    } else {
-      timeEntry = await createTimeEntry(settings, task.projectId, task.id);
+  try {
+    if (missingKeys(settings)) {
+      throw new Error('EAUTH: Missing keys, unable to update timer.');
     }
-    displayTimerStatus(context, timeEntry.is_running, timeEntry.hours);
+    if (!settings.task) {
+      throw new Error('ETASK: No task selected.');
+    }
+    const userId: number = await getHarvestUserId(settings);
+    const task: { id: number; projectId: number } = JSON.parse(settings.task);
+    if (typeof task !== 'undefined' && typeof task.id !== 'undefined' && task.id) {
+      let timeEntry = await getTimeEntryForTask(settings, userId, task.projectId, task.id);
+      if (timeEntry) {
+        if (timeEntry.is_running) {
+          await stopTimeEntry(settings, timeEntry.id);
+          timeEntry.is_running = false;
+        } else {
+          await restartTimeEntry(settings, timeEntry.id);
+          timeEntry.is_running = true;
+        }
+      } else {
+        timeEntry = await createTimeEntry(settings, task.projectId, task.id);
+      }
+      displayTimerStatus(context, timeEntry.is_running, timeEntry.hours);
+    }
+  } catch (e) {
+    displayError(context, e);
   }
 };
