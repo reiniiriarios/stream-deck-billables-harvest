@@ -1,32 +1,6 @@
 /// <reference path="libs/js/stream-deck.js" />
 
 /**
- * Get the hours formatted for display.
- *
- * @param {number} hours
- * @returns {string} formatted hours
- */
-const formatHours = (hours: number): string => {
-  // Display hours as a value of how far a user has to go.
-  // -2h = 2 hours remaining to work
-  // 2h = 2 hours over
-  hours = hours * -1;
-  if (Math.abs(hours) < 1) return (hours >= 0 ? '+' : '') + Math.round(hours * 60) + 'm';
-  return (hours >= 0 ? '+' : '') + hours.toFixed(2) + 'h';
-};
-
-/**
- * Get a timer's hours formatted for display.
- *
- * @param {number} hours
- * @returns {string} formatted hours
- */
-const formatTimer = (hours: number): string => {
-  if (hours < 1) return Math.round(hours * 60) + 'm';
-  return hours.toFixed(2) + 'h';
-};
-
-/**
  * Icon config.
  */
 const CANVAS_SIZE = 144;
@@ -258,4 +232,30 @@ export const displayError = (context: string, error: Error): void => {
 
   const finalImage = canvas.toDataURL('image/png');
   $SD.setImage(context, finalImage);
+};
+
+/**
+ * Get the hours formatted for display.
+ *
+ * @param {number} hours
+ * @returns {string} formatted hours
+ */
+const formatHours = (hours: number): string => {
+  // Display hours as a value of how far a user has to go.
+  // -2h = 2 hours remaining to work
+  // 2h = 2 hours over
+  hours = hours * -1;
+  if (Math.abs(hours) < 1) return (hours >= 0 ? '+' : '') + Math.round(hours * 60) + 'm';
+  return (hours >= 0 ? '+' : '') + hours.toFixed(2) + 'h';
+};
+
+/**
+ * Get a timer's hours formatted for display.
+ *
+ * @param {number} hours
+ * @returns {string} formatted hours
+ */
+const formatTimer = (hours: number): string => {
+  if (hours < 1) return Math.round(hours * 60) + 'm';
+  return hours.toFixed(2) + 'h';
 };
