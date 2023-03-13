@@ -42,35 +42,25 @@ Error|Details
 `H0001`|Error response when fetching data from Harvest.
 `H1001`|Error response when posting data to Harvest.
 `H2001`|Error response when patching data on Harvest.
-`H0403`|GET: Invalid authentication for Harvest. Check token and account id.
-`H0404`|GET: Harvest endpoint not found (or invalid authentication). Check token and account id.*
-`H0422`|GET: Error processing Harvest request.
-`H0429`|GET: Harvest requests throttled.
-`H0500`|GET: Harvest server error.
-`H0###`|GET: Other Harvest error.
-`H1403`|POST: Invalid authentication for Harvest. Check token and account id.
-`H1404`|POST: Harvest endpoint not found (or invalid authentication). Check token and account id.*
-`H1422`|POST: Error processing Harvest request.
-`H1429`|POST: Harvest requests throttled.
-`H1500`|POST: Harvest server error.
-`H1###`|POST: Other Harvest error.
-`H2403`|PATCH: Invalid authentication for Harvest. Check token and account id.
-`H2404`|PATCH: Harvest endpoint not found (or invalid authentication). Check token and account id.*
-`H2422`|PATCH: Error processing Harvest request.
-`H2429`|PATCH: Harvest requests throttled.
-`H2500`|PATCH: Harvest server error.
-`H2###`|PATCH: Other Harvest error.
+`H#403`|Invalid authentication for Harvest. Check token and account id.
+`H#404`|Harvest endpoint not found (or invalid authentication). Check token and account id. \*
+`H#422`|Error processing Harvest request.
+`H#429`|Harvest requests throttled.
+`H#500`|Harvest server error.
+`H####`|Other Harvest error.
 `F0002`|Error response from Forecast.
-`F0403`|GET: Invalid authentication for Forecast. Check token and account id.
-`F0404`|GET: Forecast endpoint not found (or invalid authentication). Check token and account id.*
-`F0422`|GET: Error processing Forecast request.
-`F0429`|GET: Forecast requests throttled.
-`F0500`|GET: Forecast server error.
-`F0###`|GET: Other Forecast error.
+`F0403`|Invalid authentication for Forecast. Check token and account id.
+`F0404`|Forecast endpoint not found (or invalid authentication). Check token and account id. \*
+`F0422`|Error processing Forecast request.
+`F0429`|Forecast requests throttled.
+`F0500`|Forecast server error.
+`F####`|Other Forecast error.
 `ERROR`|Unhandled error. Details available in DevTools.
 
 \* The API has a bug where if authentication fails, it will sometimes respond
 with a `404` instead of a `401`/`403`.
+
+\*\* The second digit in `H#000` and `F#000` errors refers to `GET`, `POST`, or `PATCH` (0, 1, or 2).
 
 ### Development Debugging
 
