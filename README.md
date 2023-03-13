@@ -9,7 +9,7 @@ to let you know how much more billable time you have left for the day.
 
 This plugin is not yet in the Stream Deck app.
 
-**[:arrow_down: Download Latest Release](https://github.com/reiniiriarios/stream-deck-billables-harvest/releases/latest)**
+**[:arrow_down: Download Latest Release][download-latest]**
 
 To install, copy the `me.reinii.harvest-billables.sdPlugin` directory to
 `~/Library/Application Support/com.elgato.StreamDeck/Plugins/` on macOS or
@@ -24,10 +24,37 @@ ids are necessary as they refer to your organization and not your user account.
 
 You only need one API token for all buttons, but you must enter the credentials in every button.
 
-[stream-deck]: https://www.elgato.com/en/welcome-to-stream-deck
-[harvest]: https://www.getharvest.com/
-[forecast]: https://www.getharvest.com/forecast
-[harvest-api]: https://id.getharvest.com/developers
+### The Buttons
+
+#### Timer
+
+The Timer button is a simple start/stop button and monitor for individual tasks. After entering
+your credentials in the settings, a list of available tasks should display in the Task dropdown.
+(If it doesn't, try clicking away to another button and clicking back.)
+
+After selecting a task, the button should display a play `⏵` or pause `⏸` button along with the time
+tracked for that task for the current day. You can set a Title (looks best if position is "Align
+Top") to differentiate Task timers.
+
+#### Billables Status
+
+This button will only work if your organization also uses [Forecast][forecast] to track billable
+hours. The purpose of this button is to keep you on track for billable hours for the week.
+
+This display will compare your total weekly tracked billable hours to date to your assigned
+billable hours in forecast, and display the remaining billable hours you need to fulfill for the
+current day.
+
+e.g. If you have 25 assigned hours flagged as billable in Forecast, logged 5 hours on Monday
+and 6 hours on Tuesday, and 1 tracked hour on Wednesday (and counting), your display for Wednesday
+will show you needing to log another 3 hours to stay on track for the week, and the pie chart
+will be 25% full.
+
+- 25 assigned hours / 5 work days = 5 hours per day
+- 5 hours Monday + 6 hours Tuesday = 11 hours, 1 hour ahead of schedule
+- 5 hours per day - 1 hour ahead of schedule = 4 assigned hours for Wednesday
+- 4 assigned hours - 1 hour tracked = 3 hours remaining for the day
+- Display shows: -3h, pie chart 25% full
 
 ## Error Messages
 
@@ -72,6 +99,15 @@ On macOS, you will first need to run the following command line in the Terminal:
 defaults write com.elgato.StreamDeck html_remote_debugging_enabled -bool YESCopy
 ```
 
-On Windows, you will need to add a `DWORD` `html_remote_debugging_enabled` with value `1` in the registry at `HKEY_CURRENT_USER\Software\Elgato Systems GmbH\StreamDeckCopy`.
+On Windows, you will need to add a `DWORD` `html_remote_debugging_enabled` with value `1` in the
+registry at `HKEY_CURRENT_USER\Software\Elgato Systems GmbH\StreamDeckCopy`.
 
-After you relaunch the Stream Deck app, you can open http://localhost:23654/ in Chrome, where you will find a list of ‘Inspectable pages‘ (plugins). Click `me.reinii.harvest-billables`. Error message details may be available in the console.
+After you relaunch the Stream Deck app, you can open http://localhost:23654/ in Chrome, where you
+will find a list of ‘Inspectable pages‘ (plugins). Click `me.reinii.harvest-billables`.
+Error message details may be available in the console.
+
+[download-latest]: https://github.com/reiniiriarios/stream-deck-billables-harvest/releases/latest
+[stream-deck]: https://www.elgato.com/en/welcome-to-stream-deck
+[harvest]: https://www.getharvest.com/
+[forecast]: https://www.getharvest.com/forecast
+[harvest-api]: https://id.getharvest.com/developers
