@@ -1,10 +1,24 @@
 {
-  "Description": "Billables Tracker for Harvest for Stream Deck", 
-  "Name": "Harvest Billables", 
-  "Category": "Harvest Billables", 
+  "Description": "Billables Tracker for Harvest for Stream Deck",
+  "Name": "Harvest Billables",
+  "Category": "Harvest Billables",
+  "me.reinii.harvest-billables.timer": {
+    "Name": "Timer",
+    "Tooltip": "Control a specific timer."
+  },
   "me.reinii.harvest-billables.status": {
-    "Name": "Billables Status", 
+    "Name": "Billables Status",
     "Tooltip": "Show current billables status."
   },
-  "Localization": {}
+  "Localization": {
+    "Keys": "Keys",
+    "Harvest API Token": "Harvest API Token",
+    "Harvest Account ID": "Harvest Account ID",
+    "Forecast Account ID": "Forecast Account ID",
+    "Settings": "Settings",
+    "Fetch Interval (Minutes)": "Fetch Interval (Minutes)",
+    "Help": "Help",
+    "How To": "How To",
+    "Task": "Task"
+  }
 }
