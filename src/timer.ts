@@ -18,7 +18,7 @@ import { Settings } from './types';
  */
 export const updateTimer = async (context: string, settings: Settings) => {
   try {
-    if (!settings.harvestAccountId.length || !settings.harvestAccountToken) {
+    if (!settings.harvestAccountId?.length || !settings.harvestAccountToken?.length) {
       throw new Error('EAUTH: Missing keys, unable to display timer.');
     }
     if (!settings.task) {
@@ -49,7 +49,7 @@ export const updateTimer = async (context: string, settings: Settings) => {
  */
 export const changeTimer = async (context: string, settings: Settings) => {
   try {
-    if (!settings.harvestAccountId.length || !settings.harvestAccountToken) {
+    if (!settings.harvestAccountId?.length || !settings.harvestAccountToken?.length) {
       throw new Error('EAUTH: Missing keys, unable to update timer.');
     }
     if (!settings.task) {

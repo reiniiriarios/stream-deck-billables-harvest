@@ -15,9 +15,9 @@ import { Assignment, HoursSchedule, Project, Settings, StartEndDates, TimeEntry 
 export const updateStatus = async (context: string, settings: Settings) => {
   try {
     if (
-      !settings.forecastAccountId.length ||
-      !settings.harvestAccountId.length ||
-      !settings.harvestAccountToken
+      !settings.forecastAccountId?.length ||
+      !settings.harvestAccountId?.length ||
+      !settings.harvestAccountToken?.length
     ) {
       throw new Error('EAUTH: Missing keys, unable to update status.');
     }
