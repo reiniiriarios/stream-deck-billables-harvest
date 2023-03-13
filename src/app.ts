@@ -25,7 +25,22 @@ actionStatus.onWillAppear(({ action, context, device, event, payload }): void =>
 });
 
 actionStatus.onKeyUp(({ action, context, device, event, payload }): void => {
-  updateStatus(context, payload.settings);
+  switch (payload.settings.buttonAction ?? null) {
+    case 'openHarvest':
+      $SD.openUrl('https://harvestapp.com/time');
+      break;
+    case 'openForecast':
+      if (payload.settings.forecastAccountId?.length) {
+        $SD.openUrl('https://forecastapp.com/' + payload.settings.forecastAccountId + '/schedule/team');
+      }
+      else {
+        $SD.openUrl('https://forecastapp.com/');
+      }
+      break;
+    case 'update':
+    default:
+      updateStatus(context, payload.settings);
+  }
 });
 
 actionTimer.onWillAppear(({ action, context, device, event, payload }): void => {

@@ -29,6 +29,14 @@
         </div>
         <div class="sdpi-heading" data-localize>Settings</div>
         <div class="sdpi-item">
+          <div class="sdpi-item-label" data-localize>Button Action</div>
+          <select class="sdpi-item-value" name="buttonAction">
+            <option value="update" data-localize>Update Data</option>
+            <option value="openHarvest" data-localize>Open Harvest Timesheet</option>
+            <option value="openForecast" data-localize>Open Forecast Schedule</option>
+          </select>
+        </div>
+        <div class="sdpi-item">
           <div class="sdpi-item-label" data-localize>Fetch Interval (Minutes)</div>
           <input class="sdpi-item-value" name="fetchInterval" type="number" value="1" min="1" max="1440" />
         </div>

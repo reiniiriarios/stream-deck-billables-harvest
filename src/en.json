@@ -19,6 +19,9 @@
     "Fetch Interval (Minutes)": "Fetch Interval (Minutes)",
     "Help": "Help",
     "How To": "How To",
-    "Task": "Task"
+    "Task": "Task",
+    "Button Action": "Button Action",
+    "Open Harvest Timesheet": "Open Harvest Timesheet",
+    "Open Forecast Schedule": "Open Forecast Schedule"
   }
 }
