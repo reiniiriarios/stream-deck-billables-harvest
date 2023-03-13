@@ -24,9 +24,9 @@ ids are necessary as they refer to your organization and not your user account.
 
 You only need one API token for all buttons, but you must enter the credentials in every button.
 
-### The Buttons
+## The Buttons
 
-#### Timer
+### Timer
 
 The Timer button is a simple start/stop button and monitor for individual tasks. After entering
 your credentials in the settings, a list of available tasks should display in the Task dropdown.
@@ -36,7 +36,7 @@ After selecting a task, the button should display a play `⏵` or pause `⏸` bu
 tracked for that task for the current day. You can set a Title (looks best if position is "Align
 Top") to differentiate Task timers.
 
-#### Billables Status
+### Billables Status
 
 This button will only work if your organization also uses [Forecast][forecast] to track billable
 hours. The purpose of this button is to keep you on track for billable hours for the week.
@@ -88,23 +88,6 @@ Error|Details
 with a `404` instead of a `401`/`403`.
 
 \*\* The second digit in `H#000` and `F#000` errors refers to `GET`, `POST`, or `PATCH` (0, 1, or 2).
-
-### Development Debugging
-
-You can debug error messages further by enabling DevTools.
-
-On macOS, you will first need to run the following command line in the Terminal:
-
-```sh
-defaults write com.elgato.StreamDeck html_remote_debugging_enabled -bool YESCopy
-```
-
-On Windows, you will need to add a `DWORD` `html_remote_debugging_enabled` with value `1` in the
-registry at `HKEY_CURRENT_USER\Software\Elgato Systems GmbH\StreamDeckCopy`.
-
-After you relaunch the Stream Deck app, you can open http://localhost:23654/ in Chrome, where you
-will find a list of ‘Inspectable pages‘ (plugins). Click `me.reinii.harvest-billables`.
-Error message details may be available in the console.
 
 [download-latest]: https://github.com/reiniiriarios/stream-deck-billables-harvest/releases/latest
 [stream-deck]: https://www.elgato.com/en/welcome-to-stream-deck
