@@ -8,7 +8,7 @@
   "Name": "Harvest Billables",
   "Icon": "images/icon-default",
   "URL": "https://github.com/reiniiriarios/stream-deck-billables-harvest/",
-  "Version": "0.1.2",
+  "Version": "0.1.3",
   "Software": {
     "MinimumVersion": "5.0"
   },
