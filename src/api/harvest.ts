@@ -33,6 +33,7 @@ export const getHarvest = async (
       'Content-Type': 'application/json; charset=utf-8',
       Authorization: `Bearer ${settings.harvestAccountToken}`,
       'Harvest-Account-Id': settings.harvestAccountId,
+      'User-Agent': 'Stream Deck Harvest Billables (github.com/reiniiriarios/stream-deck-billables-harvest)',
     },
   }).then((res) => {
     if (res.status < 200 || res.status >= 300) {
