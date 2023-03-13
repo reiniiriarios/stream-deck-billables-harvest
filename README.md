@@ -72,6 +72,16 @@ Error|Details
 \* The API has a bug where if authentication fails, it will sometimes respond
 with a `404` instead of a `401`/`403`.
 
-### Development
+### Development Debugging
 
-You can access DevTools by visiting [chrome://inspect](chrome://inspect) in Chrome, and clicking on `me.reinii.harvest-billables`. Further error message details may be available in the console.
+You can debug error messages further by enabling DevTools.
+
+On macOS, you will first need to run the following command line in the Terminal:
+
+```sh
+defaults write com.elgato.StreamDeck html_remote_debugging_enabled -bool YESCopy
+```
+
+On Windows, you will need to add a `DWORD` `html_remote_debugging_enabled` with value `1` in the registry at `HKEY_CURRENT_USER\Software\Elgato Systems GmbH\StreamDeckCopy`.
+
+After you relaunch the Stream Deck app, you can open http://localhost:23654/ in Chrome, where you will find a list of ‘Inspectable pages‘ (plugins). Click `me.reinii.harvest-billables`. Error message details may be available in the console.
