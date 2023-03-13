@@ -69,7 +69,7 @@ export const getProjects = async (settings: Settings): Promise<Project[]> => {
   // Get projects.
   const resP = await getForecast(settings, 'projects');
   if (typeof resP.projects === 'undefined' || !resP.projects.length) {
-    throw new Error('F0003: No projects found in Forecast.');
+    throw new Error('NOPRJ: No projects found in Forecast.');
   }
   resP.projects.forEach((project: Project) => {
     if (!project.archived) {

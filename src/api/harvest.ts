@@ -204,7 +204,7 @@ export const createTimeEntry = async (
     spent_date: getTodayUTCDate(),
   });
   if (typeof newTimeEntry.id === 'undefined' || !newTimeEntry.id) {
-    throw new Error('H5001: Error creating time entry.');
+    throw new Error('ETIM1: Error creating time entry.');
   }
 
   return newTimeEntry;
@@ -219,7 +219,7 @@ export const createTimeEntry = async (
 export const restartTimeEntry = async (settings: Settings, timeEntryId: number) => {
   const res = await patchHarvest(settings, 'time_entries/' + timeEntryId + '/restart');
   if (typeof res.id === 'undefined' || !res.id) {
-    throw new Error('H5002: Possible error restarting time entry.');
+    throw new Error('ETIM2: Possible error restarting time entry.');
   }
 };
 
@@ -232,7 +232,7 @@ export const restartTimeEntry = async (settings: Settings, timeEntryId: number) 
 export const stopTimeEntry = async (settings: Settings, timeEntryId: number) => {
   const res = await patchHarvest(settings, 'time_entries/' + timeEntryId + '/stop');
   if (typeof res.id === 'undefined' || !res.id) {
-    throw new Error('H5003: Possible error stopping time entry.');
+    throw new Error('ETIM3: Possible error stopping time entry.');
   }
 };
 

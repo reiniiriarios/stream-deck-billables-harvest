@@ -35,22 +35,41 @@ Error|Details
 ---|---
 `EAUTH`|Missing harvest token or account ids. [Generate these][harvest-api] and paste them in the settings window.
 `ETASK`|No task selected. Make sure tasks are available for your user account, then select a task in the Timer button settings.
+`NOPRJ`|No projects found in Forecast. In order for billable hours to display, there must be projects in Forecast that you are assigned to.
+`ETIM1`|Error creating time entry.
+`ETIM2`|Error restarting time entry.
+`ETIM3`|Error stopping time entry.
 `H0001`|Error response when fetching data from Harvest.
-`H0###`|Error fetching data from Harvest.
 `H1001`|Error response when posting data to Harvest.
-`H1###`|Error posting data to Harvest.
 `H2001`|Error response when patching data on Harvest.
-`H2###`|Error patching data on Harvest.
-`H5001`|Error creating time entry.
-`H5002`|Error restarting time entry.
-`H5003`|Error stopping time entry.
-`F0###`|Error fetching data from Forecast.
+`H0403`|GET: Invalid authentication for Harvest. Check token and account id.
+`H0404`|GET: Harvest endpoint not found (or invalid authentication). Check token and account id.*
+`H0422`|GET: Error processing Harvest request.
+`H0429`|GET: Harvest requests throttled.
+`H0500`|GET: Harvest server error.
+`H0###`|GET: Other Harvest error.
+`H1403`|POST: Invalid authentication for Harvest. Check token and account id.
+`H1404`|POST: Harvest endpoint not found (or invalid authentication). Check token and account id.*
+`H1422`|POST: Error processing Harvest request.
+`H1429`|POST: Harvest requests throttled.
+`H1500`|POST: Harvest server error.
+`H1###`|POST: Other Harvest error.
+`H2403`|PATCH: Invalid authentication for Harvest. Check token and account id.
+`H2404`|PATCH: Harvest endpoint not found (or invalid authentication). Check token and account id.*
+`H2422`|PATCH: Error processing Harvest request.
+`H2429`|PATCH: Harvest requests throttled.
+`H2500`|PATCH: Harvest server error.
+`H2###`|PATCH: Other Harvest error.
 `F0002`|Error response from Forecast.
-`F0003`|No projects found in Forecast. In order for billable hours to display, there must be projects in Forecast that you are assigned to.
+`F0403`|GET: Invalid authentication for Forecast. Check token and account id.
+`F0404`|GET: Forecast endpoint not found (or invalid authentication). Check token and account id.*
+`F0422`|GET: Error processing Forecast request.
+`F0429`|GET: Forecast requests throttled.
+`F0500`|GET: Forecast server error.
+`F0###`|GET: Other Forecast error.
 `ERROR`|Unhandled error. Details available in DevTools.
 
-In all of the above messages, `###` refers to an HTTP response code.
-The API has a bug where if authentication fails, it will sometimes respond
+\* The API has a bug where if authentication fails, it will sometimes respond
 with a `404` instead of a `401`/`403`.
 
 ### Development
