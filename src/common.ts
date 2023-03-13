@@ -1,17 +1,4 @@
-import { Settings, StartEndDates } from './types';
-
-/**
- * Helper function to check settings are filled.
- *
- *
- */
-export const missingKeys = (settings: Settings) => {
-  return (
-    !settings.forecastAccountId.length ||
-    !settings.harvestAccountId.length ||
-    !settings.harvestAccountToken
-  );
-};
+import { StartEndDates } from './types';
 
 /**
  * Get start and end dates of current week in ISO 8601.

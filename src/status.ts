@@ -1,6 +1,6 @@
 import { getForecastUserId, getProjects, getAssignments } from './api/forecast';
 import { getHarvestUserId, getTimeEntries } from './api/harvest';
-import { getStartEndDates, missingKeys } from './common';
+import { getStartEndDates } from './common';
 import { displayError, displayHoursRemaining } from './display';
 import { Assignment, HoursSchedule, Project, Settings, StartEndDates, TimeEntry } from './types';
 
@@ -14,7 +14,11 @@ import { Assignment, HoursSchedule, Project, Settings, StartEndDates, TimeEntry 
  */
 export const updateStatus = async (context: string, settings: Settings) => {
   try {
-    if (missingKeys(settings)) {
+    if (
+      !settings.forecastAccountId.length ||
+      !settings.harvestAccountId.length ||
+      !settings.harvestAccountToken
+    ) {
       throw new Error('EAUTH: Missing keys, unable to update status.');
     }
     const startEnd: StartEndDates = getStartEndDates();

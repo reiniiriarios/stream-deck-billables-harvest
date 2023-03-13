@@ -5,7 +5,6 @@ import {
   restartTimeEntry,
   stopTimeEntry,
 } from './api/harvest';
-import { missingKeys } from './common';
 import { displayError, displayTimerStatus } from './display';
 import { Settings } from './types';
 
@@ -19,7 +18,7 @@ import { Settings } from './types';
  */
 export const updateTimer = async (context: string, settings: Settings) => {
   try {
-    if (missingKeys(settings)) {
+    if (!settings.harvestAccountId.length || !settings.harvestAccountToken) {
       throw new Error('EAUTH: Missing keys, unable to display timer.');
     }
     if (!settings.task) {
@@ -50,7 +49,7 @@ export const updateTimer = async (context: string, settings: Settings) => {
  */
 export const changeTimer = async (context: string, settings: Settings) => {
   try {
-    if (missingKeys(settings)) {
+    if (!settings.harvestAccountId.length || !settings.harvestAccountToken) {
       throw new Error('EAUTH: Missing keys, unable to update timer.');
     }
     if (!settings.task) {
