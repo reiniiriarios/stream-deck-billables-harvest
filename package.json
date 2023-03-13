@@ -20,7 +20,8 @@
     "build": "webpack --mode=production",
     "copy": "./install-plugin.sh",
     "build-copy": "npm run build && npm run copy",
-    "dev": "webpack --watch --mode=development"
+    "dev": "webpack --watch --mode=development",
+    "newver": "node ./update-version.js"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",

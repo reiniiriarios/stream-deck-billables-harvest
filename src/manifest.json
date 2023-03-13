@@ -25,7 +25,9 @@
   "Actions": [
     {
       "Name": "Timer",
-      "Controllers": ["Keypad"],
+      "Controllers": [
+        "Keypad"
+      ],
       "Tooltip": "Control a specific timer.",
       "UUID": "me.reinii.harvest-billables.timer",
       "Icon": "images/icon-default",
@@ -38,7 +40,9 @@
     },
     {
       "Name": "Billables Status",
-      "Controllers": ["Keypad"],
+      "Controllers": [
+        "Keypad"
+      ],
       "Tooltip": "Show current billables status.",
       "UUID": "me.reinii.harvest-billables.status",
       "Icon": "images/icon-default",
