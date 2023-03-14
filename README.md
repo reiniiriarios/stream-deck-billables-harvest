@@ -7,13 +7,7 @@ to let you know how much more billable time you have left for the day.
 
 ## Getting Started
 
-This plugin is not yet in the Stream Deck app.
-
-**[:arrow_down: Download Latest Release][download-latest]**
-
-To install, copy the `me.reinii.harvest-billables.sdPlugin` directory to
-`~/Library/Application Support/com.elgato.StreamDeck/Plugins/` on macOS or
-`%appdata%\Elgato\StreamDeck\Plugins\` on Windows.
+**[:arrow_right: Install Plugin in Stream Deck Store][store-page]**
 
 ### Generate API Credentials
 
@@ -89,6 +83,15 @@ with a `404` instead of a `401`/`403`.
 
 \*\* The second digit in `H#000` and `F#000` errors refers to `GET`, `POST`, or `PATCH` (0, 1, or 2).
 
+### Install Manually
+
+[:arrow_down: Download Latest Release][download-latest]
+
+Copy the `me.reinii.harvest-billables.sdPlugin` directory to
+`~/Library/Application Support/com.elgato.StreamDeck/Plugins/` on macOS or
+`%appdata%\Elgato\StreamDeck\Plugins\` on Windows.
+
+[store-page]: https://apps.elgato.com/plugins/me.reinii.harvest-billables
 [download-latest]: https://github.com/reiniiriarios/stream-deck-billables-harvest/releases/latest
 [stream-deck]: https://www.elgato.com/en/welcome-to-stream-deck
 [harvest]: https://www.getharvest.com/
