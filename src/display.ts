@@ -261,6 +261,16 @@ const formatTimer = (hours: number): string => {
   return hours.toFixed(2) + 'h';
 };
 
+//--------------------- preview functions -----------------------
+
+/**
+ * Display a timer's status.
+ *
+ * @param {number} time
+ * @param {boolean} is_running
+ * @param {string} preview_text
+ * @returns {string} png data url
+ */
 export const timerPreview = (time: number, is_running: boolean, preview_text: string): string => {
   // Canvas
   let canvas = document.createElement('canvas');
@@ -268,8 +278,7 @@ export const timerPreview = (time: number, is_running: boolean, preview_text: st
   canvas.height = CANVAS_SIZE * PREVIEW_SCALE;
   let ctx = canvas.getContext('2d');
   ctx.scale(PREVIEW_SCALE, PREVIEW_SCALE);
-  ctx.fillStyle = '#111';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Icon
   const icon = is_running ? ICONS.timerRunning : ICONS.timerStopped;
@@ -299,6 +308,7 @@ export const timerPreview = (time: number, is_running: boolean, preview_text: st
  *
  * @param {number} hoursRemaining
  * @param {number} assignedHours
+ * @returns {string} png data url
  */
 export const pieChartPreview = (hoursRemaining: number, assignedHours: number): string => {
   // Canvas
@@ -307,8 +317,7 @@ export const pieChartPreview = (hoursRemaining: number, assignedHours: number): 
   canvas.height = CANVAS_SIZE * PREVIEW_SCALE;
   let ctx = canvas.getContext('2d');
   ctx.scale(PREVIEW_SCALE, PREVIEW_SCALE);
-  ctx.fillStyle = '#111';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Icon
   if (!assignedHours) {
@@ -329,6 +338,64 @@ export const pieChartPreview = (hoursRemaining: number, assignedHours: number): 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(formatHours(hoursRemaining), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
+
+  return canvas.toDataURL('image/png');
+};
+
+/**
+ * Display the hours remaining.
+ *
+ * @param {number} hoursRemaining
+ * @param {number} assignedHours
+ * @returns {string} png data url
+ */
+export const pieChartOnlyPreview = (hoursRemaining: number, assignedHours: number): string => {
+  const workedHours = assignedHours - hoursRemaining;
+  const scale = 4;
+
+  // Canvas
+  let canvas = document.createElement('canvas');
+  canvas.width = CANVAS_SIZE * scale;
+  canvas.height = CANVAS_SIZE * scale;
+  let ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // size and position settings
+  const centerX = CANVAS_SIZE * 0.5;
+  const centerY = CANVAS_SIZE * 0.5;
+  const radius = CANVAS_SIZE * 0.4;
+  const startAngle = Math.PI * -0.5; // radians
+  const offset = radius * 0.175;
+
+  // draw slice of hours fulfilled
+  const workedHoursAngle = (workedHours / assignedHours) * 2 * Math.PI;
+  ctx.beginPath();
+  ctx.moveTo(centerX, centerY);
+  ctx.arc(centerX, centerY, radius, startAngle, startAngle + workedHoursAngle, false);
+  ctx.lineTo(centerX, centerY);
+  ctx.fillStyle = BRAND_COLOR;
+  ctx.fill();
+
+  // draw the rest empty
+  const remainingAngle = ((assignedHours - workedHours) / assignedHours) * 2 * Math.PI;
+  const endAngle = startAngle + workedHoursAngle + remainingAngle;
+  const angleCenter = (startAngle + workedHoursAngle + endAngle) * 0.5;
+  const offsetX = Math.cos(angleCenter) * offset;
+  const offsetY = Math.sin(angleCenter) * offset;
+  ctx.beginPath();
+  ctx.moveTo(centerX + offsetX, centerY + offsetY);
+  ctx.arc(
+    centerX + offsetX,
+    centerY + offsetY,
+    radius * 0.75,
+    startAngle + workedHoursAngle,
+    endAngle,
+    false
+  );
+  ctx.lineTo(centerX + offsetX, centerY + offsetY);
+  ctx.fillStyle = EMPTY_COLOR;
+  ctx.fill();
 
   return canvas.toDataURL('image/png');
 };
