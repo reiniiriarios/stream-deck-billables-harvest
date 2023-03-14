@@ -34,7 +34,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            "Harvest Billables for Stream Deck ${{ github.ref_name }}.zip"
+            Harvest Billables for Stream Deck ${{ github.ref_name }}.zip
             build-${{ github.ref_name }}.zip
           fail_on_unmatched_files: true
           draft: true
