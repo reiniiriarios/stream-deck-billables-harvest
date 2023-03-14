@@ -22,8 +22,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Package
-        run: npm run package
+      - name: StreamDeck Distribution Tool
+        uses: AdamCarballo/streamdeck-distribution-tool@v1
+        with:
+          input: build/me.reinii.harvest-billables.sdPlugin
+          output: build
 
       - name: Zip plugin
         run: |
