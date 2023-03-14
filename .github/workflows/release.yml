@@ -22,12 +22,19 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Package
+        run: npm run package
+
       - name: Zip plugin
-        run: (cd build && zip -r ../release-${{ github.ref_name }}.zip .)
+        run: |
+          zip -j "Harvest Billables for Stream Deck ${{ github.ref_name }}.zip" build/me.reinii.harvest-billables.streamDeckPlugin
+          (cd build && zip -r ../build-${{ github.ref_name }}.zip .)
 
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
-          files: release-${{ github.ref_name }}.zip
+          files: |
+            "Harvest Billables for Stream Deck ${{ github.ref_name }}.zip"
+            build-${{ github.ref_name }}.zip
           fail_on_unmatched_files: true
           draft: true

@@ -83,11 +83,14 @@ with a `404` instead of a `401`/`403`.
 
 \*\* The second digit in `H#000` and `F#000` errors refers to `GET`, `POST`, or `PATCH` (0, 1, or 2).
 
-### Install Manually
+## Install Manually
 
 [:arrow_down: Download Latest Release][download-latest]
 
-Copy the `me.reinii.harvest-billables.sdPlugin` directory to
+Unzip and launch the `*.streamDeckPlugin` file and Stream Deck should install the plugin.
+
+To install manually, download the `build-*.zip` file, unzip, and copy the
+`me.reinii.harvest-billables.sdPlugin` directory to
 `~/Library/Application Support/com.elgato.StreamDeck/Plugins/` on macOS or
 `%appdata%\Elgato\StreamDeck\Plugins\` on Windows.
 
