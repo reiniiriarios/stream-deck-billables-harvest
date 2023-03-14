@@ -9,6 +9,7 @@ const BRAND_COLOR = '#fa5c00';
 const OVERAGE_COLOR = '#f00';
 const EMPTY_COLOR = '#333';
 const FONT_SIZE = 32;
+const PREVIEW_SCALE = 2;
 
 /**
  * Icon svg data.
@@ -258,4 +259,76 @@ const formatHours = (hours: number): string => {
 const formatTimer = (hours: number): string => {
   if (hours < 1) return Math.round(hours * 60) + 'm';
   return hours.toFixed(2) + 'h';
+};
+
+export const timerPreview = (time: number, is_running: boolean, preview_text: string): string => {
+  // Canvas
+  let canvas = document.createElement('canvas');
+  canvas.width = CANVAS_SIZE * PREVIEW_SCALE;
+  canvas.height = CANVAS_SIZE * PREVIEW_SCALE;
+  let ctx = canvas.getContext('2d');
+  ctx.scale(PREVIEW_SCALE, PREVIEW_SCALE);
+  ctx.fillStyle = '#111';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Icon
+  const icon = is_running ? ICONS.timerRunning : ICONS.timerStopped;
+  const path = new Path2D(icon.path);
+  ctx.fillStyle = icon.color;
+  ctx.fill(path);
+
+  // Text
+  ctx.fillStyle = TEXT_COLOR;
+  ctx.font = `${FONT_SIZE}px Helvetica, Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(formatTimer(time), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
+
+  // Preview Text
+  ctx.fillStyle = TEXT_COLOR;
+  ctx.font = `${FONT_SIZE * 0.8}px Helvetica, Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(preview_text, CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.125);
+
+  return canvas.toDataURL('image/png');
+};
+
+/**
+ * Display the hours remaining.
+ *
+ * @param {number} hoursRemaining
+ * @param {number} assignedHours
+ */
+export const pieChartPreview = (hoursRemaining: number, assignedHours: number): string => {
+  // Canvas
+  let canvas = document.createElement('canvas');
+  canvas.width = CANVAS_SIZE * PREVIEW_SCALE;
+  canvas.height = CANVAS_SIZE * PREVIEW_SCALE;
+  let ctx = canvas.getContext('2d');
+  ctx.scale(PREVIEW_SCALE, PREVIEW_SCALE);
+  ctx.fillStyle = '#111';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Icon
+  if (!assignedHours) {
+    drawIconNoAssignedHours(ctx);
+  } else {
+    let percentageRemaining = assignedHours - hoursRemaining / assignedHours;
+    // check success with an error margin
+    if (percentageRemaining <= 0.01 && percentageRemaining >= -0.01) {
+      drawIconSuccess(ctx);
+    } else {
+      drawPieChart(ctx, hoursRemaining, assignedHours);
+    }
+  }
+
+  // Text
+  ctx.fillStyle = TEXT_COLOR;
+  ctx.font = `${FONT_SIZE}px Helvetica, Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(formatHours(hoursRemaining), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
+
+  return canvas.toDataURL('image/png');
 };
