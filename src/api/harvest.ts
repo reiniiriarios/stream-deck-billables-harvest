@@ -1,4 +1,4 @@
-import { getTodayUTCDate } from '../common';
+import { getTodaysDate } from '../common';
 import { ProjectAssignment, Settings, StartEndDates, TimeEntry } from '../types';
 
 const harvestUrl = 'https://api.harvestapp.com/v2/';
@@ -169,7 +169,7 @@ export const getTimeEntryForTask = async (
   taskId: number
 ): Promise<TimeEntry> => {
   // Get tracked hours.
-  const today = getTodayUTCDate();
+  const today = getTodaysDate();
   const res = await getHarvest(settings, 'time_entries', {
     user_id: userId,
     project_id: projectId,
@@ -202,7 +202,7 @@ export const createTimeEntry = async (
   const newTimeEntry = await postHarvest(settings, 'time_entries', {
     project_id: projectId,
     task_id: taskId,
-    spent_date: getTodayUTCDate(),
+    spent_date: getTodaysDate(),
   });
   if (typeof newTimeEntry.id === 'undefined' || !newTimeEntry.id) {
     throw new Error('ETIM1: Error creating time entry.');
