@@ -1,7 +1,7 @@
 {
   "name": "stream-deck-billables-harvest",
   "description": "Track time in Harvest on Stream Deck and display time tracked compared with billable hours assigned in Forecast.",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "license": "GPL-3.0-or-later",
   "author": {
     "name": "Emma Litwa-Vulcu",
