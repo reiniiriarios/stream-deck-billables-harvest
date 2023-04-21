@@ -41,14 +41,14 @@ current day.
 
 e.g. If you have 25 assigned hours flagged as billable in Forecast, logged 5 hours on Monday
 and 6 hours on Tuesday, and 1 tracked hour on Wednesday (and counting), your display for Wednesday
-will show you needing to log another 3 hours to stay on track for the week, and the pie chart
-will be 25% full.
+will show you needing to log another 3 hours (15 hours total) to stay on track for the week, and
+the pie chart will be 80% full.
 
 - 25 assigned hours / 5 work days = 5 hours per day
 - 5 hours Monday + 6 hours Tuesday = 11 hours, 1 hour ahead of schedule
-- 5 hours per day - 1 hour ahead of schedule = 4 assigned hours for Wednesday
-- 4 assigned hours - 1 hour tracked = 3 hours remaining for the day
-- Display shows: -3h, pie chart 25% full
+- 5 hours per day - 1 hour ahead of schedule = 4 remaining hours for Wednesday
+- 4 remaining hours - 1 hour tracked = 3 hours remaining for the day
+- Display shows: -3h, pie chart 80% full
 
 ## Error Messages
 
