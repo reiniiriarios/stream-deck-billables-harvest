@@ -9,12 +9,12 @@ import {
 
 export const fakeStartEnd: StartEndDates = {
   start: {
-    date: new Date('2022-12-06T15:59:13.503Z'),
-    iso: '2022-12-06T15:59:13.503Z',
+    date: new Date('2022-12-06T00:00:00.000-0800'),
+    iso: '2022-12-06T00:00:00.000-0800',
   },
   end: {
-    date: new Date('2022-12-09T15:59:13.503Z'),
-    iso: '2022-12-09T15:59:13.503Z',
+    date: new Date('2022-12-09T23:59:59.999-0800'),
+    iso: '2022-12-09T23:59:59.999-0800',
   },
 };
 
