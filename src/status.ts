@@ -1,6 +1,6 @@
 import { getForecastUserId, getProjects, getAssignments } from './api/forecast';
 import { getHarvestUserId, getTimeEntries } from './api/harvest';
-import { getStartEndDates } from './common';
+import { getLocalTimezone, getStartEndDates } from './common';
 import { displayError, displayHoursRemaining } from './display';
 import { Assignment, HoursSchedule, Project, Settings, StartEndDates, TimeEntry } from './types';
 
@@ -197,7 +197,7 @@ export const getAssignmentDays = (
 ): { start: Date; days: number } => {
   // If the assignment start date is before the current week's start date, then
   // we count only beginning at startEnd.start and not assignment.start_date
-  let startDate = new Date(assignment.start_date);
+  let startDate = new Date(assignment.start_date + 'T00:00' + getLocalTimezone());
   if (startEnd.start.date > startDate) {
     startDate = startEnd.start.date;
   }
@@ -215,7 +215,7 @@ export const getAssignmentDays = (
 
   // If the assignment end date is after the current week's end date, then
   // we count ending at startEnd.end and not assignment.end_date
-  let endDate = new Date(assignment.end_date);
+  let endDate = new Date(assignment.end_date + 'T00:00' + getLocalTimezone());
   if (endDate > startEnd.end.date) {
     endDate = startEnd.end.date;
   }

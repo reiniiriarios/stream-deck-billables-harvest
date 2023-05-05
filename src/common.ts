@@ -25,27 +25,49 @@ export const getStartEndDates = (): StartEndDates => {
   end.setSeconds(59);
   end.setMilliseconds(999);
 
-  // format: 2023-04-16T00:00:00.000-0700, 2023-04-22T23:59:59.999-0700
-  const toIso = (date: Date): string => {
-    const tzoff = date.getTimezoneOffset();
-    const localIso = new Date(date.getTime() - tzoff * 60000).toISOString().slice(0, -1);
-    const h = Math.floor(tzoff / 60);
-    const m = tzoff % 60;
-    const tz = (tzoff < 0 ? '+' : '-') + h.toString().padStart(2, '0') + m.toString().padStart(2, '0');
-    return localIso + tz;
-  }
-
   return {
     start: {
       date: start,
-      iso: toIso(start),
+      iso: getIsoLocalTimezone(start),
     },
     end: {
       date: end,
-      iso: toIso(end),
+      iso: getIsoLocalTimezone(end),
     },
   };
 };
+
+/**
+ * Get a timezone offset for a specific date in the format of '-0700'.
+ *
+ * @returns {string}
+ */
+export const getTimezone = (date: Date): string => {
+  const tzoff = date.getTimezoneOffset();
+  const h = Math.floor(tzoff / 60);
+  const m = tzoff % 60;
+  return (tzoff < 0 ? '+' : '-') + h.toString().padStart(2, '0') + m.toString().padStart(2, '0');
+}
+
+/**
+ * Get a timezone offset for the local time in the format of '-0700'.
+ *
+ * @returns {string}
+ */
+export const getLocalTimezone = (): string => {
+  return getTimezone(new Date());
+}
+
+/**
+ * Get a date in ISO 8601 in the local timezone.
+ *
+ * format: 2023-04-16T00:00:00.000-0700, 2023-04-22T23:59:59.999-0700
+ *
+ * @returns {string}
+ */
+export const getIsoLocalTimezone = (date: Date): string => {
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, -1) + getTimezone(date);
+}
 
 /**
  * Get today's date in ISO 8601.
