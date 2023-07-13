@@ -22,6 +22,10 @@
     "Task": "Task",
     "Button Action": "Button Action",
     "Open Harvest Timesheet": "Open Harvest Timesheet",
-    "Open Forecast Schedule": "Open Forecast Schedule"
+    "Open Forecast Schedule": "Open Forecast Schedule",
+    "Billable / Non-Billable": "Billable / Non-Billable",
+    "Billable Hours": "Billable Hours",
+    "Non-Billable Hours": "Non-Billable Hours",
+    "All Hours": "All Hours"
   }
 }

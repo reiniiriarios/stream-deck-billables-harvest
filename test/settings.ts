@@ -2,7 +2,7 @@
 
 import path from 'path';
 import dotenv from 'dotenv';
-import { Settings } from '../src/types';
+import { HourType, Settings } from '../src/types';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
@@ -11,6 +11,7 @@ const getTestSettings = (): Settings => {
     harvestAccountToken: process.env.HARVEST_ACCOUNT_TOKEN ?? '',
     harvestAccountId: process.env.HARVEST_ACCOUNT_ID ?? '',
     forecastAccountId: process.env.FORECAST_ACCOUNT_ID ?? '',
+    billable: HourType.Both,
   };
 };
 const testSettings = getTestSettings();

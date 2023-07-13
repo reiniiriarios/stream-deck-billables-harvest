@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { Project, StartEndDates } from '../src/types';
+import { HourType, Project, StartEndDates } from '../src/types';
 import { fakeAssignments, fakeProject, fakeStartEnd, fakeTimeEntries } from './test-data';
 import {
   getTotalLoggedHours,
@@ -10,15 +10,15 @@ import { getStartEndDates } from '../src/common';
 
 describe('update status', () => {
   test('get total logged hours', () => {
-    const totalHours = getTotalLoggedHours(fakeTimeEntries, fakeProject.id);
+    const totalHours = getTotalLoggedHours(fakeTimeEntries, fakeProject.id, HourType.Both);
     expect(totalHours).toBe(3);
 
     // Only billable hours.
-    const totalHoursBillable = getTotalLoggedHours(fakeTimeEntries, fakeProject.id, true);
+    const totalHoursBillable = getTotalLoggedHours(fakeTimeEntries, fakeProject.id, HourType.Billable);
     expect(totalHoursBillable).toBe(2);
 
     // Not including billable hours.
-    const totalHoursNonBillable = getTotalLoggedHours(fakeTimeEntries, fakeProject.id, false);
+    const totalHoursNonBillable = getTotalLoggedHours(fakeTimeEntries, fakeProject.id, HourType.NonBillable);
     expect(totalHoursNonBillable).toBe(1);
   });
 
@@ -60,7 +60,8 @@ describe('update status', () => {
       fakeAssignments,
       fakeStartEnd,
       fakeProjects,
-      fakeProject.id
+      fakeProject.id,
+      HourType.Both
     );
     expect(schedule[0]).toBe(0); // Sunday
     expect(schedule[1]).toBe(0); // Monday, fakeStartEnd starts on Tuesday
@@ -75,7 +76,8 @@ describe('update status', () => {
       fakeAssignments,
       fakeStartEnd,
       fakeProjects,
-      123
+      123,
+      HourType.Both
     );
     expect(scheduleNoProjectMatch[0]).toBe(0);
     expect(scheduleNoProjectMatch[1]).toBe(0);
@@ -91,7 +93,7 @@ describe('update status', () => {
       fakeStartEnd,
       fakeProjects,
       fakeProject.id,
-      false
+      HourType.NonBillable
     );
     expect(scheduleNoBillables[0]).toBe(0);
     expect(scheduleNoBillables[1]).toBe(0);
@@ -107,7 +109,7 @@ describe('update status', () => {
       fakeStartEnd,
       fakeProjects,
       fakeProject.id,
-      true
+      HourType.Billable
     );
     expect(scheduleBillables[0]).toBe(0);
     expect(scheduleBillables[1]).toBe(0);

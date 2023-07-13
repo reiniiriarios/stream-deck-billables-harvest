@@ -1,9 +1,16 @@
+export enum HourType {
+  Billable = 0,
+  NonBillable = 1,
+  Both = 2,
+}
+
 // User settings from stream deck button config.
 export interface Settings {
   harvestAccountToken: string;
   harvestAccountId: string;
   forecastAccountId: string;
   task?: string;
+  billable: HourType;
 }
 
 // Response from Harvest, with additional properties.

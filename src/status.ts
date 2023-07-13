@@ -2,7 +2,7 @@ import { getForecastUserId, getProjects, getAssignments } from './api/forecast';
 import { getHarvestUserId, getTimeEntries } from './api/harvest';
 import { getLocalTimezone, getStartEndDates } from './common';
 import { displayError, displayHoursRemaining } from './display';
-import { Assignment, HoursSchedule, Project, Settings, StartEndDates, TimeEntry } from './types';
+import { Assignment, HourType, HoursSchedule, Project, Settings, StartEndDates, TimeEntry } from './types';
 
 /**
  * Update billable hours status.
@@ -22,8 +22,8 @@ export const updateStatus = async (context: string, settings: Settings) => {
       throw new Error('EAUTH: Missing keys, unable to update status.');
     }
     const startEnd: StartEndDates = getStartEndDates();
-    const loggedHours = getLoggedHours(settings, startEnd, true);
-    const assignedHours = getAssignedHours(settings, startEnd, true);
+    const loggedHours = getLoggedHours(settings, startEnd, settings.billable);
+    const assignedHours = getAssignedHours(settings, startEnd, settings.billable);
     const hoursRemaining = (await assignedHours) - (await loggedHours);
     displayHoursRemaining(context, hoursRemaining, await assignedHours);
   } catch (e) {
@@ -42,7 +42,7 @@ export const updateStatus = async (context: string, settings: Settings) => {
 export const getLoggedHours = async (
   settings: Settings,
   startEnd: StartEndDates,
-  billable: boolean = null
+  billable: HourType,
 ): Promise<number> => {
   const userIdHarvest: number = await getHarvestUserId(settings);
   const timeEntries: TimeEntry[] = await getTimeEntries(settings, userIdHarvest, startEnd);
@@ -62,7 +62,7 @@ export const getLoggedHours = async (
 export const getAssignedHours = async (
   settings: Settings,
   startEnd: StartEndDates,
-  billable: boolean = null
+  billable: HourType
 ): Promise<number> => {
   const userIdForecast: number = await getForecastUserId(settings);
   const assignments: Assignment[] = await getAssignments(settings, userIdForecast, startEnd);
@@ -90,20 +90,33 @@ export const getAssignedHours = async (
 export const getTotalLoggedHours = (
   timeEntries: TimeEntry[],
   projectId: number = 0,
-  billable: boolean = null
+  billable: HourType,
 ): number => {
   let hours: number = 0;
   timeEntries.forEach((timeEntry: TimeEntry) => {
     if (projectId && timeEntry.project.id !== projectId) {
       return;
     }
-    if (billable !== null && billable !== timeEntry.billable) {
+    if (!billableMatchesType(timeEntry.billable, billable)) {
       return;
     }
     hours += timeEntry.hours;
   });
   return hours;
 };
+
+/**
+ * Check whether billable entry matches type.
+ *
+ * @param {boolean} billable
+ * @param {HourType} type
+ * @returns 
+ */
+const billableMatchesType = (billable: boolean, type: HourType): boolean => {
+  return type === HourType.Both
+    || (type === HourType.Billable && billable)
+    || (type === HourType.NonBillable && !billable);
+}
 
 /**
  * Get total assigned hours for a project from a list of time entries.
@@ -167,14 +180,14 @@ export const getAssignedHoursSchedule = (
   startEnd: StartEndDates,
   projects: Project[],
   projectId: number = 0,
-  billable: boolean = null
+  billable: HourType
 ): HoursSchedule => {
   let schedule: HoursSchedule = Array(7).fill(0);
   assignments.forEach((assignment: Assignment) => {
     if (projectId && assignment.project_id !== projectId) {
       return;
     }
-    if (billable !== null && billable !== projects[assignment.project_id].billable) {
+    if (!billableMatchesType(projects[assignment.project_id].billable, billable)) {
       return;
     }
 
