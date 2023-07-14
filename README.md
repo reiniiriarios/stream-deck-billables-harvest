@@ -32,23 +32,25 @@ Top") to differentiate Task timers.
 
 ### Billables Status
 
-This button will only work if your organization also uses [Forecast][forecast] to track billable
-hours. The purpose of this button is to keep you on track for billable hours for the week.
+This button will only work if your organization also uses [Forecast][forecast] to track time.
+The purpose of this button is to keep you on track for hours for the week.
 
-This display will compare your total weekly tracked billable hours to date to your assigned
-billable hours in forecast, and display the remaining billable hours you need to fulfill for the
+This display will compare your total weekly tracked hours to date to your assigned
+billable hours in forecast, and display the remaining hours you need to fulfill for the
 current day.
 
-e.g. If you have 25 assigned hours flagged as billable in Forecast, logged 5 hours on Monday
-and 6 hours on Tuesday, and 1 tracked hour on Wednesday (and counting), your display for Wednesday
-will show you needing to log another 3 hours (15 hours total) to stay on track for the week, and
-the pie chart will be 80% full.
+e.g. If you have 25 assigned hours in Forecast, logged 5 hours on Monday and 6 hours on Tuesday,
+and 1 tracked hour on Wednesday (and counting), your display for Wednesday will show you needing
+to log another 3 hours (15 hours total) to stay on track for the week, and the pie chart will
+be 80% full.
 
 - 25 assigned hours / 5 work days = 5 hours per day
 - 5 hours Monday + 6 hours Tuesday = 11 hours, 1 hour ahead of schedule
 - 5 hours per day - 1 hour ahead of schedule = 4 remaining hours for Wednesday
 - 4 remaining hours - 1 hour tracked = 3 hours remaining for the day
 - Display shows: -3h, pie chart 80% full
+
+You can track billable hours, non-billable hours, or both for each button/display.
 
 ## Error Messages
 
