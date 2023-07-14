@@ -13,7 +13,6 @@ describe('get forecast data', () => {
 
   test('get projects', async () => {
     const projects: Project[] = await getProjects(testSettings);
-    // console.log(projects)
     expect(projects.length).toBeGreaterThanOrEqual(0);
 
     if (projects.length) {
@@ -31,7 +30,6 @@ describe('get forecast data', () => {
       userId,
       getStartEndDates()
     );
-    // console.log(assignments)
     expect(assignments.length).toBeGreaterThanOrEqual(0);
 
     if (assignments.length) {

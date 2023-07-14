@@ -73,7 +73,7 @@ export const getProjects = async (settings: Settings): Promise<Project[]> => {
     throw new Error('NOPRJ: No projects found in Forecast.');
   }
   resP.projects.forEach((project: Project) => {
-    if (!project.archived) {
+    if (project.id && !project.archived) {
       projects[project.id] = project;
     }
   });

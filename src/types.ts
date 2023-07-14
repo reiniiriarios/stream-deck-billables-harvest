@@ -1,7 +1,7 @@
 export enum HourType {
-  Billable = 0,
-  NonBillable = 1,
-  Both = 2,
+  Billable = 'billable',
+  NonBillable = 'nonbillable',
+  Both = 'both',
 }
 
 // User settings from stream deck button config.
