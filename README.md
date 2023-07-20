@@ -54,6 +54,12 @@ You can track billable hours, non-billable hours, or both for each button/displa
 
 ### Preview
 
+#### Buttons
+
+| ![](docs/photo-01.jpg) |
+|:--:|
+| Stream Deck MK.2 w/ Peaceful Web Faceplate |
+
 #### Settings
 
 Timer|Chart
