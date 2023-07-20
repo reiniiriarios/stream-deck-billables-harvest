@@ -52,6 +52,15 @@ be 80% full.
 
 You can track billable hours, non-billable hours, or both for each button/display.
 
+### Preview
+
+#### Settings
+
+Timer|Chart
+---|---
+![](docs/settings-timer.png)|![](docs/settings-chart.png)
+Task Dropdown shows all available tasks, grouped by project. | Button action can refresh data, open Harvest timesheet, or open Forecast schedule.
+
 ## Error Messages
 
 Error|Details
