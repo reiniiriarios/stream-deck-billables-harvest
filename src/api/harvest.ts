@@ -3,6 +3,8 @@ import { ProjectAssignment, Settings, StartEndDates, TimeEntry } from '../types'
 
 const harvestUrl = 'https://api.harvestapp.com/v2/';
 
+let harvestUserId: number = null;
+
 /**
  * Fetch data from the harvest api.
  *
@@ -118,9 +120,12 @@ export const patchHarvest = async (settings: Settings, path: string): Promise<an
  * @param {Settings} settings
  * @returns {Promise<number>}
  */
-export const getHarvestUserId = async (settings: Settings): Promise<number> => {
-  const user = await getHarvest(settings, 'users/me');
-  return user.id;
+export const getHarvestUserId = async (settings: Settings, refresh: boolean = false): Promise<number> => {
+  if (!harvestUserId || refresh) {
+    const user = await getHarvest(settings, 'users/me');
+    harvestUserId = user.id;
+  }
+  return harvestUserId;
 };
 
 /**

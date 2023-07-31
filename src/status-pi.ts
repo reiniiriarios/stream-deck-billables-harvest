@@ -2,6 +2,7 @@
 /// <reference path="libs/js/utils.js" />
 
 import config from '../config.js';
+import { Settings } from './types';
 
 $PI.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }): void => {
   const { payload, context } = actionInfo;
@@ -12,8 +13,8 @@ $PI.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }): 
   form.addEventListener(
     'input',
     Utils.debounce(150, () => {
-      const value = Utils.getFormValue(form);
-      $PI.setSettings(value);
+      const newSettings = Utils.getFormValue(form) as Settings;
+      $PI.setSettings(newSettings);
     })
   );
 });

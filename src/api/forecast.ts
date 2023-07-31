@@ -2,6 +2,8 @@ import { Assignment, Project, RemainingBudgetedHours, Settings, StartEndDates } 
 
 const forecastUrl = 'https://api.forecastapp.com/';
 
+let forecastUserId: number = null;
+
 /**
  * Fetch data from the forecast api.
  *
@@ -53,9 +55,12 @@ export const getForecast = async (
  * @param {Settings} settings
  * @returns {Promise<number>}
  */
-export const getForecastUserId = async (settings: Settings): Promise<number> => {
-  const res = await getForecast(settings, 'whoami');
-  return res.current_user.id;
+export const getForecastUserId = async (settings: Settings, refresh: boolean = false): Promise<number> => {
+  if (!forecastUserId || refresh) {
+    const res = await getForecast(settings, 'whoami');
+    forecastUserId = res.current_user.id;
+  }
+  return forecastUserId;
 };
 
 /**

@@ -16,8 +16,8 @@ $PI.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }): 
   form.addEventListener(
     'input',
     Utils.debounce(150, () => {
-      const value = Utils.getFormValue(form);
-      $PI.setSettings(value);
+      const newSettings = Utils.getFormValue(form) as Settings;
+      $PI.setSettings(newSettings);
     })
   );
 });
