@@ -29,6 +29,7 @@ export const getHarvest = async (
       .join('&');
     url += '?' + params;
   }
+  console.log('GET', url);
   const response = await fetch(url, {
     method: 'GET',
     headers: {
@@ -62,6 +63,7 @@ export const getHarvest = async (
  */
 export const postHarvest = async (settings: Settings, path: string, data: object): Promise<any> => {
   let url = harvestUrl + path;
+  console.log('POST', url, data);
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -94,6 +96,7 @@ export const postHarvest = async (settings: Settings, path: string, data: object
  */
 export const patchHarvest = async (settings: Settings, path: string): Promise<any> => {
   let url = harvestUrl + path;
+  console.log('PATCH', url);
   const response = await fetch(url, {
     method: 'PATCH',
     headers: {

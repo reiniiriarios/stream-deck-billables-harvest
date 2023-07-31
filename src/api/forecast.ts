@@ -28,6 +28,7 @@ export const getForecast = async (
       .join('&');
     url += '?' + params;
   }
+  console.log('GET', url);
   const response = await fetch(url, {
     method: 'GET',
     headers: {
