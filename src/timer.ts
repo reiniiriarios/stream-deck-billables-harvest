@@ -29,9 +29,9 @@ export const updateTimer = async (context: string, settings: Settings) => {
     if (typeof task !== 'undefined' && typeof task.id !== 'undefined' && task.id) {
       const timeEntry = await getTimeEntryForTask(settings, userId, task.projectId, task.id);
       if (timeEntry) {
-        displayTimerStatus(context, timeEntry.is_running, timeEntry.hours);
+        displayTimerStatus(context, timeEntry.is_running, timeEntry.hours, settings.timeFormat);
       } else {
-        displayTimerStatus(context, false, 0);
+        displayTimerStatus(context, false, 0, settings.timeFormat);
       }
     }
   } catch (e) {
@@ -70,7 +70,7 @@ export const changeTimer = async (context: string, settings: Settings) => {
       } else {
         timeEntry = await createTimeEntry(settings, task.projectId, task.id);
       }
-      displayTimerStatus(context, timeEntry.is_running, timeEntry.hours);
+      displayTimerStatus(context, timeEntry.is_running, timeEntry.hours, settings.timeFormat);
     }
   } catch (e) {
     displayError(context, e);

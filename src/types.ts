@@ -4,6 +4,13 @@ export enum HourType {
   Both = 'both',
 }
 
+export enum TimeFormat {
+  HourDecimal = 'hourDecimal', // 1.5h
+  AlwaysMinutes = 'alwaysMinutes', // 90m
+  HoursMinutes = 'hoursMinutes', // 1:30
+  HoursMinutesPadded = 'hoursMinutesPadded', // 01:30
+}
+
 // User settings from stream deck button config.
 export interface Settings {
   harvestAccountToken: string;
@@ -11,6 +18,7 @@ export interface Settings {
   forecastAccountId: string;
   task?: string;
   billable: HourType;
+  timeFormat?: TimeFormat;
 }
 
 // Response from Harvest, with additional properties.

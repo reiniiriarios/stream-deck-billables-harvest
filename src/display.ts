@@ -1,5 +1,7 @@
 /// <reference path="libs/js/stream-deck.js" />
 
+import { TimeFormat } from "./types";
+
 /**
  * Icon config.
  */
@@ -176,7 +178,7 @@ const drawPieChart = (
  * @param {boolean} is_running
  * @param {number} time
  */
-export const displayTimerStatus = (context: string, is_running: boolean, time: number): void => {
+export const displayTimerStatus = (context: string, is_running: boolean, time: number, format: TimeFormat): void => {
   // Canvas
   let canvas = document.createElement('canvas');
   canvas.width = CANVAS_SIZE;
@@ -195,7 +197,7 @@ export const displayTimerStatus = (context: string, is_running: boolean, time: n
   ctx.font = `${FONT_SIZE}px Helvetica, Arial, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(formatTimer(time), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
+  ctx.fillText(formatTimer(time, format), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
 
   const finalImage = canvas.toDataURL('image/png');
   $SD.setImage(context, finalImage);
@@ -256,9 +258,23 @@ const formatHours = (hours: number): string => {
  * @param {number} hours
  * @returns {string} formatted hours
  */
-const formatTimer = (hours: number): string => {
-  if (hours < 1) return Math.round(hours * 60) + 'm';
-  return hours.toFixed(2) + 'h';
+const formatTimer = (hours: number, format: TimeFormat): string => {
+  switch (format) {
+    case TimeFormat.HoursMinutes: // 1:30
+    case TimeFormat.HoursMinutesPadded: // 01:30
+      let hoursFloor = Math.floor(hours);
+      let minutes = hours * 60 - (hoursFloor * 60);
+      let hoursDisplay = format === TimeFormat.HoursMinutesPadded && hoursFloor < 10
+        ? `0${hoursFloor}`
+        : hoursFloor.toString();
+      return `${hoursDisplay}:${minutes}`;
+    case TimeFormat.AlwaysMinutes: // 90m
+      return Math.round(hours * 60) + 'm';
+    case TimeFormat.HourDecimal: // 1.5h
+    default:
+      if (hours < 1) return Math.round(hours * 60) + 'm';
+      return hours.toFixed(2) + 'h';
+  }
 };
 
 //--------------------- preview functions -----------------------
@@ -271,7 +287,7 @@ const formatTimer = (hours: number): string => {
  * @param {string} preview_text
  * @returns {string} png data url
  */
-export const timerPreview = (time: number, is_running: boolean, preview_text: string): string => {
+export const timerPreview = (time: number, is_running: boolean, preview_text: string, format: TimeFormat): string => {
   // Canvas
   let canvas = document.createElement('canvas');
   canvas.width = CANVAS_SIZE * PREVIEW_SCALE;
@@ -291,7 +307,7 @@ export const timerPreview = (time: number, is_running: boolean, preview_text: st
   ctx.font = `${FONT_SIZE}px Helvetica, Arial, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(formatTimer(time), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
+  ctx.fillText(formatTimer(time, format), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
 
   // Preview Text
   ctx.fillStyle = TEXT_COLOR;
