@@ -5,7 +5,8 @@ export enum HourType {
 }
 
 export enum TimeFormat {
-  HourDecimal = 'hourDecimal', // 1.5h
+  HourDecimal = 'hourDecimal', // 1.5h / 30m
+  AlwaysHours = 'alwaysHours', // 1.5h
   AlwaysMinutes = 'alwaysMinutes', // 90m
   HoursMinutes = 'hoursMinutes', // 1:30
   HoursMinutesPadded = 'hoursMinutesPadded', // 01:30
