@@ -51,7 +51,8 @@ const ICONS = {
 export const displayHoursRemaining = (
   context: string,
   hoursRemaining: number,
-  assignedHours: number
+  assignedHours: number,
+  format: TimeFormat,
 ): void => {
   // Canvas
   let canvas = document.createElement('canvas');
@@ -78,7 +79,7 @@ export const displayHoursRemaining = (
   ctx.font = `${FONT_SIZE}px Helvetica, Arial, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(formatHours(hoursRemaining), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
+  ctx.fillText(formatChartHours(hoursRemaining, format), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
 
   const finalImage = canvas.toDataURL('image/png');
   $SD.setImage(context, finalImage);
@@ -243,13 +244,32 @@ export const displayError = (context: string, error: Error): void => {
  * @param {number} hours
  * @returns {string} formatted hours
  */
-export const formatHours = (hours: number): string => {
+export const formatChartHours = (hours: number, format: TimeFormat): string => {
   // Display hours as a value of how far a user has to go.
   // -2h = 2 hours remaining to work
   // 2h = 2 hours over
-  hours = hours * -1;
-  if (Math.abs(hours) < 1) return (hours >= 0 ? '+' : '') + Math.round(hours * 60) + 'm';
-  return (hours >= 0 ? '+' : '') + hours.toFixed(2) + 'h';
+  let sign = hours < 0 ? '+' : '-';
+  hours = Math.abs(hours);
+
+  switch (format) {
+    case TimeFormat.HoursMinutes: // 1:30
+    case TimeFormat.HoursMinutesPadded: // 01:30
+      let hoursFloor = Math.floor(hours);
+      let minutes = Math.round(hours * 60 - (hoursFloor * 60));
+      let hoursDisplay = format === TimeFormat.HoursMinutesPadded && hoursFloor < 10
+        ? `0${hoursFloor}`
+        : hoursFloor.toString();
+      let minutesDisplay = minutes < 10 ? `0${minutes}` : minutes.toString();
+      return `${sign}${hoursDisplay}:${minutesDisplay}`;
+    case TimeFormat.AlwaysHours: // 1.5h
+      return sign + hours.toFixed(2) + 'h';
+    case TimeFormat.AlwaysMinutes: // 90m
+      return sign + Math.round(hours * 60) + 'm';
+    case TimeFormat.HourDecimal: // 1.5h / 30m
+    default:
+      if (hours < 1) return sign + Math.round(hours * 60) + 'm';
+      return sign + hours.toFixed(2) + 'h';
+  }
 };
 
 /**
@@ -329,7 +349,7 @@ export const timerPreview = (time: number, is_running: boolean, preview_text: st
  * @param {number} assignedHours
  * @returns {string} png data url
  */
-export const pieChartPreview = (hoursRemaining: number, assignedHours: number): string => {
+export const pieChartPreview = (hoursRemaining: number, assignedHours: number, format: TimeFormat): string => {
   // Canvas
   let canvas = document.createElement('canvas');
   canvas.width = CANVAS_SIZE * PREVIEW_SCALE;
@@ -356,7 +376,7 @@ export const pieChartPreview = (hoursRemaining: number, assignedHours: number): 
   ctx.font = `${FONT_SIZE}px Helvetica, Arial, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(formatHours(hoursRemaining), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
+  ctx.fillText(formatChartHours(hoursRemaining, format), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
 
   return canvas.toDataURL('image/png');
 };

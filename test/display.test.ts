@@ -1,24 +1,45 @@
 import { describe, expect, test } from '@jest/globals';
-import { formatHours, formatTimer } from '../src/display';
+import { formatChartHours, formatTimer } from '../src/display';
 import { TimeFormat } from '../src/types';
 
 // Test formatting hours for pie chart.
 // Positive and negative are flipped to display remaining time.
-describe('formatHours', () => {
-  test('positive hours', () => {
-    expect(formatHours(-1.1275)).toBe('+1.13h');
+describe('formatChartHours', () => {
+  test('HourDecimal', () => {
+    expect(formatChartHours(-1.1275, TimeFormat.HourDecimal)).toBe('+1.13h');
+    expect(formatChartHours(1.1275, TimeFormat.HourDecimal)).toBe('-1.13h');
+    expect(formatChartHours(-0.1275, TimeFormat.HourDecimal)).toBe('+8m');
+    expect(formatChartHours(0.1275, TimeFormat.HourDecimal)).toBe('-8m');
   });
 
-  test('negative hours', () => {
-    expect(formatHours(1.1275)).toBe('-1.13h');
+  test('AlwaysHours', () => {
+    expect(formatChartHours(-1.1275, TimeFormat.AlwaysHours)).toBe('+1.13h');
+    expect(formatChartHours(1.1275, TimeFormat.AlwaysHours)).toBe('-1.13h');
+    expect(formatChartHours(-0.1275, TimeFormat.AlwaysHours)).toBe('+0.13h');
+    expect(formatChartHours(0.1275, TimeFormat.AlwaysHours)).toBe('-0.13h');
   });
 
-  test('positive minutes', () => {
-    expect(formatHours(-0.1275)).toBe('+8m');
+  test('AlwaysMinutes', () => {
+    expect(formatChartHours(-1.1275, TimeFormat.AlwaysMinutes)).toBe('+68m');
+    expect(formatChartHours(1.1275, TimeFormat.AlwaysMinutes)).toBe('-68m');
+    expect(formatChartHours(-0.1275, TimeFormat.AlwaysMinutes)).toBe('+8m');
+    expect(formatChartHours(0.1275, TimeFormat.AlwaysMinutes)).toBe('-8m');
   });
 
-  test('negative minutes', () => {
-    expect(formatHours(0.1275)).toBe('-8m');
+  test('HoursMinutes', () => {
+    expect(formatChartHours(-1.1275, TimeFormat.HoursMinutes)).toBe('+1:08');
+    expect(formatChartHours(1.1275, TimeFormat.HoursMinutes)).toBe('-1:08');
+    expect(formatChartHours(-0.1275, TimeFormat.HoursMinutes)).toBe('+0:08');
+    expect(formatChartHours(0.1275, TimeFormat.HoursMinutes)).toBe('-0:08');
+  });
+
+  test('HoursMinutesPadded', () => {
+    expect(formatChartHours(-10.1275, TimeFormat.HoursMinutesPadded)).toBe('+10:08');
+    expect(formatChartHours(10.1275, TimeFormat.HoursMinutesPadded)).toBe('-10:08');
+    expect(formatChartHours(-1.1275, TimeFormat.HoursMinutesPadded)).toBe('+01:08');
+    expect(formatChartHours(1.1275, TimeFormat.HoursMinutesPadded)).toBe('-01:08');
+    expect(formatChartHours(-0.1275, TimeFormat.HoursMinutesPadded)).toBe('+00:08');
+    expect(formatChartHours(0.1275, TimeFormat.HoursMinutesPadded)).toBe('-00:08');
   });
 });
 
