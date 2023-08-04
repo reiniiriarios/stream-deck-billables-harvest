@@ -243,7 +243,7 @@ export const displayError = (context: string, error: Error): void => {
  * @param {number} hours
  * @returns {string} formatted hours
  */
-const formatHours = (hours: number): string => {
+export const formatHours = (hours: number): string => {
   // Display hours as a value of how far a user has to go.
   // -2h = 2 hours remaining to work
   // 2h = 2 hours over
@@ -258,7 +258,7 @@ const formatHours = (hours: number): string => {
  * @param {number} hours
  * @returns {string} formatted hours
  */
-const formatTimer = (hours: number, format: TimeFormat): string => {
+export const formatTimer = (hours: number, format: TimeFormat): string => {
   switch (format) {
     case TimeFormat.HoursMinutes: // 1:30
     case TimeFormat.HoursMinutesPadded: // 01:30
