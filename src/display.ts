@@ -263,11 +263,12 @@ const formatTimer = (hours: number, format: TimeFormat): string => {
     case TimeFormat.HoursMinutes: // 1:30
     case TimeFormat.HoursMinutesPadded: // 01:30
       let hoursFloor = Math.floor(hours);
-      let minutes = hours * 60 - (hoursFloor * 60);
+      let minutes = Math.round(hours * 60 - (hoursFloor * 60));
       let hoursDisplay = format === TimeFormat.HoursMinutesPadded && hoursFloor < 10
         ? `0${hoursFloor}`
         : hoursFloor.toString();
-      return `${hoursDisplay}:${minutes}`;
+      let minutesDisplay = minutes < 10 ? `0${minutes}` : minutes.toString();
+      return `${hoursDisplay}:${minutesDisplay}`;
     case TimeFormat.AlwaysHours: // 1.5h
       return hours.toFixed(2) + 'h';
     case TimeFormat.AlwaysMinutes: // 90m
