@@ -31,6 +31,10 @@ const ICONS = {
     path: 'M 57.58 40.52 H 62.9 a 3.04 3.04 90 0 1 3.04 3.04 V 89.92 a 3.04 3.04 90 0 1 -3.04 3.04 H 57.58 a 3.04 3.04 90 0 1 -3.04 -3.04 V 43.56 A 3.04 3.04 90 0 1 57.58 40.52 Z m 23.56 52.44 h 5.32 a 3.04 3.04 90 0 0 3.04 -3.04 V 43.56 a 3.04 3.04 90 0 0 -3.04 -3.04 H 81.14 a 3.04 3.04 90 0 0 -3.04 3.04 V 89.92 A 3.04 3.04 90 0 0 81.14 92.96 Z',
     color: '#575757',
   },
+  stopWatch: {
+    path: 'M85.7 53.94l1.52-2.4c.72-1.12.4-2.48-.72-3.2-1.12-.72-2.48-.4-3.2.72l-1.52 2.4c-2.24-1.12-4.8-1.92-7.36-2.16V46.34h.16c1.28 0 2.32-1.04 2.32-2.32S75.86 41.7 74.58 41.7h-4.88c-1.28 0-2.32 1.04-2.32 2.32s1.04 2.32 2.32 2.32h.16v3.04C58.82 50.5 50.26 59.78 50.26 71.06 50.26 83.14 60.02 92.9 72.1 92.9s21.84-9.84 21.84-21.84C93.94 64.18 90.74 58.02 85.7 53.94zM72.1 88.26c-9.52 0-17.2-7.76-17.2-17.2s7.76-17.2 17.2-17.2 17.2 7.76 17.2 17.2S81.62 88.26 72.1 88.26zM79.78 62.18c-.96-.88-2.4-.72-3.28.24l-6.24 7.12c-.88.96-.72 2.4.24 3.28.96.88 2.4.72 3.28-.24l6.24-7.12C80.9 64.5 80.82 63.06 79.78 62.18z',
+    color: BRAND_COLOR,
+  },
   empty: {
     path: 'M 72 82.5 A 1.875 1.875 90 0 0 72 15 A 1.875 1.875 90 0 0 72 82.5 M 72 75 A 1.875 1.875 90 0 1 72 22.5 A 1.875 1.875 90 0 1 72 75 Z M 100.125 15 L 38.25 76.875 L 43.875 82.5 L 105.75 20.625 Z',
     color: EMPTY_COLOR,
@@ -178,6 +182,7 @@ const drawPieChart = (
  * @param {string} context
  * @param {boolean} is_running
  * @param {number} time
+ * @param {TimeFormat} format
  */
 export const displayTimerStatus = (context: string, is_running: boolean, time: number, format: TimeFormat): void => {
   // Canvas
@@ -189,6 +194,38 @@ export const displayTimerStatus = (context: string, is_running: boolean, time: n
 
   // Icon
   const icon = is_running ? ICONS.timerRunning : ICONS.timerStopped;
+  const path = new Path2D(icon.path);
+  ctx.fillStyle = icon.color;
+  ctx.fill(path);
+
+  // Text
+  ctx.fillStyle = TEXT_COLOR;
+  ctx.font = `${FONT_SIZE}px Helvetica, Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(formatTimer(time, format), CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.85);
+
+  const finalImage = canvas.toDataURL('image/png');
+  $SD.setImage(context, finalImage);
+};
+
+/**
+ * Display a timer's status.
+ *
+ * @param {string} context
+ * @param {number} time
+ * @param {TimeFormat} format
+ */
+export const displayTimerTotal = (context: string, time: number, format: TimeFormat): void => {
+  // Canvas
+  let canvas = document.createElement('canvas');
+  canvas.width = CANVAS_SIZE;
+  canvas.height = CANVAS_SIZE;
+  let ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Icon
+  const icon = ICONS.stopWatch;
   const path = new Path2D(icon.path);
   ctx.fillStyle = icon.color;
   ctx.fill(path);

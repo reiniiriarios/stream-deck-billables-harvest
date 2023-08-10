@@ -39,6 +39,21 @@
       "PropertyInspectorPath": "timer-pi.html"
     },
     {
+      "Name": "Timer Total",
+      "Controllers": [
+        "Keypad"
+      ],
+      "Tooltip": "Display total for all timers.",
+      "UUID": "me.reinii.harvest-billables.timer-total",
+      "Icon": "images/icon-default",
+      "States": [
+        {
+          "Image": "images/icon-default"
+        }
+      ],
+      "PropertyInspectorPath": "timer-total-pi.html"
+    },
+    {
       "Name": "Billables Status",
       "Controllers": [
         "Keypad"

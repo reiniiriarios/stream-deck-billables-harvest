@@ -12,6 +12,11 @@ export enum TimeFormat {
   HoursMinutesPadded = 'hoursMinutesPadded', // 01:30
 }
 
+export enum TimePeriod {
+  Day = 'day',
+  Week = 'week',
+}
+
 // User settings from stream deck button config.
 export interface Settings {
   harvestAccountToken: string;
@@ -20,6 +25,7 @@ export interface Settings {
   task?: string;
   billable: HourType;
   timeFormat?: TimeFormat;
+  timePeriod?: TimePeriod;
 }
 
 // Response from Harvest, with additional properties.

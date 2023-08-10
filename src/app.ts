@@ -4,9 +4,11 @@
 import { updateStatus } from './status';
 import config from '../config.js';
 import { changeTimer, updateTimer } from './timer';
+import { updateTimerTotal } from './timer-total';
 
 const actionStatus = new Action(config.appName + '.status');
 const actionTimer = new Action(config.appName + '.timer');
+const actionTimerTotal = new Action(config.appName + '.timer-total');
 
 /**
  * The first event fired when Stream Deck starts
@@ -54,4 +56,17 @@ actionTimer.onWillAppear(({ action, context, device, event, payload }): void => 
 
 actionTimer.onKeyUp(({ action, context, device, event, payload }): void => {
   changeTimer(context, payload.settings);
+});
+
+actionTimerTotal.onWillAppear(({ action, context, device, event, payload }): void => {
+  const intervalMinutes = parseInt(payload.settings.fetchInterval);
+  const interval = (intervalMinutes < 1 ? 1 : intervalMinutes) * 60000;
+  updateTimerTotal(context, payload.settings);
+  setInterval(() => {
+    updateTimerTotal(context, payload.settings);
+  }, interval);
+});
+
+actionTimerTotal.onKeyUp(({ action, context, device, event, payload }): void => {
+  updateTimerTotal(context, payload.settings);
 });

@@ -6,6 +6,10 @@
     "Name": "Timer",
     "Tooltip": "Control a specific timer."
   },
+  "me.reinii.harvest-billables.timer-total": {
+    "Name": "Timer Total",
+    "Tooltip": "Display total for all timers."
+  },
   "me.reinii.harvest-billables.status": {
     "Name": "Billables Status",
     "Tooltip": "Show current billables status."
@@ -26,6 +30,8 @@
     "Billable / Non-Billable": "Billable / Non-Billable",
     "Billable Hours": "Billable Hours",
     "Non-Billable Hours": "Non-Billable Hours",
-    "All Hours": "All Hours"
+    "All Hours": "All Hours",
+    "Today": "Today",
+    "Current Week": "Current Week"
   }
 }

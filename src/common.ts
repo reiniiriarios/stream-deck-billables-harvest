@@ -38,6 +38,38 @@ export const getStartEndDates = (): StartEndDates => {
 };
 
 /**
+ * Get start and end dates of today in ISO 8601.
+ *
+ * @returns {StartEndDates}
+ */
+export const getTodayAsStartEndDates = (): StartEndDates => {
+  let currentDate = new Date();
+
+  let start = new Date(currentDate);
+  start.setHours(0);
+  start.setMinutes(0);
+  start.setSeconds(0);
+  start.setMilliseconds(0);
+
+  let end = new Date(currentDate);
+  end.setHours(23);
+  end.setMinutes(59);
+  end.setSeconds(59);
+  end.setMilliseconds(999);
+
+  return {
+    start: {
+      date: start,
+      iso: getIsoLocalTimezone(start),
+    },
+    end: {
+      date: end,
+      iso: getIsoLocalTimezone(end),
+    },
+  };
+};
+
+/**
  * Get a timezone offset for a specific date in the format of '-0700'.
  *
  * @returns {string}

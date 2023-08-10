@@ -47,22 +47,30 @@ document.getElementById('howto-button').addEventListener('click', () => {
  * @param {Settings} settings
  */
 const setTaskOptions = async (settings: Settings) => {
-  let select = document.getElementById('task');
-  const projectAssignments = await getUserProjectAssignments(settings);
-  projectAssignments.forEach((project_assignment: ProjectAssignment) => {
-    // Project optgroup
-    let optgroup = document.createElement('optgroup');
-    optgroup.label = project_assignment.project.name;
-    project_assignment.task_assignments.forEach((task_assignment: TaskAssignment) => {
-      // Task assignment option
-      let option = document.createElement('option');
-      option.text = task_assignment.task.name;
-      option.value = JSON.stringify({
-        id: task_assignment.task.id,
-        projectId: project_assignment.project.id,
+  try {
+    if (!settings.harvestAccountId?.length || !settings.harvestAccountToken?.length) {
+      throw new Error('EAUTH: Missing keys, unable to update task options.');
+    }
+    let select = document.getElementById('task');
+    const projectAssignments = await getUserProjectAssignments(settings);
+    projectAssignments.forEach((project_assignment: ProjectAssignment) => {
+      // Project optgroup
+      let optgroup = document.createElement('optgroup');
+      optgroup.label = project_assignment.project.name;
+      project_assignment.task_assignments.forEach((task_assignment: TaskAssignment) => {
+        // Task assignment option
+        let option = document.createElement('option');
+        option.text = task_assignment.task.name;
+        option.value = JSON.stringify({
+          id: task_assignment.task.id,
+          projectId: project_assignment.project.id,
+        });
+        optgroup.appendChild(option);
       });
-      optgroup.appendChild(option);
+      select.appendChild(optgroup);
     });
-    select.appendChild(optgroup);
-  });
+  }
+  catch (e) {
+    console.error(e);
+  }
 };
