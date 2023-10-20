@@ -8,8 +8,8 @@
     "email": "80431903+reiniiriarios@users.noreply.github.com"
   },
   "engines": {
-    "node": "^20.3.0",
-    "npm": "^9.6.7"
+    "node": "^20.8.1",
+    "npm": "^10.1.0"
   },
   "repository": {
     "type": "git",
