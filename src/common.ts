@@ -76,7 +76,7 @@ export const getTodayAsStartEndDates = (): StartEndDates => {
  */
 export const getTimezone = (date: Date): string => {
   const tzoff = date.getTimezoneOffset();
-  const h = Math.floor(tzoff / 60);
+  const h = Math.floor(Math.abs(tzoff) / 60);
   const m = tzoff % 60;
   return (tzoff < 0 ? '+' : '-') + h.toString().padStart(2, '0') + m.toString().padStart(2, '0');
 }
