@@ -41,6 +41,13 @@
           </select>
         </div>
         <div class="sdpi-item">
+          <div class="sdpi-item-label" data-localize>Week Start</div>
+          <select class="sdpi-item-value" name="weekStart">
+            <option value="Saturday" data-localize>Saturday</option>
+            <option value="Sunday" data-localize>Sunday</option>
+          </select>
+        </div>
+        <div class="sdpi-item">
           <div class="sdpi-item-label" data-localize>Format</div>
           <select class="sdpi-item-value" id="timeFormat" name="timeFormat">
             <option value="hourDecimal">1.5hr / 30m</option>
@@ -52,7 +59,14 @@
         </div>
         <div class="sdpi-item">
           <div class="sdpi-item-label" data-localize>Fetch Interval (Minutes)</div>
-          <input class="sdpi-item-value" name="fetchInterval" type="number" value="1" min="1" max="1440" />
+          <input
+            class="sdpi-item-value"
+            name="fetchInterval"
+            type="number"
+            value="1"
+            min="1"
+            max="1440"
+          />
         </div>
         <div class="sdpi-heading" data-localize>Help</div>
         <div class="sdpi-item">

@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { HourType, Project, StartEndDates } from '../src/types';
+import { HourType, Project, StartEndDates, WeekStart } from '../src/types';
 import { fakeAssignments, fakeProject, fakeStartEnd, fakeTimeEntries } from './test-data';
 import {
   getTotalLoggedHours,
@@ -45,7 +45,7 @@ describe('update status', () => {
   });
 
   test('start and end dates', () => {
-    const startEnd: StartEndDates = getStartEndDates();
+    const startEnd: StartEndDates = getStartEndDates(WeekStart.Sunday);
     const now = Date.now();
     expect(startEnd.start.date.getTime()).toBeLessThan(now);
     expect(startEnd.end.date.getTime()).toBeGreaterThan(now);

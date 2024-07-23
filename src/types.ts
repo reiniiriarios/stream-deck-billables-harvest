@@ -17,12 +17,18 @@ export enum TimePeriod {
   Week = 'week',
 }
 
+export enum WeekStart {
+  Saturday = 'Saturday',
+  Sunday = 'Sunday',
+}
+
 // User settings from stream deck button config.
 export interface Settings {
   harvestAccountToken: string;
   harvestAccountId: string;
   forecastAccountId: string;
   task?: string;
+  weekStart: WeekStart;
   billable: HourType;
   timeFormat?: TimeFormat;
   timePeriod?: TimePeriod;

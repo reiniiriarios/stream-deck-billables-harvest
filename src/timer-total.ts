@@ -23,7 +23,7 @@ export const updateTimerTotal = async (context: string, settings: Settings) => {
         break;
       case TimePeriod.Week:
       default:
-        startEnd = getStartEndDates();
+        startEnd = getStartEndDates(settings.weekStart);
         break;
     }
     const loggedHours = getLoggedHours(settings, startEnd, settings.billable);

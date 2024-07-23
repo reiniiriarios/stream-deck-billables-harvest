@@ -1,25 +1,37 @@
-import { StartEndDates } from './types';
+import { StartEndDates, WeekStart } from './types';
+
+function firstDayOfWeek(dateObject) {
+
+  const firstDayOfWeekIndex = 0;
+  const dayOfWeek = dateObject.getDay(),
+    firstDayOfWeek = new Date(dateObject),
+    diff = dayOfWeek >= firstDayOfWeekIndex ?
+      dayOfWeek - firstDayOfWeekIndex :
+      6 - dayOfWeek
+
+  firstDayOfWeek.setDate(dateObject.getDate() - diff)
+  firstDayOfWeek.setHours(0, 0, 0, 0)
+
+  return firstDayOfWeek;
+}
+
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
 
 /**
  * Get start and end dates of current week in ISO 8601.
  *
  * @returns {StartEndDates}
  */
-export const getStartEndDates = (): StartEndDates => {
+export const getStartEndDates = (weekStart: WeekStart): StartEndDates => {
   let currentDate = new Date();
 
   // first day of the week = current day of the month - current day of the week
-  const firstDay = currentDate.getDate() - currentDate.getDay();
-  let start = new Date(currentDate);
-  start.setDate(firstDay);
-  start.setHours(0);
-  start.setMinutes(0);
-  start.setSeconds(0);
-  start.setMilliseconds(0);
-
-  const lastDay = firstDay + 6;
-  let end = new Date(currentDate);
-  end.setDate(lastDay);
+  const start = addDays(firstDayOfWeek(currentDate), weekStart == WeekStart.Saturday ? -1 : 0);
+  const end = addDays(start, 6);
   end.setHours(23);
   end.setMinutes(59);
   end.setSeconds(59);

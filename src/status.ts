@@ -21,7 +21,7 @@ export const updateStatus = async (context: string, settings: Settings) => {
     ) {
       throw new Error('EAUTH: Missing keys, unable to update status.');
     }
-    const startEnd: StartEndDates = getStartEndDates();
+    const startEnd: StartEndDates = getStartEndDates(settings.weekStart);
     const loggedHours = getLoggedHours(settings, startEnd, settings.billable);
     const assignedHours = getAssignedHours(settings, startEnd, settings.billable);
     const hoursRemaining = (await assignedHours) - (await loggedHours);
