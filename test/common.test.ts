@@ -1,6 +1,7 @@
 import { describe, expect, test, beforeAll, afterAll } from '@jest/globals';
 import timezonedDate from 'timezoned-date';
 import { getIsoLocalTimezone, getLocalTimezone, getStartEndDates, getTimezone, getTodayAsStartEndDates, getTodaysDate } from '../src/common';
+import { WeekStart } from '../src/types';
 
 // Cache and reset Date before and after tests.
 let originalDate: DateConstructor;
@@ -77,21 +78,21 @@ describe('getTodaysDate', () => {
 describe('getStartEndDates', () => {
   test('format matches -0700', () => {
     Date = timezonedDate.makeConstructor(-420);
-    let se = getStartEndDates();
+    let se = getStartEndDates(WeekStart.Sunday);
     expect(se.start.iso).toMatch(/^\d{4}-\d{2}-\d{2}T00:00:00.000\-0700$/);
     expect(se.end.iso).toMatch(/^\d{4}-\d{2}-\d{2}T23:59:59.999\-0700$/);
   });
 
   test('format matches +0400', () => {
     Date = timezonedDate.makeConstructor(240);
-    let se = getStartEndDates();
+    let se = getStartEndDates(WeekStart.Sunday);
     expect(se.start.iso).toMatch(/^\d{4}-\d{2}-\d{2}T00:00:00.000\+0400$/);
     expect(se.end.iso).toMatch(/^\d{4}-\d{2}-\d{2}T23:59:59.999\+0400$/);
   });
 
   test('format matches UTC', () => {
     Date = timezonedDate.makeConstructor(0);
-    let se = getStartEndDates();
+    let se = getStartEndDates(WeekStart.Sunday);
     expect(se.start.iso).toMatch(/^\d{4}-\d{2}-\d{2}T00:00:00.000Z$/);
     expect(se.end.iso).toMatch(/^\d{4}-\d{2}-\d{2}T23:59:59.999Z$/);
   });

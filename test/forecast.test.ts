@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { Assignment, Project } from '../src/types';
+import { Assignment, Project, WeekStart } from '../src/types';
 import testSettings from './settings';
 import { getAssignments, getForecastUserId, getProjects } from '../src/api/forecast';
 import { getStartEndDates } from '../src/common';
@@ -28,7 +28,7 @@ describe('get forecast data', () => {
     const assignments: Assignment[] = await getAssignments(
       testSettings,
       userId,
-      getStartEndDates()
+      getStartEndDates(WeekStart.Sunday)
     );
     expect(assignments.length).toBeGreaterThanOrEqual(0);
 

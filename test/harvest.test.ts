@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { ProjectAssignment, TimeEntry } from '../src/types';
+import { ProjectAssignment, TimeEntry, WeekStart } from '../src/types';
 import testSettings from './settings';
 import { getHarvestUserId, getTimeEntries, getUserProjectAssignments } from '../src/api/harvest';
 import { getStartEndDates } from '../src/common';
@@ -15,7 +15,7 @@ describe('get harvest data', () => {
   });
 
   test('get time entries', async () => {
-    timeEntries = await getTimeEntries(testSettings, userId, getStartEndDates());
+    timeEntries = await getTimeEntries(testSettings, userId, getStartEndDates(WeekStart.Sunday));
     // console.log(timeEntries)
     expect(timeEntries.length).toBeGreaterThanOrEqual(0);
   });
