@@ -174,7 +174,8 @@ export const getTimeEntryForTask = async (
   settings: Settings,
   userId: number,
   projectId: number,
-  taskId: number
+  taskId: number,
+  taskNotes: string = ""
 ): Promise<TimeEntry> => {
   // Get tracked hours.
   const today = getTodaysDate();
@@ -186,9 +187,15 @@ export const getTimeEntryForTask = async (
     to: today,
   });
   if (typeof res.time_entries !== 'undefined' && res.time_entries.length) {
-    // Return the first one found.
-    // @todo Track this differently?
-    return res.time_entries.pop();
+    // If there are no task notes to filter, set to null to match Harvest
+    // (Harvest returns empty notes as null)
+    if(taskNotes === "")
+      taskNotes = null;
+
+    // Find where task notes match
+    let matchingTask: TimeEntry = res.time_entries.find(te => te.notes === taskNotes);
+    if (matchingTask !== null)
+      return matchingTask;
   }
 
   return null;
@@ -205,12 +212,17 @@ export const getTimeEntryForTask = async (
 export const createTimeEntry = async (
   settings: Settings,
   projectId: number,
-  taskId: number
+  taskId: number,
+  taskNote: string
 ): Promise<TimeEntry> => {
+  // Harvest likes to deal with empty notes as nulls
+  if (taskNote === "") taskNote = null;
+
   const newTimeEntry = await postHarvest(settings, 'time_entries', {
     project_id: projectId,
     task_id: taskId,
     spent_date: getTodaysDate(),
+    notes: taskNote
   });
   if (typeof newTimeEntry.id === 'undefined' || !newTimeEntry.id) {
     throw new Error('ETIM1: Error creating time entry.');
