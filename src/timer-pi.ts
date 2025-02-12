@@ -56,7 +56,7 @@ const setTaskOptions = async (settings: Settings) => {
     projectAssignments.forEach((project_assignment: ProjectAssignment) => {
       // Project optgroup
       let optgroup = document.createElement('optgroup');
-      optgroup.label = project_assignment.project.name;
+      optgroup.label = `${ project_assignment.client.name } - ${ project_assignment.project.name }`;
       project_assignment.task_assignments.forEach((task_assignment: TaskAssignment) => {
         // Task assignment option
         let option = document.createElement('option');
