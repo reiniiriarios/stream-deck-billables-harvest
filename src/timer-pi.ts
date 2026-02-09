@@ -4,20 +4,35 @@
 import config from '../config.js';
 import { getUserProjectAssignments } from './api/harvest';
 import { ProjectAssignment, Settings, TaskAssignment } from './types';
+import { withDefaultSettings } from './settings';
 
 $PI.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }): void => {
   const { payload, context } = actionInfo;
-  const form = document.getElementById('property-inspector');
+  const form = document.getElementById('property-inspector') as HTMLFormElement;
+  let cachedTaskKey = '';
 
-  setTaskOptions(payload.settings).then(() => {
-    Utils.setFormValue(payload.settings, form);
-  });
+  const syncTaskOptions = async (settings: Partial<Settings>) => {
+    const normalizedSettings = withDefaultSettings(settings);
+    const taskKey = `${normalizedSettings.harvestAccountId}:${normalizedSettings.harvestAccountToken}`;
+    if (taskKey === cachedTaskKey) {
+      return;
+    }
+    cachedTaskKey = taskKey;
+    await setTaskOptions(normalizedSettings);
+    Utils.setFormValue(normalizedSettings, form);
+  };
+
+  const normalizedSettings = withDefaultSettings(payload.settings);
+  Utils.setFormValue(normalizedSettings, form);
+  $PI.setSettings(normalizedSettings);
+  syncTaskOptions(normalizedSettings);
 
   form.addEventListener(
     'input',
     Utils.debounce(150, () => {
-      const newSettings = Utils.getFormValue(form) as Settings;
+      const newSettings = withDefaultSettings(Utils.getFormValue(form) as Settings);
       $PI.setSettings(newSettings);
+      syncTaskOptions(newSettings);
     })
   );
 });
@@ -47,11 +62,14 @@ document.getElementById('howto-button').addEventListener('click', () => {
  * @param {Settings} settings
  */
 const setTaskOptions = async (settings: Settings) => {
+  let select = document.getElementById('task') as HTMLSelectElement;
+  const currentTask = select.value;
+  select.innerHTML = '<option value="">-- Select --</option>';
+
   try {
     if (!settings.harvestAccountId?.length || !settings.harvestAccountToken?.length) {
       throw new Error('EAUTH: Missing keys, unable to update task options.');
     }
-    let select = document.getElementById('task');
     const projectAssignments = await getUserProjectAssignments(settings);
     projectAssignments.forEach((project_assignment: ProjectAssignment) => {
       // Project optgroup
@@ -69,6 +87,11 @@ const setTaskOptions = async (settings: Settings) => {
       });
       select.appendChild(optgroup);
     });
+
+    const hasCurrentTask = Array.from(select.options).some((option) => option.value === currentTask);
+    if (currentTask && hasCurrentTask) {
+      select.value = currentTask;
+    }
   }
   catch (e) {
     console.error(e);

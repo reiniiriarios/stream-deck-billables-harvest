@@ -3,17 +3,20 @@
 
 import config from '../config.js';
 import { Settings } from './types';
+import { withDefaultSettings } from './settings';
 
 $PI.onConnected(({ actionInfo, appInfo, connection, messageType, port, uuid }): void => {
   const { payload, context } = actionInfo;
-  const form = document.getElementById('property-inspector');
+  const form = document.getElementById('property-inspector') as HTMLFormElement;
+  const normalizedSettings = withDefaultSettings(payload.settings);
 
-  Utils.setFormValue(payload.settings, form);
+  Utils.setFormValue(normalizedSettings, form);
+  $PI.setSettings(normalizedSettings);
 
   form.addEventListener(
     'input',
     Utils.debounce(150, () => {
-      const newSettings = Utils.getFormValue(form) as Settings;
+      const newSettings = withDefaultSettings(Utils.getFormValue(form) as Settings);
       $PI.setSettings(newSettings);
     })
   );

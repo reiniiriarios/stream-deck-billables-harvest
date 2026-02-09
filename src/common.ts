@@ -108,7 +108,16 @@ export const getIsoLocalTimezone = (date: Date): string => {
  * @returns {string}
  */
 export const getTodaysDate = (): string => {
-  const date = new Date();
+  return getDateAsYmd(new Date());
+}
+
+/**
+ * Format a Date as YYYY-MM-DD in local timezone.
+ *
+ * @param {Date} date
+ * @returns {string}
+ */
+export const getDateAsYmd = (date: Date): string => {
   return (
     date.getFullYear() +
     '-' +
@@ -116,4 +125,4 @@ export const getTodaysDate = (): string => {
     '-' +
     date.getDate().toString().padStart(2, '0')
   );
-};
+}

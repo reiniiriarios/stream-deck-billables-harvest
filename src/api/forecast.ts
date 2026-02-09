@@ -1,8 +1,44 @@
 import { Assignment, Project, RemainingBudgetedHours, Settings, StartEndDates } from '../types';
 
-const forecastUrl = 'https://api.forecastapp.com/';
+const forecastUrls = [
+  'https://api.forecast.it/api/v1/',
+  'https://api.forecastapp.com/',
+];
 
 let forecastUserId: number = null;
+
+const buildForecastUrl = (baseUrl: string, path: string, args: object = null): string => {
+  let url = baseUrl + path;
+  if (args) {
+    let params = Object.keys(args)
+      .map(function (key) {
+        return key + '=' + args[key];
+      })
+      .join('&');
+    url += '?' + params;
+  }
+  return url;
+};
+
+const getHeaderVariants = (settings: Settings): HeadersInit[] => {
+  const forecastToken = settings.forecastApiToken?.length
+    ? settings.forecastApiToken
+    : settings.harvestAccountToken;
+
+  return [
+    {
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Forecast-Api-Key': forecastToken,
+      'User-Agent': 'Stream Deck Harvest Billables (github.com/reiniiriarios/stream-deck-billables-harvest)',
+    },
+    {
+      'Content-Type': 'application/json; charset=utf-8',
+      Authorization: `Bearer ${forecastToken}`,
+      'Forecast-Account-Id': settings.forecastAccountId,
+      'User-Agent': 'Stream Deck Harvest Billables (github.com/reiniiriarios/stream-deck-billables-harvest)',
+    },
+  ];
+};
 
 /**
  * Fetch data from the forecast api.
@@ -19,35 +55,33 @@ export const getForecast = async (
   path: string,
   args: object = null
 ): Promise<any> => {
-  let url = forecastUrl + path;
-  if (args) {
-    let params = Object.keys(args)
-      .map(function (key) {
-        return key + '=' + args[key];
-      })
-      .join('&');
-    url += '?' + params;
-  }
-  console.log('GET', url);
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      Authorization: `Bearer ${settings.harvestAccountToken}`,
-      'Forecast-Account-Id': settings.forecastAccountId,
-      'User-Agent': 'Stream Deck Harvest Billables (github.com/reiniiriarios/stream-deck-billables-harvest)',
-    },
-  }).then((res) => {
-    if (res.status < 200 || res.status >= 300) {
-      throw new Error('F0' + String(res.status).padStart(3, '0') + ': Error fetching data.');
+  let lastError: Error;
+  const headers = getHeaderVariants(settings);
+
+  for (let i = 0; i < forecastUrls.length; i++) {
+    for (let h = 0; h < headers.length; h++) {
+      const url = buildForecastUrl(forecastUrls[i], path, args);
+      try {
+        console.log('GET', url);
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: headers[h],
+        });
+        if (response.status < 200 || response.status >= 300) {
+          throw new Error('F0' + String(response.status).padStart(3, '0') + ': Error fetching data.');
+        }
+        const body = await response.json();
+        if (typeof body.error !== 'undefined') {
+          throw new Error('F0002: ' + body.error_description);
+        }
+        return body;
+      } catch (e) {
+        lastError = e as Error;
+      }
     }
-    return res.json();
-  });
-  if (typeof response.error !== 'undefined') {
-    throw new Error('F0002: ' + response.error_description);
   }
 
-  return response;
+  throw lastError || new Error('F0001: Error fetching data.');
 };
 
 /**
