@@ -1,9 +1,72 @@
-import { getTodaysDate } from '../common';
+import { getDateAsYmd, getTodaysDate } from '../common';
 import { ProjectAssignment, Settings, StartEndDates, TimeEntry } from '../types';
 
 const harvestUrl = 'https://api.harvestapp.com/v2/';
+const harvestUserAgent =
+  'Harvest Stream Deck Plugin (https://github.com/reiniiriarios/stream-deck-billables-harvest)';
 
 let harvestUserId: number = null;
+
+const isBadRequestError = (error: unknown): boolean => {
+  return error instanceof Error && /^H0400:/.test(error.message);
+};
+
+const getTimeEntriesRequestArgs = (
+  userId: number | null,
+  from: string,
+  to: string
+): Record<string, string | number> => {
+  const args: Record<string, string | number> = { from, to };
+  if (typeof userId === 'number' && Number.isFinite(userId) && userId > 0) {
+    args.user_id = userId;
+  }
+  return args;
+};
+
+const fetchTimeEntriesForRange = async (
+  settings: Settings,
+  userId: number | null,
+  filterUserId: number | null,
+  from: string,
+  to: string
+): Promise<TimeEntry[]> => {
+  const res = await getHarvest(settings, 'time_entries', getTimeEntriesRequestArgs(userId, from, to));
+  if (typeof res.time_entries !== 'undefined' && res.time_entries.length) {
+    const entries = res.time_entries as TimeEntry[];
+    if (typeof filterUserId === 'number' && Number.isFinite(filterUserId) && filterUserId > 0) {
+      return entries.filter((entry) => entry.user?.id === filterUserId);
+    }
+    return entries;
+  }
+  return [];
+};
+
+const getTimeEntriesByDay = async (
+  settings: Settings,
+  userId: number,
+  startDate: Date,
+  endDate: Date
+): Promise<TimeEntry[]> => {
+  const entriesById: Record<string, TimeEntry> = {};
+  let current = new Date(startDate);
+  while (current <= endDate) {
+    const currentDate = getDateAsYmd(current);
+    let dailyEntries: TimeEntry[] = [];
+    try {
+      dailyEntries = await fetchTimeEntriesForRange(settings, userId, userId, currentDate, currentDate);
+    } catch (error) {
+      if (!isBadRequestError(error)) {
+        throw error;
+      }
+      dailyEntries = await fetchTimeEntriesForRange(settings, null, userId, currentDate, currentDate);
+    }
+    dailyEntries.forEach((entry) => {
+      entriesById[String(entry.id)] = entry;
+    });
+    current.setDate(current.getDate() + 1);
+  }
+  return Object.values(entriesById);
+};
 
 /**
  * Fetch data from the harvest api.
@@ -36,19 +99,22 @@ export const getHarvest = async (
       'Content-Type': 'application/json; charset=utf-8',
       Authorization: `Bearer ${settings.harvestAccountToken}`,
       'Harvest-Account-Id': settings.harvestAccountId,
-      'User-Agent': 'Stream Deck Harvest Billables (github.com/reiniiriarios/stream-deck-billables-harvest)',
+      'User-Agent': harvestUserAgent,
     },
-  }).then((res) => {
-    if (res.status < 200 || res.status >= 300) {
-      throw new Error('H0' + String(res.status).padStart(3, '0') + ': Error fetching data.');
-    }
-    return res.json();
   });
-  if (typeof response.error !== 'undefined') {
-    throw new Error('H0001: ' + response.error_description);
+  if (response.status < 200 || response.status >= 300) {
+    const details = await response.text();
+    throw new Error(
+      'H0' + String(response.status).padStart(3, '0') + ': Error fetching data.'
+      + (details?.length ? ' ' + details : '')
+    );
+  }
+  const data = await response.json();
+  if (typeof data.error !== 'undefined') {
+    throw new Error('H0001: ' + data.error_description);
   }
 
-  return response;
+  return data;
 };
 
 /**
@@ -70,19 +136,23 @@ export const postHarvest = async (settings: Settings, path: string, data: object
       'Content-Type': 'application/json; charset=utf-8',
       Authorization: `Bearer ${settings.harvestAccountToken}`,
       'Harvest-Account-Id': settings.harvestAccountId,
+      'User-Agent': harvestUserAgent,
     },
     body: JSON.stringify(data),
-  }).then((res) => {
-    if (res.status < 200 || res.status >= 300) {
-      throw new Error('H1' + String(res.status).padStart(3, '0') + ': Error posting data.');
-    }
-    return res.json();
   });
-  if (typeof response.error !== 'undefined') {
-    throw new Error('H1001: ' + response.error_description);
+  if (response.status < 200 || response.status >= 300) {
+    const details = await response.text();
+    throw new Error(
+      'H1' + String(response.status).padStart(3, '0') + ': Error posting data.'
+      + (details?.length ? ' ' + details : '')
+    );
+  }
+  const dataRes = await response.json();
+  if (typeof dataRes.error !== 'undefined') {
+    throw new Error('H1001: ' + dataRes.error_description);
   }
 
-  return response;
+  return dataRes;
 };
 
 /**
@@ -103,18 +173,22 @@ export const patchHarvest = async (settings: Settings, path: string): Promise<an
       'Content-Type': 'application/json; charset=utf-8',
       Authorization: `Bearer ${settings.harvestAccountToken}`,
       'Harvest-Account-Id': settings.harvestAccountId,
+      'User-Agent': harvestUserAgent,
     },
-  }).then((res) => {
-    if (res.status < 200 || res.status >= 300) {
-      throw new Error('H2' + String(res.status).padStart(3, '0') + ': Error posting data.');
-    }
-    return res.json();
   });
-  if (typeof response.error !== 'undefined') {
-    throw new Error('H2001: ' + response.error_description);
+  if (response.status < 200 || response.status >= 300) {
+    const details = await response.text();
+    throw new Error(
+      'H2' + String(response.status).padStart(3, '0') + ': Error posting data.'
+      + (details?.length ? ' ' + details : '')
+    );
+  }
+  const dataRes = await response.json();
+  if (typeof dataRes.error !== 'undefined') {
+    throw new Error('H2001: ' + dataRes.error_description);
   }
 
-  return response;
+  return dataRes;
 };
 
 /**
@@ -144,21 +218,26 @@ export const getTimeEntries = async (
   userId: number,
   startEnd: StartEndDates
 ): Promise<TimeEntry[]> => {
-  let timeEntries: TimeEntry[] = [];
-
-  // Get tracked hours.
-  const res = await getHarvest(settings, 'time_entries', {
-    user_id: userId,
-    from: startEnd.start.iso,
-    to: startEnd.end.iso,
-  });
-  if (typeof res.time_entries !== 'undefined' && res.time_entries.length) {
-    res.time_entries.forEach((entry: TimeEntry) => {
-      timeEntries.push(entry);
-    });
+  const from = getDateAsYmd(startEnd.start.date);
+  const to = getDateAsYmd(startEnd.end.date);
+  try {
+    return await fetchTimeEntriesForRange(settings, userId, userId, from, to);
+  } catch (error) {
+    if (!isBadRequestError(error)) {
+      throw error;
+    }
   }
 
-  return timeEntries;
+  try {
+    return await fetchTimeEntriesForRange(settings, null, userId, from, to);
+  } catch (error) {
+    if (!isBadRequestError(error)) {
+      throw error;
+    }
+  }
+
+  // Fallback: query day-by-day for API compatibility edge-cases in some accounts.
+  return getTimeEntriesByDay(settings, userId, startEnd.start.date, startEnd.end.date);
 };
 
 /**

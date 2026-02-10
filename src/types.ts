@@ -17,15 +17,24 @@ export enum TimePeriod {
   Week = 'week',
 }
 
+export enum ButtonAction {
+  Update = 'update',
+  OpenHarvest = 'openHarvest',
+  OpenForecast = 'openForecast',
+}
+
 // User settings from stream deck button config.
 export interface Settings {
   harvestAccountToken: string;
   harvestAccountId: string;
   forecastAccountId: string;
+  forecastApiToken?: string;
   task?: string;
   billable: HourType;
   timeFormat?: TimeFormat;
   timePeriod?: TimePeriod;
+  buttonAction?: ButtonAction;
+  fetchInterval?: string;
 }
 
 // Response from Harvest, with additional properties.

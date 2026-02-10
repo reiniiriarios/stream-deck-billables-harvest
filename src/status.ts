@@ -15,7 +15,7 @@ import { Assignment, HourType, HoursSchedule, Project, Settings, StartEndDates, 
 export const updateStatus = async (context: string, settings: Settings) => {
   try {
     if (
-      !settings.forecastAccountId?.length ||
+      (!settings.forecastAccountId?.length && !settings.forecastApiToken?.length) ||
       !settings.harvestAccountId?.length ||
       !settings.harvestAccountToken?.length
     ) {

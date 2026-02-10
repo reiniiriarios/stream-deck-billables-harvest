@@ -11,12 +11,19 @@ to let you know how much more billable time you have left for the day.
 
 ### Generate API Credentials
 
-You'll need to generate an API token in [Harvest][harvest-api] as well
-as finding your Harvest Account ID and Forecast Account ID. Both your Harvest and Forecast IDs
-can be found under the API token details after [creating it][harvest-api]. These two additional
-ids are necessary as they refer to your organization and not your user account.
+You'll need:
 
-You only need one API token for all buttons, but you must enter the credentials in every button.
+- A Harvest API token
+- A Harvest account ID
+- A Forecast account ID (for `Billables Status`)
+
+Harvest token and account ID can be found in your Harvest developer settings after
+creating an API token at [Harvest Developers][harvest-api].  
+These IDs represent your organization, not your user profile.
+
+Credentials are saved per action in Stream Deck, so each button must be configured.
+For some newer Forecast accounts, you may also need a separate Forecast API token in the
+`Billables Status` action settings.
 
 ## The Buttons
 
@@ -24,7 +31,6 @@ You only need one API token for all buttons, but you must enter the credentials 
 
 The Timer button is a simple start/stop button and monitor for individual tasks. After entering
 your credentials in the settings, a list of available tasks should display in the Task dropdown.
-(If it doesn't, try clicking away to another button and clicking back.)
 
 After selecting a task, the button should display a play `⏵` or pause `⏸` button along with the time
 tracked for that task for the current day. You can set a Title (looks best if position is "Align
@@ -32,8 +38,10 @@ Top") to differentiate Task timers.
 
 ### Billables Status
 
-This button will only work if your organization also uses [Forecast][forecast] to track time.
+This button only works if your organization also uses [Forecast][forecast] to track time.
 The purpose of this button is to keep you on track for hours for the week.
+If status requests fail, try adding a Forecast API token in button settings (while keeping your
+Harvest token for Harvest requests).
 
 This display will compare your total weekly tracked hours to date to your assigned
 billable hours in forecast, and display the remaining hours you need to fulfill for the
@@ -67,6 +75,25 @@ Timer|Chart
 ![](docs/settings-timer.png)|![](docs/settings-chart.png)
 Task Dropdown shows all available tasks, grouped by project. | Button action can refresh data, open Harvest timesheet, or open Forecast schedule.
 
+## Build From Source
+
+```bash
+git clone https://github.com/reiniiriarios/stream-deck-billables-harvest.git
+cd stream-deck-billables-harvest
+git submodule update --init --recursive
+npm ci
+npm run build
+npm run package
+```
+
+Installer output:
+
+- `build/me.reinii.harvest-billables.streamDeckPlugin`
+
+Development bundle output:
+
+- `build/me.reinii.harvest-billables.sdPlugin`
+
 ## Error Messages
 
 Error|Details
@@ -99,6 +126,19 @@ Error|Details
 with a `404` instead of a `401`/`403`.
 
 \*\* The second digit in `H#000` and `F#000` errors refers to `GET`, `POST`, or `PATCH` (0, 1, or 2).
+
+## Troubleshooting
+
+### `H0400` on `Timer Total`
+
+If `Timer` works but `Timer Total` shows `H0400`:
+
+1. Update to the latest plugin build from this repository.
+2. Reinstall cleanly (quit Stream Deck, remove old plugin folder, install `.streamDeckPlugin` again).
+3. Re-enter Harvest credentials in the `Timer Total` action.
+
+The latest code includes multiple fallback request strategies for Harvest time-entry queries
+to handle account-specific API validation behavior.
 
 ## Install Manually
 

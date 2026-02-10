@@ -69,7 +69,7 @@ export const displayHoursRemaining = (
   if (!assignedHours) {
     drawIconNoAssignedHours(ctx);
   } else {
-    let percentageRemaining = assignedHours - hoursRemaining / assignedHours;
+    let percentageRemaining = (assignedHours - hoursRemaining) / assignedHours;
     // check success with an error margin
     if (percentageRemaining <= 0.01 && percentageRemaining >= -0.01) {
       drawIconSuccess(ctx);
@@ -399,7 +399,7 @@ export const pieChartPreview = (hoursRemaining: number, assignedHours: number, f
   if (!assignedHours) {
     drawIconNoAssignedHours(ctx);
   } else {
-    let percentageRemaining = assignedHours - hoursRemaining / assignedHours;
+    let percentageRemaining = (assignedHours - hoursRemaining) / assignedHours;
     // check success with an error margin
     if (percentageRemaining <= 0.01 && percentageRemaining >= -0.01) {
       drawIconSuccess(ctx);
